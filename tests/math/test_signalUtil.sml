@@ -1,0 +1,92 @@
+(* 
+* file: test_signalUril.sml
+* author: Marius Geitle <marius.geitle@hiof.no>
+*
+* This file contains tests that validate the signal utilities structure
+*)
+
+
+val _ = print"\n\n********** signal utilities tests **********\n"
+
+val _ = test( "dft",
+  fn() =>
+    let
+        val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+    in
+       SignalUtil.dft(input)
+    end,
+  fn x =>
+    let
+       val correct = [
+              Complex.complex(21.0, 0.0),
+              Complex.complex(~3.0, 5.1962),
+              Complex.complex(~3.0, 1.7321),
+              Complex.complex(~3.0, 0.0),
+              Complex.complex(~3.0, ~1.7321),
+              Complex.complex(~3.0, ~5.1962)
+          ];
+       val result = List.tabulate(
+               Array.length(x), fn i => Array.sub(x, i))
+    in
+       ListPair.allEq (fn (f1,f2) => 
+           Util.approxEqReal' (Complex.re(f1), Complex.re(f2), 4) andalso
+           Util.approxEqReal' (Complex.im(f1), Complex.im(f2), 4)
+           ) (correct, result)
+    end
+  )
+  ;
+
+val _ = test( "idft",
+  fn() =>
+    let
+        val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+        val transformed = SignalUtil.dft(input);
+    in
+       SignalUtil.idft(transformed)
+    end,
+  fn x =>
+    let
+       val correct = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+       val result = List.tabulate(
+               Array.length(x), fn i => Array.sub(x, i))
+    in
+       ListPair.allEq 
+          (fn (f1, f2) => Util.approxEqReal' (f1, Complex.re(f2), 14) andalso
+                          Util.approxEqReal' (0.0, Complex.im(f2), 14))
+          (correct, result)
+    end
+  )
+  ;
+
+
+val _ = test( "hilbert",
+  fn() =>
+    let
+        val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+    in
+       SignalUtil.hilbert(input)
+    end,
+  fn x =>
+    let
+       
+       val correct = [
+              2.309401076758503,
+              ~1.154700538379252,
+              ~1.154700538379252,
+              ~1.154700538379252,
+              ~1.154700538379252,
+              2.309401076758503
+          ];
+
+       val result = List.tabulate(
+               Array.length(x), fn i => Array.sub(x, i))
+
+    in
+       ListPair.allEq 
+          (fn (f1, f2) => Util.approxEqReal' (f1, f2, 3))
+          (correct, result)
+    end
+  )
+  ;
+
+

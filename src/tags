@@ -1,0 +1,1663 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+'a	array2d.sml	/^  type 'a array = { Width : int, Height : int, Values : 'a Array.array }$/;"	t
+ACTIVE_TYPE	image/bsds/csa_defs.h	31;"	d
+ACTIVE_TYPE	image/bsds/csa_defs.h	36;"	d
+ADATE_RANDOM	image/bsds/adate_random.h	10;"	d
+Args'	optimize.sml	/^            val Args' = Arg::Args$/;"	v
+Array	ffi.h	31;"	d
+Array1D	image/bsds/Array.hh	/^    Array1D () {$/;"	f	class:Array1D
+Array1D	image/bsds/Array.hh	/^    Array1D (unsigned n) {$/;"	f	class:Array1D
+Array1D	image/bsds/Array.hh	/^class Array1D $/;"	c
+Array2D	array2d.sml	/^structure Array2D =$/;"	r
+Array2D	image/bsds/Array.hh	/^    Array2D () {$/;"	f	class:Array2D
+Array2D	image/bsds/Array.hh	/^    Array2D (unsigned d0, unsigned d1) {$/;"	f	class:Array2D
+Array2D	image/bsds/Array.hh	/^class Array2D$/;"	c
+Array3D	image/bsds/Array.hh	/^    Array3D () {$/;"	f	class:Array3D
+Array3D	image/bsds/Array.hh	/^    Array3D (unsigned d0, unsigned d1, unsigned d2) {$/;"	f	class:Array3D
+Array3D	image/bsds/Array.hh	/^class Array3D $/;"	c
+Array4D	image/bsds/Array.hh	/^    Array4D () {$/;"	f	class:Array4D
+Array4D	image/bsds/Array.hh	/^    Array4D (unsigned d0, unsigned d1, unsigned d2, unsigned d3) {$/;"	f	class:Array4D
+Array4D	image/bsds/Array.hh	/^class Array4D $/;"	c
+Assignment	ml/k_means.sml	/^    val Assignment = Array.array( List.length Instances, ~1 )$/;"	v
+BADCOUNT	image/bsds/csa.hh	640;"	d
+BADINPUT1	image/bsds/csa.hh	635;"	d
+BADINPUT2	image/bsds/csa.hh	636;"	d
+BADINPUT3	image/bsds/csa.hh	637;"	d
+BADINPUT4	image/bsds/csa.hh	638;"	d
+BADINPUT5	image/bsds/csa.hh	639;"	d
+Bool	ffi.h	/^typedef Int32_t Bool;$/;"	t
+Bool_t	ffi.h	/^typedef Int32_t Bool_t;$/;"	t
+BooleanImage	image/boolean_image.sml	/^structure BooleanImage = ImageFun( BooleanImageSpec )$/;"	r
+BooleanImageSpec	image/boolean_image.sml	/^structure BooleanImageSpec : IMAGE_SPEC =$/;"	r
+C	image/filter_util.sml	/^    val C = 1.0\/( Math.sqrt( 2.0*Math.pi )*Sigma )$/;"	v
+COMPLEX	math/complex.sml	/^signature COMPLEX = sig$/;"	s
+CP	image/f_measure.sml	/^    val ( CP, SP, CR, SR, P, R, F ) = eval( List, Zero )$/;"	v
+CP	image/f_measure.sml	/^    val ( CP, SP, CR, SR, _, _, _ ) = eval( List, Zero )$/;"	v
+CPointer	ffi.h	/^typedef void* CPointer;$/;"	t
+CSA	image/bsds/csa.cc	/^CSA::CSA (int n, int m, const int* graph) $/;"	f	class:CSA
+CSA	image/bsds/csa.hh	/^class CSA$/;"	c
+Canny	image/canny.sml	/^structure Canny =$/;"	r
+CenterX	image/filter.sml	/^      val CenterX = $/;"	v
+CenterY	image/filter.sml	/^      val CenterY =  $/;"	v
+Char16	ffi.h	/^typedef WordU16_t Char16;$/;"	t
+Char16_t	ffi.h	/^typedef WordU16_t Char16_t;$/;"	t
+Char32	ffi.h	/^typedef WordU32_t Char32;$/;"	t
+Char32_t	ffi.h	/^typedef WordU32_t Char32_t;$/;"	t
+Char8	ffi.h	/^typedef WordU8_t Char8;$/;"	t
+Char8_t	ffi.h	/^typedef WordU8_t Char8_t;$/;"	t
+ColorImageReal	image/color_image.sml	/^structure ColorImageReal = ImageFun( ColorImageRealSpec )$/;"	r
+ColorImageRealSpec	image/color_image.sml	/^structure ColorImageRealSpec : IMAGE_SPEC =$/;"	r
+ColorImageSpec	image/color_image.sml	/^structure ColorImageSpec = $/;"	r
+ColorImageWord8	image/color_image.sml	/^structure ColorImageWord8 = ImageFun( ColorImageWord8Spec )$/;"	r
+ColorImageWord8Spec	image/color_image.sml	/^structure ColorImageWord8Spec : IMAGE_SPEC = $/;"	r
+Complement	image/morphology.sml	/^    val Complement = BooleanImage.image( Width, Height, false )$/;"	v
+Complex	math/complex.sml	/^structure Complex :> COMPLEX = struct$/;"	r
+Cooccur	image/probability_rand_index.sml	/^  val ( Cooccur, Width, Height ) = $/;"	v
+Cooccur	image/util.sml	/^  val Cooccur = Array.array( NumSegs1*NumSegs2, 0 )$/;"	v
+CooccurSize	image/probability_rand_index.sml	/^  val CooccurSize = Width*Height$/;"	v
+Cost	image/f_measure.sml	/^            val Cost = $/;"	v
+Count	image/image.sml	/^                val Count = Array.sub( Histogram, Index )$/;"	v
+CountP	image/f_measure.sml	/^    val CountP = $/;"	v
+CountR	image/f_measure.sml	/^            val CountR = $/;"	v
+CurrentIn	image/pnm_binary.sml	/^    val CurrentIn : Word8.word ref = ref 0w0$/;"	v
+CurrentOut	image/pnm_binary.sml	/^    val CurrentOut : Word8.word ref = ref 0w0$/;"	v
+DEFAULT_PO_COST_THRESH	image/bsds/csa_defs.h	5;"	d
+DEFAULT_PO_WORK_THRESH	image/bsds/csa_defs.h	7;"	d
+DEFAULT_SCALE_FACTOR	image/bsds/csa_defs.h	4;"	d
+DEFAULT_UPD_FAC	image/bsds/csa_defs.h	8;"	d
+DEFOP	image/bsds/Matrix.cc	2051;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2074;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2096;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2136;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2167;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2176;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2179;"	d	file:
+DEFOP	image/bsds/Matrix.cc	2209;"	d	file:
+DEFOP	image/bsds/Matrix.hh	/^    DEFOP(&&);$/;"	m	class:Matrix
+DEFOP	image/bsds/Matrix.hh	/^    DEFOP(*);$/;"	m	class:Matrix
+DEFOP	image/bsds/Matrix.hh	/^    DEFOP(*=);$/;"	m	class:Matrix
+DEFOP	image/bsds/Matrix.hh	/^    DEFOP(==);$/;"	m	class:Matrix
+DEFOP	image/bsds/Matrix.hh	332;"	d
+DEFOP	image/bsds/Matrix.hh	340;"	d
+DEFOP	image/bsds/Matrix.hh	343;"	d
+DEFOP	image/bsds/Matrix.hh	360;"	d
+DEFOP	image/bsds/Matrix.hh	363;"	d
+DEFOP	image/bsds/Matrix.hh	366;"	d
+DEFOP	image/bsds/Matrix.hh	369;"	d
+DEFOP	image/bsds/Matrix.hh	376;"	d
+DX	image/canny.sml	/^              val DX = sub( GradX, X, Y )$/;"	v
+DY	image/canny.sml	/^              val DY = sub( GradY, X, Y )$/;"	v
+DefaultMaxDist	image/f_measure.sml	/^  val DefaultMaxDist = 0.0075$/;"	v
+DefaultOutlierCost	image/f_measure.sml	/^  val DefaultOutlierCost = 100.0;$/;"	v
+Delims	image/image.sml	/^    val Delims = $/;"	v
+Delta	optimize.sml	/^      val Delta = 1.0\/( real( getCount Res ) )$/;"	v
+Depth	image/boolean_image.sml	/^  val Depth = 1$/;"	v
+Depth	image/color_image.sml	/^  val Depth = 3$/;"	v
+Depth	image/grayscale_image.sml	/^  val Depth = 1$/;"	v
+Depth	image/image.sml	/^    val Depth = Spec.Depth$/;"	v
+Depth	image/image.sml	/^  val Depth : int$/;"	v
+Depth	image/pnm.sml	/^    val Depth = PNMCommon.getDepth Format$/;"	v
+Depth	image/pnm.sml	/^  val Depth : int$/;"	v
+Depth	image/pnm_text.sml	/^          val Depth = parseInt Input$/;"	v
+Diagonal	image/f_measure.sml	/^    val Diagonal = Math.sqrt( real( Width*Width + Height*Height ) )$/;"	v
+Dist	ml/k_means.sml	/^                  val Dist = distance( Instance, J ) $/;"	v
+Dist	ml/k_means.sml	/^            val Dist = X-Y $/;"	v
+Distance	ml/k_means.sml	/^          val ( Distance, MeanIdx ) = $/;"	v
+E	image/canny.sml	/^                  val E = BooleanImage.sub( Edge, X, Y )$/;"	v
+E	image/canny.sml	/^            val E = BooleanImage.sub( Edge, X, Y )$/;"	v
+E	image/morphology.sml	/^                        val E = sub( Thinned, X+J-1, Y+I-1 )$/;"	v
+ERRBASE	image/bsds/csa.hh	634;"	d
+EXCESS_THRESH	image/bsds/csa_defs.h	16;"	d
+EXCESS_THRESH	image/bsds/csa_defs.h	18;"	d
+EXTERNAL	ffi.h	126;"	d
+EXTERNAL	ffi.h	131;"	d
+EXTERNAL	ffi.h	135;"	d
+Edge	image/bsds/match.cc	/^struct Edge {$/;"	s	file:
+Edge	image/canny.sml	/^      val Edge = BooleanImage.zeroImage( Width, Height )$/;"	v
+Eval	optimize.sml	/^                val Eval = f( Args' )$/;"	v
+Exception	image/bsds/Exception.cc	/^Exception::Exception (const Exception& that)$/;"	f	class:Exception
+Exception	image/bsds/Exception.cc	/^Exception::Exception (const char* msg)$/;"	f	class:Exception
+Exception	image/bsds/Exception.hh	/^class Exception $/;"	c
+F	image/f_measure.sml	/^    val F = 2.0*P*R\/( case ( P+R )>0.0 of false => 1.0 | true => ( P+R ) )$/;"	v
+F	image/morphology.sml	/^    val F = SOME false$/;"	v
+FALSE	image/bsds/csa_defs.h	2;"	d
+FILTER	image/filter.sml	/^signature FILTER =$/;"	s
+FILTER_IMAGE	image/filter.sml	/^signature FILTER_IMAGE =$/;"	s
+FMeasureAverage	image/f_measure.sml	/^structure FMeasureAverage : SCORE =$/;"	r
+FMeasureBerkeleyEdge	image/f_measure.sml	/^structure FMeasureBerkeleyEdge : SCORE =$/;"	r
+FMeasureCommon	image/f_measure.sml	/^structure FMeasureCommon =$/;"	r
+FMeasureForeground	image/f_measure.sml	/^structure FMeasureForeground : SCORE =$/;"	r
+Factor	image/image.sml	/^    val Factor = 1.0\/( ( real NumBins )-1.0 )$/;"	v
+FillType	image/bsds/Matrix.hh	/^    enum FillType {$/;"	g	class:Matrix
+Filter	image/image.sml	/^  structure Filter = FilterFun( FilterImage )$/;"	r
+FilterFun	image/filter.sml	/^functor FilterFun( Image : FILTER_IMAGE ) : FILTER =$/;"	c
+FilterImage	image/image.sml	/^  structure FilterImage : FILTER_IMAGE = $/;"	r
+FilterUtil	image/filter_util.sml	/^structure FilterUtil =$/;"	r
+ForegroundLabel	image/f_measure.sml	/^  val ForegroundLabel = max( lessTruth, unique( eq lessTruth, Truth ) )$/;"	v
+Format	image/image.sml	/^    val Format = Spec.PNMFormat$/;"	v
+Format	image/pnm.sml	/^    val ( Format, Width, Height, MaxVal, TupleTypes ) = $/;"	v
+Format	image/pnm.sml	/^  val Format : PNMCommon.format$/;"	v
+Format'	image/pnm_text.sml	/^          val Format' = parseFormat Input$/;"	v
+Gaussian	image/canny.sml	/^      val Gaussian = FilterUtil.createGaussianMask( Sigma )$/;"	v
+GaussianDerived	image/canny.sml	/^      val GaussianDerived = ImageUtil.gradientXReal Gaussian$/;"	v
+GradX	image/canny.sml	/^      val GradX = convolve( SmoothX, GaussianDerived )$/;"	v
+GradY	image/canny.sml	/^      val GradY = convolve( SmoothY, transposed GaussianDerived )$/;"	v
+GrayscaleImageInt	image/grayscale_image.sml	/^structure GrayscaleImageInt = ImageFun( GrayscaleImageIntSpec )$/;"	r
+GrayscaleImageIntSpec	image/grayscale_image.sml	/^structure GrayscaleImageIntSpec : IMAGE_SPEC =$/;"	r
+GrayscaleImageReal	image/grayscale_image.sml	/^structure GrayscaleImageReal = ImageFun( GrayscaleImageRealSpec )$/;"	r
+GrayscaleImageRealSpec	image/grayscale_image.sml	/^structure GrayscaleImageRealSpec : IMAGE_SPEC =$/;"	r
+GrayscaleImageSpec	image/grayscale_image.sml	/^structure GrayscaleImageSpec = $/;"	r
+GrayscaleImageWord8	image/grayscale_image.sml	/^structure GrayscaleImageWord8 = ImageFun( GrayscaleImageWord8Spec )$/;"	r
+GrayscaleImageWord8Spec	image/grayscale_image.sml	/^structure GrayscaleImageWord8Spec : IMAGE_SPEC =$/;"	r
+High	image/canny.sml	/^            val [ High ] = $/;"	v
+High	image/canny.sml	/^            val [ High ] =$/;"	v
+High	image/canny.sml	/^      val ( High, Low ) = $/;"	v
+Histogram	image/image.sml	/^          val Histogram = Array.array( NumBins, 0 )$/;"	v
+Histogram	image/threshold.sml	/^    val [ Histogram ] = Image.histograms( Image, NumBins )$/;"	v
+I	image/pnm_binary.sml	/^      val I = Word.fromInt( X mod 8 )$/;"	v
+IMAGE	image/image.sml	/^signature IMAGE =$/;"	s
+IMAGE_SPEC	image/image.sml	/^signature IMAGE_SPEC = $/;"	s
+Image	image/filter.sml	/^  structure Image : FILTER_IMAGE$/;"	r
+Image	image/filter.sml	/^  structure Image = Image$/;"	r
+Image	image/pnm.sml	/^    val Image = $/;"	v
+Image	image/pnm.sml	/^  structure Image : PNM_IMAGE$/;"	r
+Image	image/pnm.sml	/^  structure Image = Image$/;"	r
+Image	image/threshold.sml	/^  structure Image : THRESHOLDS_IMAGE$/;"	r
+Image	image/threshold.sml	/^  structure Image = Image$/;"	r
+Image1	image/image_util.sml	/^    val ( Image1 as { Width, Height, ... } )::_ = Images$/;"	v
+ImageCommon	image/image_common.sml	/^structure ImageCommon =$/;"	r
+ImageFun	image/image.sml	/^functor ImageFun( Spec : IMAGE_SPEC ) : IMAGE = $/;"	c
+ImageIndex	image/filter.sml	/^            val ImageIndex = trunc( YY, Height )*Width+trunc( XX, Width )$/;"	v
+ImageInt	image/image_int.sml	/^structure ImageInt =$/;"	r
+ImageReal	image/f_measure.sml	/^    val ImageReal = ImageUtil.convertBooleanToTransposedReal Image$/;"	v
+ImageReal	image/image_real.sml	/^structure ImageReal =$/;"	r
+ImageUtil	image/image_util.sml	/^structure ImageUtil =$/;"	r
+ImageWord8	image/image_word.sml	/^structure ImageWord8 =$/;"	r
+In	text_file_util.sml	/^    val In = TextIO.openIn Filename$/;"	v
+Inc	image/threshold.sml	/^    val Inc = 1.0\/( real NumBins )$/;"	v
+Index	image/image.sml	/^                val Index = $/;"	v
+Input	image/pnm.sml	/^    val Input = BinIO.openIn( Filename )$/;"	v
+Int16	ffi.h	/^typedef int16_t Int16;$/;"	t
+Int16_t	ffi.h	/^typedef int16_t Int16_t;$/;"	t
+Int32	ffi.h	/^typedef int32_t Int32;$/;"	t
+Int32_t	ffi.h	/^typedef int32_t Int32_t;$/;"	t
+Int64	ffi.h	/^typedef int64_t Int64;$/;"	t
+Int64_t	ffi.h	/^typedef int64_t Int64_t;$/;"	t
+Int8	ffi.h	/^typedef int8_t Int8;$/;"	t
+Int8_t	ffi.h	/^typedef int8_t Int8_t;$/;"	t
+KMeans	ml/k_means.sml	/^structure KMeans =$/;"	r
+Length	image/f_measure.sml	/^    val Length = List.length List$/;"	v
+Length	image/filter_util.sml	/^    val Length = 8.0*Real.realCeil Sigma $/;"	v
+Length'	image/f_measure.sml	/^    val Length' = real Length$/;"	v
+ListUtil	list_util.sml	/^structure ListUtil =$/;"	r
+M	image/canny.sml	/^              val M = sub( NormalizedMagnitude, X, Y )$/;"	v
+M'	image/canny.sml	/^                  val M' = sub( Max, X, Y )$/;"	v
+M1	image/canny.sml	/^                val M1 = $/;"	v
+M1	image/morphology.sml	/^    val M1 = Array2D.fromList( 3, 3, [ F, F, F, TF, T, TF, T, T, T ] )$/;"	v
+M2	image/canny.sml	/^                val M2 = $/;"	v
+M2	image/morphology.sml	/^    val M2 = Array2D.fromList( 3, 3, [ TF, F, F, T, T, F, T, T, TF ] )$/;"	v
+M3	image/morphology.sml	/^    val M3 = Array2D.fromList( 3, 3, [ T, TF, F, T, T, F, T, TF, F ] )$/;"	v
+M4	image/morphology.sml	/^    val M4 = Array2D.fromList( 3, 3, [ T, T, TF, T, T, F, TF, F, F ] )$/;"	v
+M5	image/morphology.sml	/^    val M5 = Array2D.fromList( 3, 3, [ T, T, T, TF, T, TF, F, F, F ] )$/;"	v
+M6	image/morphology.sml	/^    val M6 = Array2D.fromList( 3, 3, [ TF, T, T, F, T, T, F, F, TF ] )$/;"	v
+M7	image/morphology.sml	/^    val M7 = Array2D.fromList( 3, 3, [ F, TF, T, F, T, T, F, TF, T ] )$/;"	v
+M8	image/morphology.sml	/^    val M8 = Array2D.fromList( 3, 3, [ F, F, TF, F, T, T, TF, T, T ] )$/;"	v
+MAGIC_MARKER	image/bsds/csa_defs.h	27;"	d
+MAXLINE	image/bsds/csa_defs.h	3;"	d
+MIN_COST	image/bsds/csa.hh	18;"	d
+MLLIB_PRIVATE	ffi.h	150;"	d
+MLLIB_PRIVATE	ffi.h	153;"	d
+MLLIB_PRIVATE	ffi.h	156;"	d
+MLLIB_PRIVATE	ffi.h	160;"	d
+MLLIB_PRIVATE	ffi.h	169;"	d
+MLLIB_PUBLIC	ffi.h	151;"	d
+MLLIB_PUBLIC	ffi.h	154;"	d
+MLLIB_PUBLIC	ffi.h	157;"	d
+MLLIB_PUBLIC	ffi.h	161;"	d
+MLLIB_PUBLIC	ffi.h	170;"	d
+Magnitude	image/canny.sml	/^      val Magnitude = GrayscaleImageReal.zeroImage( Width, Height )$/;"	v
+MakeRealL1Norm'	image/image_util.sml	/^  fun MakeRealL1Norm'( image : GrayscaleImageReal.image )$/;"	f
+MakeRealZeroMean'	image/image_util.sml	/^  fun MakeRealZeroMean'( image : GrayscaleImageReal.image )$/;"	f
+Mask	image/filter_util.sml	/^    val Mask = GrayscaleImageReal.zeroImage( List.length Xs, 1 )$/;"	v
+Mask	image/filter_util.sml	/^    val Mask = GrayscaleImageReal.zeroImage( MaskSize, MaskSize )$/;"	v
+MaskCenter	image/filter_util.sml	/^    val MaskCenter = MaskSize div 2$/;"	v
+MaskSize	image/filter_util.sml	/^    val MaskSize = Real.ceil( Sigma*8.0 )+( Real.ceil( Sigma*8.0 )+1 ) mod 2$/;"	v
+MaskTotal	image/filter.sml	/^      val MaskTotal = MaskWidth*MaskHeight$/;"	v
+Masks	image/morphology.sml	/^    val Masks = [ M1, M2, M3, M4, M5, M6, M7, M8 ]$/;"	v
+Match1	image/f_measure.sml	/^    val Match1 = GrayscaleImageReal.image( Height, Width, 0.0 )$/;"	v
+Match2	image/f_measure.sml	/^    val Match2 = GrayscaleImageReal.image( Height, Width, 0.0 )$/;"	v
+Matched	image/morphology.sml	/^            val Matched = BooleanImage.image( Width, Height, false )$/;"	v
+MathUtil	math/math_util.sml	/^structure MathUtil =$/;"	r
+Matrix	image/bsds/Matrix.cc	/^Matrix::Matrix () $/;"	f	class:Matrix
+Matrix	image/bsds/Matrix.cc	/^Matrix::Matrix (const Matrix& that) $/;"	f	class:Matrix
+Matrix	image/bsds/Matrix.cc	/^Matrix::Matrix (int rows, int cols, FillType type) $/;"	f	class:Matrix
+Matrix	image/bsds/Matrix.cc	/^Matrix::Matrix (int rows, int cols, double* data) $/;"	f	class:Matrix
+Matrix	image/bsds/Matrix.cc	/^Matrix::Matrix (int sz, FillType type) $/;"	f	class:Matrix
+Matrix	image/bsds/Matrix.hh	/^class Matrix $/;"	c
+Max	image/canny.sml	/^      val Max = GrayscaleImageReal.zeroImage( Width, Height )$/;"	v
+Max	image/image_util.sml	/^    val Max = GrayscaleImageReal.foldl Real.max Real.negInf Image$/;"	v
+Max	image/image_util.sml	/^    val Max = GrayscaleImageReal.foldl$/;"	v
+Max	optimize.sml	/^    val Max = ref 0.0$/;"	v
+MaxDist	image/f_measure.sml	/^    val MaxDist = DefaultMaxDist$/;"	v
+MaxInt	image/grayscale_image.sml	/^    val MaxInt = real( Option.valOf Int.maxInt )$/;"	v
+MaxScore	image/f_measure.sml	/^        val MaxScore = $/;"	v
+MaxVal'	image/color_image.sml	/^    val MaxVal' = Real.fromLargeInt( Word.toLargeInt MaxVal )$/;"	v
+MaxVal'	image/grayscale_image.sml	/^    val MaxVal' = Real.fromLargeInt( Word.toLargeInt MaxVal )$/;"	v
+MaxVal'	image/grayscale_image.sml	/^    val MaxVal' = real( Word.toInt MaxVal )$/;"	v
+MaxVal'	image/grayscale_image.sml	/^    val MaxVal' = rfw MaxVal $/;"	v
+Mean	image/threshold.sml	/^    val Mean =$/;"	v
+MeanIdx	ml/k_means.sml	/^              val MeanIdx = Array.sub( Assignment, I )$/;"	v
+Means	ml/k_means.sml	/^    val Means = Array.array( K, [] )$/;"	v
+Min	image/image_util.sml	/^    val Min = GrayscaleImageReal.foldl Real.min Real.posInf Image$/;"	v
+MinInt	image/grayscale_image.sml	/^    val MinInt = real( Option.valOf Int.minInt )$/;"	v
+Morphology	image/morphology.sml	/^structure Morphology =$/;"	r
+N	image/filter_util.sml	/^    val N = ( Length-1.0 )\/2.0$/;"	v
+N	image/probability_rand_index.sml	/^  val N = Array.foldl ( fn( X, Y ) => X+Y ) 0 Cooccur$/;"	v
+N2	image/probability_rand_index.sml	/^  val N2 = Array.foldl ( fn( X, Y ) => X*X+Y ) 0 Cooccur$/;"	v
+NC2	image/probability_rand_index.sml	/^  val NC2 = N*(N-1) div 2$/;"	v
+NCols2	image/probability_rand_index.sml	/^  val NCols2 = sumSquares( sumCols( 0, 0, [] ) )$/;"	v
+NEXTPOW2	image/bsds/Matrix.hh	19;"	d
+NOMEM	image/bsds/csa.hh	642;"	d
+NONCONTIG	image/bsds/csa.hh	641;"	d
+NRows2	image/probability_rand_index.sml	/^  val NRows2 = sumSquares( sumRows( 0, 0, [] ) )$/;"	v
+NUM_BEST	image/bsds/csa_types.h	4;"	d
+Normalized	image/image_util.sml	/^    val Normalized = GrayscaleImageReal.image( Width, Height, 0.0 )    $/;"	v
+Normalized	image/image_util.sml	/^    val Normalized = GrayscaleImageReal.image( Width, Height, 0.0 )$/;"	v
+NormalizedHistogram	image/threshold.sml	/^    val NormalizedHistogram = Array.array( NumBins, 0.0 ) $/;"	v
+NormalizedMagnitude	image/canny.sml	/^      val NormalizedMagnitude = ImageUtil.normalizeReal Magnitude$/;"	v
+NullString8	ffi.h	/^typedef String8_t NullString8;$/;"	t
+NullString8_t	ffi.h	/^typedef String8_t NullString8_t;$/;"	t
+Num	image/f_measure.sml	/^        val ( Num, TotalScore as ( TotalP, TotalR, TotalF ) ) =$/;"	v
+Num	image/image.sml	/^    val Num = Width1*Height1$/;"	v
+Num	image/image_util.sml	/^    val Num =$/;"	v
+NumPixels	image/pnm_binary.sml	/^      val NumPixels = Width*Height$/;"	v
+NumPixels	image/threshold.sml	/^    val NumPixels = Width*Height$/;"	v
+NumSegs1	image/util.sml	/^  val NumSegs1 = seg1ToInt( Util.max lessSeg1 Seg1 )+1$/;"	v
+NumSegs2	image/util.sml	/^  val NumSegs2 = seg2ToInt( Util.max lessSeg2 Seg2 )+1$/;"	v
+Objptr	ffi.h	/^typedef Pointer Objptr;$/;"	t
+Optimize	optimize.sml	/^structure Optimize =$/;"	r
+Out	image/image.sml	/^    val Out = zeroImage( Height, Width )$/;"	v
+Out	image/image_util.sml	/^          val Out = BooleanImage.image( Width, Height, false )$/;"	v
+Out	image/image_util.sml	/^    val Out = BooleanImage.image( Width, Height, false )$/;"	v
+Out	image/image_util.sml	/^    val Out = GrayscaleImageReal.image( Height, Width, 0.0 )$/;"	v
+Out	image/image_util.sml	/^    val Out = GrayscaleImageReal.image( Width, Height, 0.0 )$/;"	v
+Out	image/image_util.sml	/^    val Out = GrayscaleImageReal.zeroImage( Width, Height )$/;"	v
+Out	image/image_util.sml	/^    val Out = GrayscaleImageWord8.image( Width, Height, 0w0)$/;"	v
+Out	text_file_util.sml	/^    val Out = TextIO.openOut Filename$/;"	v
+OutlierCost	image/f_measure.sml	/^    val OutlierCost = DefaultOutlierCost$/;"	v
+Output	image/filter.sml	/^      val Output as $/;"	v
+Output	image/image.sml	/^      val Output as { Values=OutputValues, ... } = zeroImage( Width1, Height1 )$/;"	v
+Output	image/pnm.sml	/^    val Output = BinIO.openOut Filename $/;"	v
+P	image/f_measure.sml	/^        val ( P, R, F ) = calcPRF( Array.sub( SegArray, I ), Truth )$/;"	v
+P	image/f_measure.sml	/^    val P = real CP\/( case SP>0 of false => 1.0 | true => real SP )$/;"	v
+P	image/f_measure.sml	/^    val P = real CountP\/( case SumP>0 of false => 1.0 | true => real SumP )$/;"	v
+PART_OF_MLLIB_TESTS	ffi.h	146;"	d
+PNM	image/image.sml	/^  structure PNM = PNMFun( PNMImage )$/;"	r
+PNM	image/pnm.sml	/^signature PNM =$/;"	s
+PNMBinary	image/pnm_binary.sml	/^structure PNMBinary =$/;"	r
+PNMCommon	image/pnm_common.sml	/^structure PNMCommon =$/;"	r
+PNMFormat	image/boolean_image.sml	/^  val PNMFormat = PNMCommon.plainPBM$/;"	v
+PNMFormat	image/color_image.sml	/^  val PNMFormat = PNMCommon.plainPPM$/;"	v
+PNMFormat	image/grayscale_image.sml	/^  val PNMFormat = PNMCommon.plainPGM$/;"	v
+PNMFormat	image/image.sml	/^  val PNMFormat : PNMCommon.format$/;"	v
+PNMFun	image/pnm.sml	/^functor PNMFun( Image : PNM_IMAGE ) : PNM =$/;"	c
+PNMImage	image/image.sml	/^  structure PNMImage : PNM_IMAGE =$/;"	r
+PNMMaxVal	image/boolean_image.sml	/^  val PNMMaxVal = 0w1 $/;"	v
+PNMMaxVal	image/color_image.sml	/^  val PNMMaxVal = 0w255 $/;"	v
+PNMMaxVal	image/grayscale_image.sml	/^  val PNMMaxVal = 0w255 $/;"	v
+PNMMaxVal	image/image.sml	/^  val PNMMaxVal : word$/;"	v
+PNMText	image/pnm_text.sml	/^structure PNMText =$/;"	r
+PNM_IMAGE	image/pnm.sml	/^signature PNM_IMAGE =$/;"	s
+PREC_COSTS	image/bsds/csa_types.h	1;"	d
+PRIVATE	ffi.h	128;"	d
+PRIVATE	ffi.h	133;"	d
+PRIVATE	ffi.h	137;"	d
+PUBLIC	ffi.h	127;"	d
+PUBLIC	ffi.h	132;"	d
+PUBLIC	ffi.h	136;"	d
+Pixel	image/bsds/Point.hh	/^typedef Point2D<int> Pixel;$/;"	t
+Pixel1	image/image.sml	/^        val Pixel1 = sub'( Image1, Index )$/;"	v
+Pixel2	image/image.sml	/^        val Pixel2 = sub'( Image2, Index )$/;"	v
+PixelWords	image/pnm.sml	/^    val PixelWords = $/;"	v
+Point2D	image/bsds/Point.hh	/^    Point2D () { x = 0; y = 0; }$/;"	f	class:Point2D
+Point2D	image/bsds/Point.hh	/^    Point2D (T x, T y) { this->x = x; this->y = y; }$/;"	f	class:Point2D
+Point2D	image/bsds/Point.hh	/^class Point2D$/;"	c
+Point3D	image/bsds/Point.hh	/^    Point3D () { x = 0; y = 0; z = 0; }$/;"	f	class:Point3D
+Point3D	image/bsds/Point.hh	/^    Point3D (T x, T y) { this->x = x; this->y = y; this->z = z;}$/;"	f	class:Point3D
+Point3D	image/bsds/Point.hh	/^class Point3D$/;"	c
+Pointer	ffi.h	/^typedef PointerAux* Pointer;$/;"	t
+PointerAux	ffi.h	/^typedef unsigned char PointerAux __attribute__ ((may_alias));$/;"	t
+Pow	util.sml	/^    val Pow = Math.pow( 10.0, real Precision )$/;"	v
+PrevMean	ml/k_means.sml	/^          val PrevMean = Array.sub( Assignment, I )$/;"	v
+PrintUtil	print_util.sml	/^structure PrintUtil =$/;"	r
+ProbBack	image/threshold.sml	/^            val ( ProbBack, CumMean ) =$/;"	v
+QUICK_MIN	image/bsds/csa.hh	17;"	d
+R	image/f_measure.sml	/^    val R = real CR\/( case SR>0 of false => 1.0 | true => real SR )$/;"	v
+R	image/f_measure.sml	/^    val R = real CountR\/( case SumR>0 of false => 1.0 | true => real SumR )$/;"	v
+R	tictactimer.sml	/^    val R = Timer.checkRealTimer RealTimer $/;"	v
+REFINE_WORK	image/bsds/csa_defs.h	23;"	d
+RIndex	image/filter.sml	/^            val RIndex = MaskTotal-1-Index$/;"	v
+Rand	ml/k_means.sml	/^    val Rand = Random.rand( 31, 29 )$/;"	v
+Random	image/bsds/Random.cc	/^Random::Random ()$/;"	f	class:Random
+Random	image/bsds/Random.cc	/^Random::Random (Random& that)$/;"	f	class:Random
+Random	image/bsds/Random.cc	/^Random::Random (u_int64_t seed)$/;"	f	class:Random
+Random	image/bsds/Random.hh	/^class Random$/;"	c
+Real32	ffi.h	/^typedef float Real32;$/;"	t
+Real32_t	ffi.h	/^typedef float Real32_t;$/;"	t
+Real64	ffi.h	/^typedef double Real64;$/;"	t
+Real64_t	ffi.h	/^typedef double Real64_t;$/;"	t
+Ref	ffi.h	32;"	d
+Res	optimize.sml	/^      val Res::RRess = Ress$/;"	v
+SCORE	image/score.sml	/^signature SCORE =$/;"	s
+STORE_REV_ARCS	image/bsds/csa_types.h	15;"	d
+Score	image/f_measure.sml	/^    val Score = $/;"	v
+SegArray	image/f_measure.sml	/^  val SegArray : int list Array.array = partition( eq lessSeg, Seg, SegLabels )$/;"	v
+SegLabels	image/f_measure.sml	/^  val SegLabels : 'a list = unique( eq lessSeg, Seg )$/;"	v
+SegLabelsArray	image/f_measure.sml	/^  val SegLabelsArray : 'a Array.array = Array.fromList SegLabels$/;"	v
+Sets	ml/k_means.sml	/^      val Sets = Array.array( K, [] )$/;"	v
+SignalUtil	math/signalUtil.sml	/^structure SignalUtil = struct$/;"	r
+SmoothX	image/canny.sml	/^      val SmoothX = convolve( Image, transposed Gaussian )$/;"	v
+SmoothY	image/canny.sml	/^      val SmoothY = convolve( Image, Gaussian )$/;"	v
+Spec	image/image.sml	/^  structure Spec = Spec$/;"	r
+State	image/bsds/Timer.hh	/^    enum State { stopped, running };$/;"	g	class:Timer
+String	image/bsds/String.cc	/^String::String ()$/;"	f	class:String
+String	image/bsds/String.cc	/^String::String (const String& that)$/;"	f	class:String
+String	image/bsds/String.cc	/^String::String (const char* fmt, ...)$/;"	f	class:String
+String	image/bsds/String.hh	/^class String $/;"	c
+String16	ffi.h	/^typedef Vector(Char16_t) String16;$/;"	t
+String16_t	ffi.h	/^typedef Vector(Char16_t) String16_t;$/;"	t
+String32	ffi.h	/^typedef Vector(Char32_t) String32;$/;"	t
+String32_t	ffi.h	/^typedef Vector(Char32_t) String32_t;$/;"	t
+String8	ffi.h	/^typedef Vector(Char8_t) String8;$/;"	t
+String8_t	ffi.h	/^typedef Vector(Char8_t) String8_t;$/;"	t
+Sum	image/filter.sml	/^            val Sum = loopMask( X, Y, 0, Image.ZeroPixel )$/;"	v
+Sum	image/filter_util.sml	/^    val Sum = GrayscaleImageReal.foldl ( fn( X, S ) => S+X ) 0.0 Mask$/;"	v
+SumP	image/f_measure.sml	/^    val SumP = $/;"	v
+SumPos	image/canny.sml	/^      val ( SumPos, SumNeg ) = $/;"	v
+SumR	image/f_measure.sml	/^            val SumR = $/;"	v
+SumR	image/f_measure.sml	/^    val ( SumR, CountR, AccumMatch ) =$/;"	v
+T	image/canny.sml	/^                val T = Real.abs( DX\/DY )$/;"	v
+T	image/canny.sml	/^                val T = Real.abs( DY\/DX )$/;"	v
+T	image/morphology.sml	/^    val T = SOME true$/;"	v
+TF	image/morphology.sml	/^    val TF = NONE$/;"	v
+THRESHOLDS	image/threshold.sml	/^signature THRESHOLDS =$/;"	s
+THRESHOLDS_IMAGE	image/threshold.sml	/^signature THRESHOLDS_IMAGE =$/;"	s
+TICTACTIMER	tictactimer.sml	/^signature TICTACTIMER = $/;"	s
+TRUE	image/bsds/csa_defs.h	1;"	d
+TextFileUtil	text_file_util.sml	/^structure TextFileUtil =$/;"	r
+Texton	image/texton.sml	/^structure Texton =$/;"	r
+Thinned	image/morphology.sml	/^      val Thinned = BooleanImage.image( Width, Height, false )$/;"	v
+Thresholds	image/image.sml	/^  structure Thresholds = ThresholdsFun( ThresholdsImage )$/;"	r
+ThresholdsFun	image/threshold.sml	/^functor ThresholdsFun( Image : THRESHOLDS_IMAGE ) : THRESHOLDS =$/;"	c
+ThresholdsImage	image/image.sml	/^  structure ThresholdsImage : THRESHOLDS_IMAGE =$/;"	r
+TicTacTimer	tictactimer.sml	/^structure TicTacTimer:TICTACTIMER =$/;"	r
+Timer	image/bsds/Timer.hh	/^Timer::Timer ()$/;"	f	class:Timer
+Timer	image/bsds/Timer.hh	/^class Timer$/;"	c
+TotalSize	image/filter.sml	/^      val TotalSize = Width*Height$/;"	v
+TruthArray	image/f_measure.sml	/^  val TruthArray : int list Array.array = $/;"	v
+TruthLabelsArray	image/f_measure.sml	/^  val TruthLabelsArray : 'b Array.array = Array.fromList TruthLabels$/;"	v
+TruthReal	image/f_measure.sml	/^    val TruthReal = GrayscaleImageReal.image( Height, Width, 0.0 )$/;"	v
+USE_SP_AUG	image/bsds/csa_defs.h	11;"	d
+USE_SP_AUG	image/bsds/csa_types.h	9;"	d
+Util	util.sml	/^structure Util =$/;"	r
+Val	image/grayscale_image.sml	/^    val Val = $/;"	v
+Valid	image/morphology.sml	/^                  val Valid = Array2D.foldlij$/;"	v
+Values	optimize.sml	/^    val Values = ref []$/;"	v
+VarClass	image/threshold.sml	/^            val VarClass = $/;"	v
+Vector	ffi.h	33;"	d
+Voxel	image/bsds/Point.hh	/^typedef Point3D<int> Voxel;$/;"	t
+W	image/image_util.sml	/^                  val W = $/;"	v
+W	image/pnm_binary.sml	/^      val W : Word8.word = $/;"	v
+W1	image/pnm_binary.sml	/^      val [ W1 ] = Ws$/;"	v
+WORK_TYPE	image/bsds/csa_defs.h	22;"	d
+Width	image/canny.sml	/^      val { Width, Height, Values } = Image$/;"	v
+Width	image/filter.sml	/^      val { Width, Height, Values } = Image$/;"	v
+Width	image/image.sml	/^    val { Width = width, Height=height, ... } = img$/;"	v
+Width	image/image_util.sml	/^    val { Width, Height, ... } = Image$/;"	v
+Width	image/threshold.sml	/^    val { Width, Height, ... } = Image$/;"	v
+Width=MaskWidth	image/filter.sml	/^      val { Width=MaskWidth, Height=MaskHeight, Values=MaskPixels } = Mask$/;"	v
+Width=MaskWidth	image/filter.sml	/^      val { Width=MaskWidth, Height=MaskHeight, Values=MaskPixels, ... } = Mask$/;"	v
+Width=Width1	image/image.sml	/^    val { Width=Width1, Height=Height1, ... } = Image1$/;"	v
+Width=Width2	image/image.sml	/^    val { Width=Width2, Height=Height2, ... } = Image2$/;"	v
+Width=width	image/image_util.sml	/^    val { Width=width, Height=height, ... } = image$/;"	v
+Word16	ffi.h	/^typedef uint16_t Word16;$/;"	t
+Word16_t	ffi.h	/^typedef uint16_t Word16_t;$/;"	t
+Word32	ffi.h	/^typedef uint32_t Word32;$/;"	t
+Word32_t	ffi.h	/^typedef uint32_t Word32_t;$/;"	t
+Word64	ffi.h	/^typedef uint64_t Word64;$/;"	t
+Word64_t	ffi.h	/^typedef uint64_t Word64_t;$/;"	t
+Word8	ffi.h	/^typedef uint8_t Word8;$/;"	t
+Word8_t	ffi.h	/^typedef uint8_t Word8_t;$/;"	t
+WordS16	ffi.h	/^typedef Int16_t WordS16;$/;"	t
+WordS16_t	ffi.h	/^typedef Int16_t WordS16_t;$/;"	t
+WordS32	ffi.h	/^typedef Int32_t WordS32;$/;"	t
+WordS32_t	ffi.h	/^typedef Int32_t WordS32_t;$/;"	t
+WordS64	ffi.h	/^typedef Int64_t WordS64;$/;"	t
+WordS64_t	ffi.h	/^typedef Int64_t WordS64_t;$/;"	t
+WordS8	ffi.h	/^typedef Int8_t WordS8;$/;"	t
+WordS8_t	ffi.h	/^typedef Int8_t WordS8_t;$/;"	t
+WordU16	ffi.h	/^typedef Word16_t WordU16;$/;"	t
+WordU16_t	ffi.h	/^typedef Word16_t WordU16_t;$/;"	t
+WordU32	ffi.h	/^typedef Word32_t WordU32;$/;"	t
+WordU32_t	ffi.h	/^typedef Word32_t WordU32_t;$/;"	t
+WordU64	ffi.h	/^typedef Word64_t WordU64;$/;"	t
+WordU64_t	ffi.h	/^typedef Word64_t WordU64_t;$/;"	t
+WordU8	ffi.h	/^typedef Word8_t WordU8;$/;"	t
+WordU8_t	ffi.h	/^typedef Word8_t WordU8_t;$/;"	t
+X	image/filter.sml	/^            val X = Index mod Width$/;"	v
+X	image/pnm_binary.sml	/^        val X = Index mod Width$/;"	v
+X	image/threshold.sml	/^                val X = Mean*ProbBack-CumMean$/;"	v
+X	util.sml	/^    val X::RXs = Xs$/;"	v
+X'	util.sml	/^    val X' = trunc( X*Pow )$/;"	v
+XMask	image/filter_util.sml	/^    val XMask = [ 1.0, 0.0, ~1.0, 2.0, 0.0, ~2.0, 1.0, 0.0, ~1.0 ]$/;"	v
+XX	image/filter.sml	/^            val XX = X+( Index mod MaskWidth-CenterX )$/;"	v
+XX	image/filter.sml	/^            val XX = X+(Index mod MaskWidth-CenterX)$/;"	v
+Xs	image/filter_util.sml	/^    val Xs = ListUtil.fromToReal( ~N, N )$/;"	v
+Xs	text_file_util.sml	/^          val Xs = String.tokens isDelim Line$/;"	v
+Xs	text_file_util.sml	/^    val Xs = read()$/;"	v
+Y	image/filter.sml	/^            val Y = Index div Width$/;"	v
+Y'	util.sml	/^    val Y' = trunc( Y*Pow )$/;"	v
+YMask	image/filter_util.sml	/^    val YMask = [ 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, ~1.0, ~2.0, ~1.0 ]$/;"	v
+YY	image/filter.sml	/^            val YY = Y+( Index div MaskWidth-CenterY )$/;"	v
+YY	image/filter.sml	/^            val YY = Y+(Index div MaskWidth-CenterY)$/;"	v
+Z	image/image_util.sml	/^                      val Z = $/;"	v
+Zero	image/f_measure.sml	/^  val Zero : score = ( 0, 0, 0, 0, 0.0, 0.0, 0.0 )$/;"	v
+Zero	image/score.sml	/^  val Zero : score$/;"	v
+ZeroPixel	image/boolean_image.sml	/^  val ZeroPixel = false $/;"	v
+ZeroPixel	image/color_image.sml	/^  val ZeroPixel : pixel = ( 0w0, 0w0, 0w0 )$/;"	v
+ZeroPixel	image/color_image.sml	/^  val ZeroPixel = ( 0.0, 0.0, 0.0 )$/;"	v
+ZeroPixel	image/filter.sml	/^  val ZeroPixel : pixel$/;"	v
+ZeroPixel	image/grayscale_image.sml	/^  val ZeroPixel : pixel = 0w0$/;"	v
+ZeroPixel	image/grayscale_image.sml	/^  val ZeroPixel = 0$/;"	v
+ZeroPixel	image/grayscale_image.sml	/^  val ZeroPixel = 0.0$/;"	v
+ZeroPixel	image/image.sml	/^    val ZeroPixel = Spec.ZeroPixel$/;"	v
+ZeroPixel	image/image.sml	/^  val ZeroPixel : pixel$/;"	v
+_	image/canny.sml	/^      val _ = $/;"	v
+_	image/canny.sml	/^      val _ = GrayscaleImageReal.appxy$/;"	v
+_	image/canny.sml	/^      val _ =$/;"	v
+_	image/color_image.sml	/^    val _ = $/;"	v
+_	image/f_measure.sml	/^            val _ = $/;"	v
+_	image/f_measure.sml	/^            val _ = GrayscaleImageReal.fill( Match1, 0.0 )$/;"	v
+_	image/f_measure.sml	/^            val _ = GrayscaleImageReal.fill( Match2, 0.0 )$/;"	v
+_	image/f_measure.sml	/^            val _ = ImageUtil.copyBooleanToTransposedReal( Truth, TruthReal )$/;"	v
+_	image/filter.sml	/^            val _ = Array.update( OutputPixels, Y*Width+X, Sum )$/;"	v
+_	image/filter.sml	/^      val _ = loop 0$/;"	v
+_	image/filter_util.sml	/^            val _ = GrayscaleImageReal.update'( Mask, I, gaussian X ) $/;"	v
+_	image/filter_util.sml	/^     val _ = ImageUtil.MakeRealL1Norm' image$/;"	v
+_	image/filter_util.sml	/^     val _ = ImageUtil.MakeRealZeroMean' image$/;"	v
+_	image/filter_util.sml	/^    val _ = $/;"	v
+_	image/filter_util.sml	/^    val _ = GrayscaleImageReal.modify ( fn( X ) => X\/Sum ) Mask$/;"	v
+_	image/filter_util.sml	/^    val _ = GrayscaleImageReal.modifyxy( $/;"	v
+_	image/filter_util.sml	/^    val _ = ImageUtil.MakeRealL1Norm' rotated$/;"	v
+_	image/filter_util.sml	/^    val _ = if deri > 0 then$/;"	v
+_	image/filter_util.sml	/^   val _ = if (hilbert) then$/;"	v
+_	image/grayscale_image.sml	/^    val _ = $/;"	v
+_	image/image.sml	/^             val _ = update (newImage, dstX, dstY, ty)$/;"	v
+_	image/image.sml	/^          val _ = appxy$/;"	v
+_	image/image.sml	/^          val _ = calculateRotationY(dstX, 0, u, (~(real newHeight - 1.0) \/ 2.0))$/;"	v
+_	image/image.sml	/^          val _ = if (0 <= x0) andalso (x1 < width) andalso $/;"	v
+_	image/image.sml	/^       val _ = if (x >= 0.0 andalso y >= 0.0) then$/;"	v
+_	image/image.sml	/^       val _ = modifyxy (fn (x,y,_) => f(x,y) ) img$/;"	v
+_	image/image.sml	/^      val _ = $/;"	v
+_	image/image.sml	/^    val _ = calculateRotationX(0, (~((real newWidth - 1.0) \/ 2.0)));$/;"	v
+_	image/image.sml	/^    val _ =$/;"	v
+_	image/image_util.sml	/^              val _ =$/;"	v
+_	image/image_util.sml	/^          val _ =$/;"	v
+_	image/image_util.sml	/^    val _ = $/;"	v
+_	image/image_util.sml	/^    val _ = GrayscaleImageReal.appi$/;"	v
+_	image/image_util.sml	/^    val _ = pack( Images, 0w0 )$/;"	v
+_	image/image_util.sml	/^    val _ =$/;"	v
+_	image/morphology.sml	/^            val _ = BooleanImage.appxy$/;"	v
+_	image/morphology.sml	/^            val _ = BooleanImage.subtract'( Thinned, Matched )$/;"	v
+_	image/morphology.sml	/^      val _ = BooleanImage.appi$/;"	v
+_	image/morphology.sml	/^      val _ = apply Masks$/;"	v
+_	image/morphology.sml	/^    val _ = BooleanImage.modifyi$/;"	v
+_	image/pnm.sml	/^    val _ = BinIO.closeIn Input $/;"	v
+_	image/pnm_binary.sml	/^        val _ = $/;"	v
+_	image/pnm_binary.sml	/^      val _ = $/;"	v
+_	image/pnm_text.sml	/^      val _ = $/;"	v
+_	image/pnm_text.sml	/^      val _ = readWhites false$/;"	v
+_	image/threshold.sml	/^    val ( _, Thresholds ) =$/;"	v
+_	image/threshold.sml	/^    val ( _, _, Threshold ) = $/;"	v
+_	image/threshold.sml	/^    val _ = Array.appi$/;"	v
+_	image/util.sml	/^  val _ = count( Seg1, Seg2 )$/;"	v
+_	math/signalUtil.sml	/^       val _ = Array.modifyi hilbertify transformed;$/;"	v
+_	ml/k_means.sml	/^      val _ =$/;"	v
+_	ml/k_means.sml	/^    val _ = $/;"	v
+_	ml/k_means.sml	/^    val _ = iterate 0$/;"	v
+_	optimize.sml	/^                val _ =$/;"	v
+_	text_file_util.sml	/^    val _ = TextIO.closeIn In$/;"	v
+_	text_file_util.sml	/^    val _ = TextIO.closeOut Out$/;"	v
+_	text_file_util.sml	/^    val _ = write Xs$/;"	v
+_ISOC99_SOURCE	ffi.h	18;"	d
+_MLTON_EXPORT_H_	ffi.h	106;"	d
+_MLTON_MLTYPES_H_	ffi.h	12;"	d
+__3median	image/bsds/Sort.hh	/^__3median (Closure cl, int x, int y, int z) $/;"	f
+__Array_hh__	image/bsds/Array.hh	3;"	d
+__BSDS__	image/bsds/bsds.h	8;"	d
+__Exception_hh__	image/bsds/Exception.hh	3;"	d
+__MLLIB_TESTS_ML_H__	ffi.h	2;"	d
+__Matrix_hh__	image/bsds/Matrix.hh	3;"	d
+__Point_hh__	image/bsds/Point.hh	3;"	d
+__Random_hh__	image/bsds/Random.hh	3;"	d
+__Sort_hh__	image/bsds/Sort.hh	3;"	d
+__String_hh__	image/bsds/String.hh	3;"	d
+__Timer_hh__	image/bsds/Timer.hh	3;"	d
+__csa_hh__	image/bsds/csa.hh	3;"	d
+__insertionSort	image/bsds/Sort.hh	/^__insertionSort (Closure cl, int start, int n)$/;"	f
+__kofn_hh__	image/bsds/kofn.hh	3;"	d
+__match_hh__	image/bsds/match.hh	3;"	d
+__quickSort	image/bsds/Sort.hh	/^__quickSort (Closure cl, int start, int n)$/;"	f
+__selectionSort1	image/bsds/Sort.hh	/^__selectionSort1 (Closure cl, int start, int n)$/;"	f
+__selectionSort2	image/bsds/Sort.hh	/^__selectionSort2 (Closure cl, int start, int n)$/;"	f
+_alloc	image/bsds/Array.hh	/^    void _alloc (unsigned d0, unsigned d1) {$/;"	f	class:Array2D
+_alloc	image/bsds/Array.hh	/^    void _alloc (unsigned d0, unsigned d1, unsigned d2) {$/;"	f	class:Array3D
+_alloc	image/bsds/Array.hh	/^    void _alloc (unsigned d0, unsigned d1, unsigned d2, unsigned d3) {$/;"	f	class:Array4D
+_alloc	image/bsds/Array.hh	/^    void _alloc (unsigned n) {$/;"	f	class:Array1D
+_alloc	image/bsds/Matrix.cc	/^Matrix::_alloc (int rows, int cols, FillType type) $/;"	f	class:Matrix
+_append	image/bsds/String.cc	/^String::_append (const char* fmt, va_list ap)$/;"	f	class:String
+_append	image/bsds/String.cc	/^String::_append (unsigned length, const char* s)$/;"	f	class:String
+_array	image/bsds/Array.hh	/^    Elem* _array;$/;"	m	class:Array1D
+_array	image/bsds/Array.hh	/^    Elem* _array;$/;"	m	class:Array2D
+_array	image/bsds/Array.hh	/^    Elem* _array;$/;"	m	class:Array3D
+_array	image/bsds/Array.hh	/^    Elem* _array;$/;"	m	class:Array4D
+_cols	image/bsds/Matrix.hh	/^    int _rows, _cols, _n;$/;"	m	class:Matrix
+_compute	image/bsds/Timer.cc	/^Timer::_compute ()$/;"	f	class:Timer
+_cpu_start	image/bsds/Timer.hh	/^    struct tms _cpu_start;$/;"	m	class:Timer	typeref:struct:Timer::tms
+_cpu_stop	image/bsds/Timer.hh	/^    struct tms _cpu_stop;$/;"	m	class:Timer	typeref:struct:Timer::tms
+_data	image/bsds/Matrix.hh	/^    double* _data;$/;"	m	class:Matrix
+_delete	image/bsds/Array.hh	/^    void _delete () {$/;"	f	class:Array1D
+_delete	image/bsds/Array.hh	/^    void _delete () {$/;"	f	class:Array2D
+_delete	image/bsds/Array.hh	/^    void _delete () {$/;"	f	class:Array3D
+_delete	image/bsds/Array.hh	/^    void _delete () {$/;"	f	class:Array4D
+_delete	image/bsds/Matrix.cc	/^Matrix::_delete () $/;"	f	class:Matrix
+_delete	image/bsds/csa.hh	/^    void _delete() {$/;"	f	class:CSA
+_dim	image/bsds/Array.hh	/^    unsigned _dim[2];$/;"	m	class:Array2D
+_dim	image/bsds/Array.hh	/^    unsigned _dim[3];$/;"	m	class:Array3D
+_dim	image/bsds/Array.hh	/^    unsigned _dim[4];$/;"	m	class:Array4D
+_elapsed	image/bsds/Timer.hh	/^    double _elapsed;$/;"	m	class:Timer
+_elapsed_start	image/bsds/Timer.hh	/^    struct timeval _elapsed_start;$/;"	m	class:Timer	typeref:struct:Timer::timeval
+_elapsed_stop	image/bsds/Timer.hh	/^    struct timeval _elapsed_stop;$/;"	m	class:Timer	typeref:struct:Timer::timeval
+_grow	image/bsds/String.cc	/^String::_grow (unsigned minSize)$/;"	f	class:String
+_inf	image/bsds/Matrix.cc	/^static const u_int64_t _inf  = 0x7ff0000000000000ll;$/;"	v	file:
+_init	image/bsds/Random.cc	/^Random::_init (u_int64_t seed)$/;"	f	class:Random
+_init	image/bsds/csa.hh	/^    void _init(int n, int m) {$/;"	f	class:CSA
+_kOfN_largeK	image/bsds/kofn.cc	/^_kOfN_largeK (int k, int n, int* values)$/;"	f	file:
+_kOfN_smallK	image/bsds/kofn.cc	/^_kOfN_smallK (int k, int n, int* values)$/;"	f	file:
+_length	image/bsds/String.hh	/^    unsigned	_length;$/;"	m	class:String
+_msg	image/bsds/Exception.hh	/^    char* _msg;$/;"	m	class:Exception
+_n	image/bsds/Array.hh	/^    unsigned _n;$/;"	m	class:Array1D
+_n	image/bsds/Array.hh	/^    unsigned _n;$/;"	m	class:Array2D
+_n	image/bsds/Array.hh	/^    unsigned _n;$/;"	m	class:Array3D
+_n	image/bsds/Array.hh	/^    unsigned _n;$/;"	m	class:Array4D
+_n	image/bsds/Matrix.hh	/^    int _rows, _cols, _n;$/;"	m	class:Matrix
+_qnan	image/bsds/Matrix.cc	/^static const u_int64_t _qnan = 0x7ff7ffffffffffffll;$/;"	v	file:
+_rows	image/bsds/Matrix.hh	/^    int _rows, _cols, _n;$/;"	m	class:Matrix
+_seed	image/bsds/Random.hh	/^    u_int64_t 	_seed;$/;"	m	class:Random
+_size	image/bsds/String.hh	/^    unsigned	_size;$/;"	m	class:String
+_snan	image/bsds/Matrix.cc	/^static const u_int64_t _snan = 0x7fffffffffffffffll;$/;"	v	file:
+_state	image/bsds/Timer.hh	/^    State _state;$/;"	m	class:Timer
+_system	image/bsds/Timer.hh	/^    double _system;$/;"	m	class:Timer
+_text	image/bsds/String.hh	/^    char*	_text;$/;"	m	class:String
+_user	image/bsds/Timer.hh	/^    double _user;$/;"	m	class:Timer
+_wrapped	image/bsds/Matrix.hh	/^    bool _wrapped;$/;"	m	class:Matrix
+_xsubi	image/bsds/Random.hh	/^    u_int16_t 	_xsubi[3];$/;"	m	class:Random
+_zero	image/bsds/Matrix.cc	/^Matrix::_zero () $/;"	f	class:Matrix
+a_scan	image/bsds/csa.hh	/^void	a_scan(rhs_ptr w)$/;"	f	class:CSA
+a_scans	image/bsds/csa.hh	/^		a_scans,$/;"	m	class:CSA
+abs	image/bsds/Matrix.cc	/^Matrix::abs () $/;"	f	class:Matrix
+abs	image/bsds/Matrix.cc	/^abs (const Matrix& a)$/;"	f
+accumLoop	util.sml	/^  fun accumLoop ( f : int * 'a -> 'a ) ( Init : 'a ) ( Count : int ) : 'a =$/;"	f
+accumLoopFromTo	util.sml	/^  fun accumLoopFromTo ( less : 'a * 'a -> bool, add : 'a * 'a -> 'a )$/;"	f
+accumLoopFromToReal	util.sml	/^  val accumLoopFromToReal = accumLoopFromTo ( Real.<, Real.+ )$/;"	v
+acos	image/bsds/Matrix.cc	/^acos (const Matrix& a)$/;"	f
+acos	image/bsds/Matrix.cc	/^void Matrix::acos ()$/;"	f	class:Matrix
+acosh	image/bsds/Matrix.cc	/^acosh (const Matrix& a)$/;"	f
+acosh	image/bsds/Matrix.cc	/^void Matrix::acosh ()$/;"	f	class:Matrix
+acot	image/bsds/Matrix.cc	/^acot (const Matrix& a)$/;"	f
+acot	image/bsds/Matrix.cc	/^static inline double acot (double x) { return atan(1.0\/x); }$/;"	f	file:
+acot	image/bsds/Matrix.cc	/^void Matrix::acot ()$/;"	f	class:Matrix
+acoth	image/bsds/Matrix.cc	/^acoth (const Matrix& a)$/;"	f
+acoth	image/bsds/Matrix.cc	/^static inline double acoth (double x) { return atanh(1.0\/x); }$/;"	f	file:
+acoth	image/bsds/Matrix.cc	/^void Matrix::acoth ()$/;"	f	class:Matrix
+acsc	image/bsds/Matrix.cc	/^acsc (const Matrix& a)$/;"	f
+acsc	image/bsds/Matrix.cc	/^static inline double acsc (double x) { return asin(1.0\/x); }$/;"	f	file:
+acsc	image/bsds/Matrix.cc	/^void Matrix::acsc ()$/;"	f	class:Matrix
+acsch	image/bsds/Matrix.cc	/^acsch (const Matrix& a)$/;"	f
+acsch	image/bsds/Matrix.cc	/^static inline double acsch (double x) { return asinh(1.0\/x); }$/;"	f	file:
+acsch	image/bsds/Matrix.cc	/^void Matrix::acsch ()$/;"	f	class:Matrix
+active	image/bsds/csa.hh	/^ACTIVE_TYPE	active;		\/* list of active nodes *\/$/;"	m	class:CSA
+add	image/f_measure.sml	/^  fun add( S1 as ( CP1, SP1, CR1, SR1, P1, R1, F1 ) : score, $/;"	f
+add	image/image.sml	/^  fun add( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, $/;"	f
+add	image/image.sml	/^  val add : image * image -> image $/;"	v
+add	image/score.sml	/^  val add : score * score -> score$/;"	v
+add'	image/image.sml	/^  fun add'( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, $/;"	f
+add'	image/image.sml	/^  val add' : image * image -> unit $/;"	v
+all	image/bsds/Matrix.cc	/^Matrix::all () const$/;"	f	class:Matrix
+all	image/bsds/Matrix.cc	/^bool all (const Matrix& a) { return a.all(); }$/;"	f
+any	image/bsds/Matrix.cc	/^Matrix::any () const$/;"	f	class:Matrix
+any	image/bsds/Matrix.cc	/^bool any (const Matrix& a) { return a.any(); }$/;"	f
+app	array2d.sml	/^  fun app ( f : 'a -> unit )$/;"	f
+app	image/image.sml	/^  fun app ( f : pixel -> unit )$/;"	f
+app	image/image.sml	/^  val app : ( pixel -> unit ) -> image -> unit$/;"	v
+append	image/bsds/String.cc	/^String::append (char c)$/;"	f	class:String
+append	image/bsds/String.cc	/^String::append (const char* fmt, ...)$/;"	f	class:String
+append	image/bsds/String.cc	/^String::append (unsigned length, const char* s) $/;"	f	class:String
+appi	array2d.sml	/^  fun appi ( f : int * 'a -> unit )$/;"	f
+appi	image/image.sml	/^  fun appi ( f : int * pixel -> unit )$/;"	f
+appi	image/image.sml	/^  val appi : ( int * pixel -> unit ) -> image -> unit$/;"	v
+appi	list_util.sml	/^  fun appi ( f : int * 'a -> unit ) ( Xs : 'a list ) : unit =$/;"	f
+appi'	list_util.sml	/^    fun appi'( I : int, Xs' ) : unit =$/;"	f
+appij	array2d.sml	/^  fun appij ( f : int * int * 'a -> unit )$/;"	f
+apply	image/morphology.sml	/^      fun apply( Masks : bool option Array2D.array list ) : unit =$/;"	f
+approxEqReal	util.sml	/^  fun approxEqReal( X : real, Y : real, Precision : int ) : bool =$/;"	f
+approxEqReal'	util.sml	/^  fun approxEqReal'( X : real, Y : real, precision : int ) : bool =$/;"	f
+appxy	image/image.sml	/^  fun appxy ( f : int * int * pixel -> unit )$/;"	f
+appxy	image/image.sml	/^  val appxy : ( int * int * pixel -> unit ) -> image -> unit$/;"	v
+array	array2d.sml	/^  fun array( Width : int, Height : int, Val : 'a ) : 'a array = $/;"	f
+asec	image/bsds/Matrix.cc	/^asec (const Matrix& a)$/;"	f
+asec	image/bsds/Matrix.cc	/^static inline double asec (double x) { return acos(1.0\/x); }$/;"	f	file:
+asec	image/bsds/Matrix.cc	/^void Matrix::asec ()$/;"	f	class:Matrix
+asech	image/bsds/Matrix.cc	/^asech (const Matrix& a)$/;"	f
+asech	image/bsds/Matrix.cc	/^static inline double asech (double x) { return acosh(1.0\/x); }$/;"	f	file:
+asech	image/bsds/Matrix.cc	/^void Matrix::asech ()$/;"	f	class:Matrix
+asin	image/bsds/Matrix.cc	/^asin (const Matrix& a)$/;"	f
+asin	image/bsds/Matrix.cc	/^void Matrix::asin ()$/;"	f	class:Matrix
+asinh	image/bsds/Matrix.cc	/^asinh (const Matrix& a)$/;"	f
+asinh	image/bsds/Matrix.cc	/^void Matrix::asinh ()$/;"	f	class:Matrix
+assign	ml/k_means.sml	/^    fun assign( I : int, Instances' : real list list, Changed : bool ) : bool =$/;"	f
+atan	image/bsds/Matrix.cc	/^atan (const Matrix& a)$/;"	f
+atan	image/bsds/Matrix.cc	/^void Matrix::atan ()$/;"	f	class:Matrix
+atanh	image/bsds/Matrix.cc	/^atanh (const Matrix& a)$/;"	f
+atanh	image/bsds/Matrix.cc	/^void Matrix::atanh ()$/;"	f	class:Matrix
+aug_path	image/bsds/csa_types.h	/^				struct	lr_arc	*aug_path;$/;"	m	struct:lhs_node	typeref:struct:lhs_node::lr_arc
+aug_path	image/bsds/csa_types.h	/^				struct	lr_arc	*aug_path;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::lr_arc
+augment	image/bsds/csa.hh	/^void	augment(lhs_ptr v)$/;"	f	class:CSA
+augment	image/bsds/csa.hh	/^void	augment(rhs_ptr w)$/;"	f	class:CSA
+avg	math/math_util.sml	/^  fun avg( Xs : real list ) : real =$/;"	f
+avg	util.sml	/^  fun avg ( add : 'a * 'a -> 'a, divide : 'a * int -> 'a, zero : unit -> 'a )$/;"	f
+back_arcs	image/bsds/csa_types.h	/^				struct	rl_arc	*back_arcs;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::rl_arc
+banish_thresh	image/bsds/csa.hh	/^double	banish_thresh;$/;"	m	class:CSA
+best	image/bsds/csa_types.h	/^				struct	lr_arc	*best[NUM_BEST];$/;"	m	struct:lhs_node	typeref:struct:lhs_node::lr_arc
+best_build	image/bsds/csa.hh	/^void	best_build(lhs_ptr v)$/;"	f	class:CSA
+binaryOp	list_util.sml	/^  fun binaryOp ( op' : 'a * 'a -> 'a ) ( Xs : 'a list, Ys : 'a list ) $/;"	f
+blerp	math/math_util.sml	/^  fun blerp( X1 : real, X2 : real, Y1 : real, Y2 : real, T1 : real, T2 : real )$/;"	f
+borderExtension	image/image_common.sml	/^  datatype borderExtension = zero | copy | wrap$/;"	t
+bottom	image/bsds/csa_types.h	/^				char	**bottom;$/;"	m	struct:stack_st
+brute	optimize.sml	/^  fun brute ( Dimensions : int, Resolutions : bruteResolution list )$/;"	f
+bruteResolution	optimize.sml	/^  datatype bruteResolution = $/;"	t
+bsdsMatchEdges	image/bsds/bsds.cc	/^extern "C" double bsdsMatchEdges(double *bitmapData1, double *bitmapData2, $/;"	f
+bucket	image/bsds/csa.hh	/^rhs_ptr		*bucket;	\/* buckets for use in price refinements *\/$/;"	m	class:CSA
+buildPixel	image/pnm_binary.sml	/^      fun buildPixel( Index : int ) : word list = $/;"	f
+buildToken	image/pnm_text.sml	/^      fun buildToken() : string list option =$/;"	f
+c	image/bsds/csa_types.h	/^				double	c;$/;"	m	struct:lr_arc
+c	image/bsds/csa_types.h	/^				double	c;$/;"	m	struct:rl_arc
+calcElmt	math/signalUtil.sml	/^         fun calcElmt(n : int, k : int) : Complex.number =$/;"	f
+calcElmt	math/signalUtil.sml	/^        fun calcElmt(n : int, k : int) : Complex.number =$/;"	f
+calcPRI	image/probability_rand_index.sml	/^fun calcPRI( lessSeg : 'a * 'a -> bool, $/;"	f
+calculate'	image/f_measure.sml	/^fun calculate'( lessSeg : 'a * 'a -> bool, $/;"	f
+calculateDft	math/signalUtil.sml	/^         fun calculateDft(k : int) : Complex.number =$/;"	f
+calculateDft	math/signalUtil.sml	/^        fun calculateDft(k : int) : Complex.number =$/;"	f
+calculateRotationX	image/image.sml	/^    fun calculateRotationX(dstX : int, u : real) : unit =$/;"	f
+calculateRotationY	image/image.sml	/^    fun calculateRotationY(dstX : int, dstY : int, u : real, v : real) : unit = $/;"	f
+cap	image/canny.sml	/^    fun cap ( Max : int ) $/;"	f
+capX	image/canny.sml	/^      val capX = cap Width$/;"	v
+capY	image/canny.sml	/^      val capY = cap Height$/;"	v
+ceil	image/bsds/Matrix.cc	/^Matrix::ceil () $/;"	f	class:Matrix
+ceil	image/bsds/Matrix.cc	/^ceil (const Matrix& a)$/;"	f
+check	image/canny.sml	/^            fun check( X : int, Y : int ) : bool =$/;"	f
+check	image/image.sml	/^    fun check( Index : int ) : bool =$/;"	f
+checkRes	optimize.sml	/^    fun checkRes( Index : int, $/;"	f
+check_e_o	image/bsds/csa.hh	/^void	check_e_o(double epsilon)$/;"	f	class:CSA
+check_e_o_node	image/bsds/csa.hh	/^int	check_e_o_node(lhs_ptr v, double epsilon)$/;"	f	class:CSA
+check_po_arcs	image/bsds/csa.hh	/^int	check_po_arcs()$/;"	f	class:CSA
+clear	image/bsds/String.cc	/^String::clear ()$/;"	f	class:String
+closest_dist	image/bsds/csa.hh	/^unsigned	long	closest_dist;$/;"	m	class:CSA
+closest_node	image/bsds/csa.hh	/^lhs_ptr	closest_node;$/;"	m	class:CSA
+cluster	ml/k_means.sml	/^  fun cluster( K : int, $/;"	f
+cmax	image/bsds/Matrix.cc	/^Matrix cmax (const Matrix& a) { return a.cmax(); }$/;"	f
+cmax	image/bsds/Matrix.cc	/^Matrix cmax (const Matrix& a, Matrix& indices) { return a.cmax(indices); }$/;"	f
+cmax	image/bsds/Matrix.cc	/^Matrix::cmax () const $/;"	f	class:Matrix
+cmax	image/bsds/Matrix.cc	/^Matrix::cmax (Matrix& indices) const $/;"	f	class:Matrix
+cmin	image/bsds/Matrix.cc	/^Matrix cmin (const Matrix& a) { return a.cmin(); }$/;"	f
+cmin	image/bsds/Matrix.cc	/^Matrix cmin (const Matrix& a, Matrix& indices) { return a.cmin(indices); }$/;"	f
+cmin	image/bsds/Matrix.cc	/^Matrix::cmin () const $/;"	f	class:Matrix
+cmin	image/bsds/Matrix.cc	/^Matrix::cmin (Matrix& indices) const $/;"	f	class:Matrix
+collect	image/image.sml	/^    fun collect( Channel : int ) : int Array.array list = $/;"	f
+combine	list_util.sml	/^  fun combine( Xs : 'a list, Ys : 'b list ) : ( 'a * 'b ) list = $/;"	f
+combine3	list_util.sml	/^  fun combine3( Xs : 'a list, Ys : 'b list, Zs : 'c list ) $/;"	f
+compare	image/f_measure.sml	/^  fun compare( S1 as ( _, _, _, _, _, _, F1 ) : score, $/;"	f
+complex	math/complex.sml	/^  fun complex (a, b) = (a, b)$/;"	f
+complex	math/complex.sml	/^ val complex : real * real -> number$/;"	v
+compute_cost	image/bsds/csa.hh	/^double	compute_cost()$/;"	f	class:CSA
+convertBooleanToReal	image/image_util.sml	/^  fun convertBooleanToReal( Image : BooleanImage.image )$/;"	f
+convertBooleanToTransposedReal	image/image_util.sml	/^  fun convertBooleanToTransposedReal( Image : BooleanImage.image )$/;"	f
+convertGrayscaleRealToBoolean	image/image_util.sml	/^  fun convertGrayscaleRealToBoolean( Image : GrayscaleImageReal.image )$/;"	f
+convertGrayscaleWord8ToReal	image/image_util.sml	/^  fun convertGrayscaleWord8ToReal( Image : GrayscaleImageWord8.image )$/;"	f
+convolve	image/canny.sml	/^    val convolve = $/;"	v
+convolve	image/filter.sml	/^    fun convolve ( BorderExtension : borderExtension, OutputSize : outputSize )$/;"	f
+convolve	image/filter.sml	/^  val convolve : ImageCommon.borderExtension * ImageCommon.outputSize -> $/;"	v
+convolve	image/image.sml	/^  val convolve : ImageCommon.borderExtension * ImageCommon.outputSize -> $/;"	v
+convolve	image/image.sml	/^  val convolve = Filter.convolve$/;"	v
+copyBooleanToTransposedReal	image/image_util.sml	/^  fun copyBooleanToTransposedReal( Src : BooleanImage.image, $/;"	f
+copy_lr_arc	image/bsds/csa_defs.h	118;"	d
+copy_lr_arc	image/bsds/csa_defs.h	124;"	d
+copy_lr_arc	image/bsds/csa_defs.h	86;"	d
+copy_lr_arc	image/bsds/csa_defs.h	94;"	d
+copy_rl_arc	image/bsds/csa_defs.h	103;"	d
+copy_rl_arc	image/bsds/csa_defs.h	106;"	d
+corSupportX	image/filter_util.sml	/^   val corSupportX = Real.ceil(Real.max($/;"	v
+corSupportY	image/filter_util.sml	/^   val corSupportY = Real.ceil(Real.max($/;"	v
+correlate	image/filter.sml	/^    fun correlate ( BorderExtension : borderExtension, OutputSize : outputSize )$/;"	f
+correlate	image/filter.sml	/^  val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> $/;"	v
+correlate	image/image.sml	/^  val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> $/;"	v
+correlate	image/image.sml	/^  val correlate = Filter.correlate$/;"	v
+cos	image/bsds/Matrix.cc	/^cos (const Matrix& a)$/;"	f
+cos	image/bsds/Matrix.cc	/^void Matrix::cos ()$/;"	f	class:Matrix
+cosh	image/bsds/Matrix.cc	/^cosh (const Matrix& a)$/;"	f
+cosh	image/bsds/Matrix.cc	/^void Matrix::cosh ()$/;"	f	class:Matrix
+cost	image/bsds/csa.hh	/^				long	cost;$/;"	m	struct:CSA::temp_arc
+cost	image/bsds/csa.hh	/^    int cost () { return result_cost; }$/;"	f	class:CSA
+cot	image/bsds/Matrix.cc	/^cot (const Matrix& a)$/;"	f
+cot	image/bsds/Matrix.cc	/^static inline double cot (double x) { return tan(1.0\/x); }$/;"	f	file:
+cot	image/bsds/Matrix.cc	/^void Matrix::cot ()$/;"	f	class:Matrix
+coth	image/bsds/Matrix.cc	/^coth (const Matrix& a)$/;"	f
+coth	image/bsds/Matrix.cc	/^static inline double coth (double x) { return tanh(1.0\/x); }$/;"	f	file:
+coth	image/bsds/Matrix.cc	/^void Matrix::coth ()$/;"	f	class:Matrix
+count	image/util.sml	/^  fun count( Ss1 : 'a list, Ss2 : 'b list ) : unit =$/;"	f
+countCooccur	image/util.sml	/^fun countCooccur( lessSeg1 : 'a * 'a -> bool,$/;"	f
+cprod	image/bsds/Matrix.cc	/^Matrix cprod (const Matrix& a) { return a.cprod(); }$/;"	f
+cprod	image/bsds/Matrix.cc	/^Matrix::cprod () const $/;"	f	class:Matrix
+cpu	image/bsds/Timer.hh	/^Timer::cpu ()$/;"	f	class:Timer
+createException	image/image_common.sml	/^  exception createException of string$/;"	e
+createGausCenterSurround	image/filter_util.sml	/^  fun createGausCenterSurround(sigma : real, scaleFactor : real) = $/;"	f
+createGaussianMask	image/filter_util.sml	/^  fun createGaussianMask( Sigma : real ) : GrayscaleImageReal.image =$/;"	f
+createGaussianMask2	image/filter_util.sml	/^  fun createGaussianMask2( Sigma : real ) : GrayscaleImageReal.image =$/;"	f
+createGaussianMaskGPB2D	image/filter_util.sml	/^ fun createGaussianMaskGPB2D (deri : int)$/;"	f
+createGaussianMaskgPb	image/filter_util.sml	/^  fun createGaussianMaskgPb (derivitive : int) ( sigma : real, support : int ) $/;"	f
+createImage	image/image.sml	/^    val createImage = fromList$/;"	v
+createImage	image/pnm.sml	/^  val createImage : int * int * pixel list -> image$/;"	v
+createSobelMasks	image/filter_util.sml	/^  fun createSobelMasks() : GrayscaleImageReal.image * GrayscaleImageReal.image =$/;"	f
+createTextonFilters	image/texton.sml	/^    fun createTextonFilters(nori : int, sigma : real) : $/;"	f
+createZero	image/filter.sml	/^  val createZero : int * int -> image$/;"	v
+createZero	image/image.sml	/^    val createZero = zeroImage$/;"	v
+create_active	image/bsds/csa_defs.h	32;"	d
+create_active	image/bsds/csa_defs.h	37;"	d
+csFilter	image/texton.sml	/^       val csFilter = FilterUtil.createGausCenterSurround(sigma, Math.sqrt 3.0)$/;"	v
+csc	image/bsds/Matrix.cc	/^csc (const Matrix& a)$/;"	f
+csc	image/bsds/Matrix.cc	/^static inline double csc (double x) { return sin(1.0\/x); }$/;"	f	file:
+csc	image/bsds/Matrix.cc	/^void Matrix::csc ()$/;"	f	class:Matrix
+csch	image/bsds/Matrix.cc	/^csch (const Matrix& a)$/;"	f
+csch	image/bsds/Matrix.cc	/^static inline double csch (double x) { return sinh(1.0\/x); }$/;"	f	file:
+csch	image/bsds/Matrix.cc	/^void Matrix::csch ()$/;"	f	class:Matrix
+csum	image/bsds/Matrix.cc	/^Matrix csum (const Matrix& a) { return a.csum(); }$/;"	f
+csum	image/bsds/Matrix.cc	/^Matrix::csum () const $/;"	f	class:Matrix
+data	image/bsds/Array.hh	/^    Elem* data () { $/;"	f	class:Array2D
+data	image/bsds/Array.hh	/^    Elem* data () { $/;"	f	class:Array3D
+data	image/bsds/Array.hh	/^    Elem* data () { $/;"	f	class:Array4D
+data	image/bsds/Array.hh	/^    Elem* data () {$/;"	f	class:Array1D
+data	image/bsds/Matrix.cc	/^Matrix::data () $/;"	f	class:Matrix
+defaultMinSize	image/bsds/String.hh	/^    static const unsigned defaultMinSize = 16;$/;"	m	class:String
+degree	image/bsds/match.cc	/^static const int degree = 6;$/;"	v	file:
+delete_list	image/bsds/csa_defs.h	67;"	d
+delta_reqd	image/bsds/csa_types.h	/^				long	delta_reqd;$/;"	m	struct:lhs_node
+denom	math/complex.sml	/^      val denom = a * a + b * b$/;"	v
+deq	image/bsds/csa.hh	/^char	*deq(queue q)$/;"	f	class:CSA
+deq_list	image/bsds/csa.hh	/^rhs_ptr	deq_list(rhs_ptr* head)$/;"	f	class:CSA
+describe_self	image/bsds/csa.hh	/^void	describe_self()$/;"	f	class:CSA
+dfs_visit	image/bsds/csa.hh	/^int	dfs_visit(register rhs_ptr w)$/;"	f	class:CSA
+dft	math/signalUtil.sml	/^   fun dft(vector : real Array.array) : Complex.number Array.array =$/;"	f
+diag	image/bsds/Matrix.cc	/^diag (const Matrix& a, int k)$/;"	f
+distance	ml/k_means.sml	/^    fun distance( Instance : real list, MeanIdx : int ) : real = $/;"	f
+divide	math/complex.sml	/^  fun divide (a1, b1) (a2, b2) =$/;"	f
+divide	math/complex.sml	/^ val divide : number -> number -> number$/;"	v
+double_push	image/bsds/csa.hh	/^void	double_push(lhs_ptr v)$/;"	f	class:CSA
+double_pushes	image/bsds/csa.hh	/^unsigned	double_pushes,$/;"	m	class:CSA
+e	util.sml	/^    val e = Real.\/(1.0, Math.pow(10.0, real precision));$/;"	v
+e_x	math/complex.sml	/^        val e_x = Math.exp(a);$/;"	v
+edge	image/bsds/csa.hh	/^    void edge (const int i, int& a, int& b, int& cost) {$/;"	f	class:CSA
+edges	image/bsds/csa.hh	/^    int edges () { return result_n; }$/;"	f	class:CSA
+elapsed	image/bsds/Timer.hh	/^Timer::elapsed ()$/;"	f	class:Timer
+elemFunction	image/filter_util.sml	/^    val elemFunction = case derivitive of$/;"	v
+element	image/boolean_image.sml	/^  type element = bool$/;"	t
+element	image/color_image.sml	/^  type element = Word8.word$/;"	t
+element	image/color_image.sml	/^  type element = real$/;"	t
+element	image/grayscale_image.sml	/^  type element = Word8.word $/;"	t
+element	image/grayscale_image.sml	/^  type element = int $/;"	t
+element	image/grayscale_image.sml	/^  type element = real$/;"	t
+element	image/image.sml	/^    type element = Spec.element$/;"	t
+element	image/image.sml	/^  type element = Spec.element$/;"	t
+element	image/image.sml	/^  type element$/;"	t
+element	image/pnm.sml	/^  type element$/;"	t
+elementCompare	image/boolean_image.sml	/^  fun elementCompare( X : element, Y : element ) : order =$/;"	f
+elementCompare	image/image.sml	/^  val elementCompare : element * element -> order$/;"	v
+elementCompare	image/image_int.sml	/^  val elementCompare = Int.compare$/;"	v
+elementCompare	image/image_real.sml	/^  val elementCompare = Real.compare$/;"	v
+elementCompare	image/image_word.sml	/^  val elementCompare = Word8.compare$/;"	v
+elementFromReal	image/boolean_image.sml	/^  fun elementFromReal X = $/;"	f
+elementFromReal	image/image.sml	/^  val elementFromReal : real -> element$/;"	v
+elementFromReal	image/image_int.sml	/^  fun elementFromReal X = Real.trunc( X*255.0 )$/;"	f
+elementFromReal	image/image_real.sml	/^  fun elementFromReal X = X$/;"	f
+elementFromReal	image/image_word.sml	/^  fun elementFromReal X = Word8.fromInt( Real.trunc( X*255.0 ) )$/;"	f
+end	image/bsds/csa_types.h	/^				char		**end;$/;"	m	struct:queue_st
+enq	image/bsds/csa_defs.h	50;"	d
+epsilon	image/bsds/csa.hh	/^double		epsilon;	\/* scaling parameter *\/$/;"	m	class:CSA
+eq	image/color_image.sml	/^    val eq = Util.eq elementCompare$/;"	v
+eq	util.sml	/^  fun eq ( compare : 'a * 'a -> order ) ( X : 'a, Y : 'a ) : bool = $/;"	f
+eqInt	util.sml	/^  val eqInt : int * int -> bool = eq Int.compare$/;"	v
+eqReal	util.sml	/^  val eqReal : real * real -> bool = eq Real.compare$/;"	v
+equal	image/image.sml	/^  fun equal( Image1 : image, Image2 : image ) : bool = $/;"	f
+equal	image/image.sml	/^  val equal : image * image -> bool$/;"	v
+equal	list_util.sml	/^  fun equal ( eq : 'a * 'a -> bool ) ( Xs : 'a list, Ys : 'a list ) : bool =$/;"	f
+equal'	list_util.sml	/^    fun equal'( [], [] ) = true$/;"	f
+err_messages	image/bsds/csa.cc	/^char* CSA::err_messages[] =$/;"	m	class:CSA	file:
+err_messages	image/bsds/csa.hh	/^static char* err_messages[];$/;"	m	class:CSA
+eval	image/f_measure.sml	/^    fun eval( List : ( image * truth list ) list, Accum : score ) : score =$/;"	f
+evaluate	image/f_measure.sml	/^  fun evaluate( Image as { Width, Height, Values } : image, $/;"	f
+evaluate	image/f_measure.sml	/^fun evaluate( lessSeg : 'a * 'a -> bool, $/;"	f
+evaluate	image/score.sml	/^  val evaluate : image * truth list -> score$/;"	v
+evaluateList	image/f_measure.sml	/^  fun evaluateList( List : ( image * truth list ) list ) : score =$/;"	f
+evaluateList	image/score.sml	/^  val evaluateList : ( image * truth list ) list -> score$/;"	v
+evaluateListAvg	image/f_measure.sml	/^  fun evaluateListAvg( List : ( image * truth list ) list ) : score =$/;"	f
+evaluateListAvg	image/score.sml	/^  val evaluateListAvg : ( image * truth list ) list -> score$/;"	v
+evenFilters	image/texton.sml	/^       val evenFilters = List.tabulate(nori, $/;"	v
+exch_lr_arcs	image/bsds/csa_defs.h	133;"	d
+exch_rl_arcs	image/bsds/csa_defs.h	110;"	d
+exp	image/bsds/Matrix.cc	/^Matrix::exp () $/;"	f	class:Matrix
+exp	image/bsds/Matrix.cc	/^exp (const Matrix& a)$/;"	f
+exp	math/complex.sml	/^  fun exp (a, b) =$/;"	f
+exp	math/complex.sml	/^ val exp : number -> number$/;"	v
+expFactor	math/signalUtil.sml	/^         val expFactor = $/;"	v
+expFactor	math/signalUtil.sml	/^        val expFactor = $/;"	v
+eye	image/bsds/Matrix.cc	/^eye (int rows, int cols) $/;"	f
+eye	image/bsds/Matrix.cc	/^eye (int sz) $/;"	f
+eye	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+fMeasureException	image/f_measure.sml	/^  exception fMeasureException of string$/;"	e
+few_arcs	image/bsds/csa_types.h	/^					unsigned	few_arcs : 1;$/;"	m	struct:lhs_node::__anon1
+fiMatchEdges	image/f_measure.c	/^double fiMatchEdges(Pointer bitmap1, Pointer bitmap2, $/;"	f
+fill	image/image.sml	/^  fun fill( Image : image, Pixel : pixel ) : unit =$/;"	f
+fill	image/image.sml	/^  val fill : image * pixel -> unit$/;"	v
+filter	image/filter.sml	/^    fun filter( Image : Image.image, $/;"	f
+filter	image/filter_util.sml	/^   val filter = GrayscaleImageReal.tabulatexy $/;"	v
+filterException	image/filter.sml	/^  exception filterException of string$/;"	e
+find	image/bsds/Matrix.cc	/^Matrix::find () const$/;"	f	class:Matrix
+find	image/bsds/Matrix.cc	/^find (const Matrix& a)$/;"	f
+findEdges	image/canny.sml	/^    val findEdges = $/;"	v
+findEdges'	image/canny.sml	/^    fun findEdges'( Sigma : real, Options : thresholdOptions )$/;"	f
+first	image/bsds/csa_types.h	/^				struct	lr_arc	*first;$/;"	m	struct:lhs_node	typeref:struct:lhs_node::lr_arc
+fix	image/bsds/Matrix.cc	/^Matrix::fix () $/;"	f	class:Matrix
+fix	image/bsds/Matrix.cc	/^fix (const Matrix& a)$/;"	f
+fix_ins	image/bsds/csa.hh	/^unsigned	fix_ins;$/;"	m	class:CSA
+fliplr	image/bsds/Matrix.cc	/^Matrix::fliplr () $/;"	f	class:Matrix
+fliplr	image/bsds/Matrix.cc	/^fliplr (const Matrix& a)$/;"	f
+flipud	image/bsds/Matrix.cc	/^Matrix::flipud () $/;"	f	class:Matrix
+flipud	image/bsds/Matrix.cc	/^flipud (const Matrix& a)$/;"	f
+floor	image/bsds/Matrix.cc	/^Matrix::floor () $/;"	f	class:Matrix
+floor	image/bsds/Matrix.cc	/^floor (const Matrix& a)$/;"	f
+flush	image/pnm_binary.sml	/^    fun flush( Output : BinIO.outstream ) : unit =$/;"	f
+foldl	array2d.sml	/^  fun foldl ( f : 'a * 'b -> 'b )$/;"	f
+foldl	image/canny.sml	/^    val foldl = GrayscaleImageReal.foldl$/;"	v
+foldl	image/image.sml	/^  fun foldl ( f : pixel * 'a -> 'a )$/;"	f
+foldl	image/image.sml	/^  val foldl : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+foldli	array2d.sml	/^  fun foldli ( f : int * 'a * 'b -> 'b )$/;"	f
+foldli	image/image.sml	/^  fun foldli ( f : int * pixel * 'a -> 'a )$/;"	f
+foldli	image/image.sml	/^  val foldli : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+foldli	list_util.sml	/^  fun foldli ( f : int * 'a * 'b -> 'b ) ( Init : 'b ) ( Xs : 'a list ) $/;"	f
+foldli'	list_util.sml	/^    fun foldli' ( I : int, Accum : 'b, Xs' ) : 'b =$/;"	f
+foldlij	array2d.sml	/^  fun foldlij ( f : int * int * 'a * 'b -> 'b )$/;"	f
+foldlxy	image/image.sml	/^  fun foldlxy ( f : int * int * pixel * 'a -> 'a )$/;"	f
+foldlxy	image/image.sml	/^  val foldlxy : ( int * int * pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+foldr	array2d.sml	/^  fun foldr ( f : 'a * 'b -> 'b )$/;"	f
+foldr	image/image.sml	/^  fun foldr ( f : pixel * 'a -> 'a )$/;"	f
+foldr	image/image.sml	/^  val foldr : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+foldri	array2d.sml	/^  fun foldri ( f : int * 'a * 'b -> 'b )$/;"	f
+foldri	image/image.sml	/^  fun foldri ( f : int * pixel * 'a -> 'a )$/;"	f
+foldri	image/image.sml	/^  val foldri : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+foldrij	array2d.sml	/^  fun foldrij ( f : int * int * 'a * 'b -> 'b )$/;"	f
+foldrxy	image/image.sml	/^  fun foldrxy ( f : int * int * pixel * 'a -> 'a )$/;"	f
+foldrxy	image/image.sml	/^  val foldrxy : ( int * int * pixel * 'a -> 'a ) -> 'a -> image -> 'a$/;"	v
+follow	image/canny.sml	/^            fun follow( X : int, Y : int ) : unit = $/;"	f
+format	image/pnm.sml	/^  datatype format = $/;"	t
+format	image/pnm_common.sml	/^  datatype format = $/;"	t
+formatException	image/image_common.sml	/^  exception formatException of string$/;"	e
+formatTime	image/bsds/Timer.cc	/^Timer::formatTime (double sec, int precision)$/;"	f	class:Timer
+fp	image/bsds/Random.hh	/^Random::fp ()$/;"	f	class:Random
+fp	image/bsds/Random.hh	/^Random::fp (double a, double b)$/;"	f	class:Random
+fromList	array2d.sml	/^  fun fromList( Width : int, Height : int, Vals : 'a list ) : 'a array =$/;"	f
+fromList	image/image.sml	/^  val fromList : int * int * pixel list -> image$/;"	v
+fromList	image/image.sml	/^  val fromList = Array2D.fromList$/;"	v
+fromTo	list_util.sml	/^  fun fromTo ( inc : 'a -> 'a, less : 'a * 'a -> bool ) ( L : 'a, H : 'a ) $/;"	f
+fromTo'	list_util.sml	/^    fun fromTo'( I : 'a ) : 'a list =$/;"	f
+fromToInt	list_util.sml	/^  val fromToInt = fromTo ( fn X => X+1, Int.< )$/;"	v
+fromToReal	list_util.sml	/^  val fromToReal = fromTo ( fn X => X+1.0, Real.< )$/;"	v
+gather	image/bsds/Matrix.cc	/^Matrix::gather (const Matrix& indices) const$/;"	f	class:Matrix
+gausX	image/filter_util.sml	/^   val gausX = createGaussianMaskgPb deri (sigmaX, corSupportX)$/;"	v
+gausY	image/filter_util.sml	/^   val gausY = createGaussianMaskgPb 0 (sigmaY, corSupportY)$/;"	v
+gaussian	image/filter_util.sml	/^    fun gaussian( X : int, Y : int ) : real = $/;"	f
+gaussian	image/filter_util.sml	/^    fun gaussian( X : real ) : real = $/;"	f
+getCount	optimize.sml	/^    fun getCount( Res : bruteResolution ) : int =$/;"	f
+getDepth	image/pnm_common.sml	/^  fun getDepth( Format : format ) : int =$/;"	f
+getElement	image/boolean_image.sml	/^  fun getElement( Pixel : pixel, I : int ) : element =$/;"	f
+getElement	image/color_image.sml	/^  fun getElement( Pixel as ( R, G, B ) : pixel, I : int ) : element =$/;"	f
+getElement	image/grayscale_image.sml	/^  fun getElement( Pixel : pixel, I : int ) : element =$/;"	f
+getElement	image/image.sml	/^  val getElement : pixel * int -> element$/;"	v
+getIndex	image/image.sml	/^    fun getIndex( Delims : element list, Element : element, Index : int )$/;"	f
+getToken	image/pnm_text.sml	/^    fun getToken( Input : BinIO.instream, ParseBits : bool ) : string option = $/;"	f
+get_active_node	image/bsds/csa_defs.h	34;"	d
+get_active_node	image/bsds/csa_defs.h	39;"	d
+getdiag	image/bsds/Matrix.cc	/^Matrix::getdiag (int k) const $/;"	f	class:Matrix
+gradientXReal	image/image_util.sml	/^  fun gradientXReal( Image : GrayscaleImageReal.image )$/;"	f
+gradientYReal	image/image_util.sml	/^  fun gradientYReal( Image : GrayscaleImageReal.image )$/;"	f
+handle_rev_pointers	image/bsds/csa_defs.h	173;"	d
+handle_rev_pointers	image/bsds/csa_defs.h	177;"	d
+head	image/bsds/csa.hh	/^				rhs_ptr	head;$/;"	m	struct:CSA::temp_arc
+head	image/bsds/csa_types.h	/^				char		**head;$/;"	m	struct:queue_st
+head	image/bsds/csa_types.h	/^				rhs_ptr	head;$/;"	m	struct:lr_arc
+head_lhs_node	image/bsds/csa.hh	/^lhs_ptr	head_lhs_node, tail_lhs_node;$/;"	m	class:CSA
+head_lr_arc	image/bsds/csa.hh	/^lr_aptr	head_lr_arc, tail_lr_arc;$/;"	m	class:CSA
+head_rhs_node	image/bsds/csa.hh	/^rhs_ptr	head_rhs_node, tail_rhs_node;$/;"	m	class:CSA
+head_rl_arc	image/bsds/csa.hh	/^rl_aptr	head_rl_arc, tail_rl_arc;$/;"	m	class:CSA
+hilbert	image/filter_util.sml	/^       val hilbert = SignalUtil.hilbert(#Values(gausX))$/;"	v
+hilbert	math/signalUtil.sml	/^   fun hilbert(vector: real Array.array) : real Array.array =$/;"	f
+hilbertify	math/signalUtil.sml	/^       fun hilbertify(i : int, x: Complex.number) : Complex.number =$/;"	f
+histograms	image/image.sml	/^    val histograms = histograms$/;"	v
+histograms	image/image.sml	/^  fun histograms( Image : image, NumBins : int ) $/;"	f
+histograms	image/image.sml	/^  val histograms : image * int -> int Array.array list$/;"	v
+histograms	image/threshold.sml	/^  val histograms : image * int -> int Array.array list$/;"	v
+i	image/bsds/match.cc	/^    int i,j;	\/\/ node ids, 0-based$/;"	m	struct:Edge	file:
+i32	image/bsds/Random.hh	/^Random::i32 () $/;"	f	class:Random
+i32	image/bsds/Random.hh	/^Random::i32 (int32_t a, int32_t b)$/;"	f	class:Random
+idft	math/signalUtil.sml	/^   fun idft(vector: Complex.number Array.array) : Complex.number Array.array =$/;"	f
+im	math/complex.sml	/^      val im = Real.\/(Real.-(Real.*(b1, a2), Real.*(a1, b2)) ,magnitude)$/;"	v
+im	math/complex.sml	/^  fun im (a, b) =$/;"	f
+im	math/complex.sml	/^ val im : number -> real$/;"	v
+image	image/boolean_image.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/color_image.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/f_measure.sml	/^  type image = BooleanImage.image$/;"	t
+image	image/filter.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/filter_util.sml	/^     val image = GrayscaleImageReal.subtract(outer, inner)$/;"	v
+image	image/grayscale_image.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/image.sml	/^    type image = Spec.image $/;"	t
+image	image/image.sml	/^    type image = Spec.image$/;"	t
+image	image/image.sml	/^  type image $/;"	t
+image	image/image.sml	/^  type image = Spec.image$/;"	t
+image	image/image.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/image.sml	/^  val image : int * int * pixel -> image$/;"	v
+image	image/image.sml	/^  val image = Array2D.array$/;"	v
+image	image/pnm.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+image	image/score.sml	/^  type image$/;"	t
+image	image/threshold.sml	/^  type image = { Width : int, Height : int, Values : pixel Array.array }$/;"	t
+img	image/image.sml	/^       val img = zeroImage(width, height);$/;"	v
+ind2sub	image/bsds/Matrix.cc	/^Matrix::ind2sub (const Matrix& ind, Matrix& i, Matrix& j)$/;"	f	class:Matrix
+ind2sub	image/bsds/Matrix.cc	/^void ind2sub ($/;"	f
+inf	image/bsds/Matrix.cc	/^static const double inf = *(double*)&_inf;$/;"	v	file:
+init	image/bsds/Array.hh	/^    void init (const Elem& elem) {$/;"	f	class:Array1D
+init	image/bsds/Array.hh	/^    void init (const Elem& elem) {$/;"	f	class:Array2D
+init	image/bsds/Array.hh	/^    void init (const Elem& elem) {$/;"	f	class:Array3D
+init	image/bsds/Array.hh	/^    void init (const Elem& elem) {$/;"	f	class:Array4D
+init	image/bsds/csa.hh	/^void	init(const int* graph)$/;"	f	class:CSA
+inner	image/filter_util.sml	/^     val inner =  createGaussianMaskGPB2D 0 (sigmaInner,$/;"	v
+input1	image/pnm_text.sml	/^    fun input1( Input : BinIO.instream ) : char option =$/;"	f
+insert	image/bsds/Matrix.cc	/^Matrix::insert (const Matrix& m, int r1, int r2, int c1, int c2)$/;"	f	class:Matrix
+insert	image/bsds/Matrix.cc	/^insert (const Matrix& a, const Matrix& m, $/;"	f
+insert_list	image/bsds/csa_defs.h	59;"	d
+int32_max	image/bsds/Random.hh	/^    static const int32_t int32_max = 2147483647;$/;"	m	class:Random
+int32_min	image/bsds/Random.hh	/^    static const int32_t int32_min = -int32_max-1;$/;"	m	class:Random
+inversed	math/signalUtil.sml	/^       val inversed = idft(transformed);$/;"	v
+invert	math/complex.sml	/^  fun invert (a, b) =$/;"	f
+invert	math/complex.sml	/^ val invert : number -> number$/;"	v
+iscolvec	image/bsds/Matrix.cc	/^Matrix::iscolvec () const $/;"	f	class:Matrix
+iscolvec	image/bsds/Matrix.cc	/^iscolvec (const Matrix& a)$/;"	f
+isempty	image/bsds/Matrix.cc	/^Matrix::isempty () const $/;"	f	class:Matrix
+isempty	image/bsds/Matrix.cc	/^isempty (const Matrix& a)$/;"	f
+isequal	image/bsds/Matrix.cc	/^Matrix::isequal (const Matrix& a) const$/;"	f	class:Matrix
+isequal	image/bsds/Matrix.cc	/^isequal (const Matrix& a, const Matrix& b)$/;"	f
+isrowvec	image/bsds/Matrix.cc	/^Matrix::isrowvec () const $/;"	f	class:Matrix
+isrowvec	image/bsds/Matrix.cc	/^isrowvec (const Matrix& a)$/;"	f
+isscalar	image/bsds/Matrix.cc	/^Matrix::isscalar () const $/;"	f	class:Matrix
+isscalar	image/bsds/Matrix.cc	/^isscalar (const Matrix& a)$/;"	f
+issize	image/bsds/Array.hh	/^    bool issize (unsigned d0, unsigned d1) const {$/;"	f	class:Array2D
+issize	image/bsds/Array.hh	/^    bool issize (unsigned d0, unsigned d1, unsigned d2) const {$/;"	f	class:Array3D
+issize	image/bsds/Array.hh	/^    bool issize (unsigned d0, unsigned d1, unsigned d2, unsigned d3) const {$/;"	f	class:Array4D
+issize	image/bsds/Array.hh	/^    bool issize (unsigned n) const {$/;"	f	class:Array1D
+issize	image/bsds/Matrix.cc	/^Matrix::issize (int rows, int cols) const $/;"	f	class:Matrix
+issize	image/bsds/Matrix.cc	/^issize (const Matrix& a, int rows, int cols)$/;"	f
+isvec	image/bsds/Matrix.cc	/^Matrix::isvec () const $/;"	f	class:Matrix
+isvec	image/bsds/Matrix.cc	/^isvec (const Matrix& a)$/;"	f
+iswrapped	image/bsds/Matrix.cc	/^Matrix::iswrapped () const$/;"	f	class:Matrix
+iswrapped	image/bsds/Matrix.cc	/^iswrapped (const Matrix &a)$/;"	f
+iter	image/morphology.sml	/^    fun iter( Current : BooleanImage.image ) : BooleanImage.image =$/;"	f
+iter	list_util.sml	/^    fun iter( Xs : 'a list ) : string =$/;"	f
+iter	print_util.sml	/^    fun iter( Index : int ) : unit =$/;"	f
+iter	print_util.sml	/^    fun iter( Xs : 'a list ) : unit =$/;"	f
+iterate	ml/k_means.sml	/^    fun iterate( I : int ) : unit =$/;"	f
+iterate	optimize.sml	/^    fun iterate( Dimension : int, $/;"	f
+iterate'	optimize.sml	/^      fun iterate'( Index : int ) $/;"	f
+izfinite	image/bsds/Matrix.cc	/^Matrix::izfinite ()$/;"	f	class:Matrix
+izfinite	image/bsds/Matrix.cc	/^izfinite (const Matrix& a)$/;"	f
+izinf	image/bsds/Matrix.cc	/^Matrix::izinf ()$/;"	f	class:Matrix
+izinf	image/bsds/Matrix.cc	/^izinf (const Matrix& a)$/;"	f
+iznan	image/bsds/Matrix.cc	/^Matrix::iznan ()$/;"	f	class:Matrix
+iznan	image/bsds/Matrix.cc	/^iznan (const Matrix& a)$/;"	f
+j	image/bsds/match.cc	/^    int i,j;	\/\/ node ids, 0-based$/;"	m	struct:Edge	file:
+kOfN	image/bsds/kofn.cc	/^kOfN (int k, int n, int* values)$/;"	f
+key	image/bsds/csa_types.h	/^				long	key;$/;"	m	struct:rhs_node
+length	image/bsds/Matrix.cc	/^Matrix::length () const $/;"	f	class:Matrix
+length	image/bsds/Matrix.cc	/^length (const Matrix& a)$/;"	f
+length	image/bsds/String.hh	/^    unsigned length () const { return _length; }$/;"	f	class:String
+lerp	math/math_util.sml	/^  fun lerp( X : real, Y : real, T : real ) : real =$/;"	f
+level	image/bsds/csa.hh	/^unsigned	long	level;	\/* level currently being scanned *\/$/;"	m	class:CSA
+lhs_node	image/bsds/csa_types.h	/^typedef	struct	lhs_node	{$/;"	s
+lhs_ptr	image/bsds/csa_types.h	/^				}	*lhs_ptr;$/;"	t	typeref:struct:lhs_node
+linspace	image/bsds/Matrix.cc	/^Matrix::linspace (double a, double b)$/;"	f	class:Matrix
+linspace	image/bsds/Matrix.cc	/^linspace (double a, double b, int n)$/;"	f
+load	image/image.sml	/^  fun load( Filename : string ) : image option = $/;"	f
+load	image/image.sml	/^  val load : string -> image option$/;"	v
+load	image/pnm.sml	/^  fun load( Filename : string ) : Image.image = $/;"	f
+load	image/pnm.sml	/^  val load : string -> Image.image$/;"	v
+log	image/bsds/Matrix.cc	/^Matrix::log () $/;"	f	class:Matrix
+log	image/bsds/Matrix.cc	/^log (const Matrix& a)$/;"	f
+log10	image/bsds/Matrix.cc	/^Matrix::log10 () $/;"	f	class:Matrix
+log10	image/bsds/Matrix.cc	/^log10 (const Matrix& a)$/;"	f
+log2	image/bsds/Matrix.cc	/^Matrix::log2 () $/;"	f	class:Matrix
+log2	image/bsds/Matrix.cc	/^log2 (const Matrix& a)$/;"	f
+logspace	image/bsds/Matrix.cc	/^Matrix logspace (double a, double b, int n)$/;"	f
+logspace	image/bsds/Matrix.cc	/^Matrix::logspace (double a, double b)$/;"	f	class:Matrix
+lookahead	image/pnm_text.sml	/^    fun lookahead( Input : BinIO.instream ) : char option =$/;"	f
+loop	image/filter.sml	/^      fun loop( Index : int ) =$/;"	f
+loop	util.sml	/^    fun loop( I : 'a ) : unit =$/;"	f
+loop	util.sml	/^    fun loop( I : 'a, X : 'b ) : 'b =$/;"	f
+loop	util.sml	/^  fun loop ( f : int -> unit ) ( Count : int ) : unit =$/;"	f
+loop'	util.sml	/^    fun loop'( I : int ) : unit =$/;"	f
+loop'	util.sml	/^    fun loop'( I : int, Accum : 'a ) : 'a =$/;"	f
+loopFromTo	util.sml	/^  fun loopFromTo ( less : 'a * 'a -> bool, add : 'a * 'a -> 'a )$/;"	f
+loopFromToReal	util.sml	/^  val loopFromToReal = loopFromTo ( Real.<, Real.+ )$/;"	v
+loopMask	image/filter.sml	/^      fun loopMask( X : int, Y : int, Index : int, Sum : Image.pixel ) $/;"	f
+loopSegments	image/f_measure.sml	/^  fun loopSegments( Truth : int list, I : int ) $/;"	f
+loopTruths	image/f_measure.sml	/^  fun loopTruths( I : int, Scores : ( real * real * real ) list ) $/;"	f
+lowerPart	math/signalUtil.sml	/^       val lowerPart = Array.length(vector) div 2;$/;"	v
+lr_aptr	image/bsds/csa_types.h	/^				}	*lr_aptr;$/;"	t	typeref:struct:lr_arc
+lr_arc	image/bsds/csa_types.h	/^typedef	struct	lr_arc		{$/;"	s
+m	image/bsds/csa.hh	/^unsigned	n, m;$/;"	m	class:CSA
+m00	image/image.sml	/^             val m00 = sub (img, x0, y0)$/;"	v
+m01	image/image.sml	/^             val m01 = sub (img, x0, y1)$/;"	v
+m10	image/image.sml	/^             val m10 = sub (img, x1, y0)$/;"	v
+m11	image/image.sml	/^             val m11 = sub (img, x1, y1)$/;"	v
+magnitude	math/complex.sml	/^      val magnitude = Real.+(Real.*(a2, a2), Real.*(b2, b2));$/;"	v
+main	image/bsds/csa.hh	/^int	main(const int* graph)$/;"	f	class:CSA
+make_active	image/bsds/csa_defs.h	33;"	d
+make_active	image/bsds/csa_defs.h	38;"	d
+mapi	list_util.sml	/^  fun mapi ( f : int * 'a -> 'b ) ( Xs : 'a list ) $/;"	f
+mapi'	list_util.sml	/^    fun mapi'( I : int, Xs' ) : 'b list =$/;"	f
+mask	image/filter_util.sml	/^    val mask = GrayscaleImageReal.zeroImage(size, 1);$/;"	v
+matchEdgeMaps	image/bsds/match.cc	/^matchEdgeMaps ($/;"	f
+matchEdges	image/f_measure.sml	/^  val matchEdges  = _import"fiMatchEdges" : $/;"	v
+matched	image/bsds/csa_types.h	/^				lhs_ptr	matched;$/;"	m	struct:rhs_node
+matched	image/bsds/csa_types.h	/^				struct	lr_arc	*matched;$/;"	m	struct:lhs_node	typeref:struct:lhs_node::lr_arc
+max	image/bsds/Matrix.cc	/^Matrix max (const Matrix& a, const Matrix& b) {$/;"	f
+max	image/bsds/Matrix.cc	/^Matrix max (const Matrix& a, double b) {$/;"	f
+max	image/bsds/Matrix.cc	/^Matrix max (double a, const Matrix& b) {$/;"	f
+max	image/bsds/Matrix.cc	/^Matrix::max () const $/;"	f	class:Matrix
+max	image/bsds/Matrix.cc	/^Matrix::max (int& index) const $/;"	f	class:Matrix
+max	image/bsds/Matrix.cc	/^double max (const Matrix& a) { return a.max(); }$/;"	f
+max	image/bsds/Matrix.cc	/^double max (const Matrix& a, int& index) { return a.max(index); }$/;"	f
+max	util.sml	/^  fun max ( less : 'a * 'a -> bool ) $/;"	f
+max'	util.sml	/^    fun max'( Ys : 'a list, Max : 'a ) : 'a =$/;"	f
+max2	util.sml	/^  fun max2 ( less : 'a * 'a -> bool )$/;"	f
+max2Int	util.sml	/^  val max2Int = max2 Int.<$/;"	v
+maxDistDefault	image/bsds/correspondPixels.cc	/^static const double maxDistDefault = 0.0075;$/;"	v	file:
+maxInt	util.sml	/^  val maxInt = max Int.<$/;"	v
+max_size	image/bsds/csa_types.h	/^				unsigned	max_size;$/;"	m	struct:queue_st
+mean	image/image_util.sml	/^    val mean = (GrayscaleImageReal.foldl $/;"	v
+member	list_util.sml	/^  fun member( eq : 'a * 'a -> bool ) ( Y : 'a, Xs : 'a list ) : bool =$/;"	f
+mexFunction	image/bsds/correspondPixels.cc	/^mexFunction ($/;"	f
+min	image/bsds/Matrix.cc	/^Matrix min (const Matrix& a, const Matrix& b) {$/;"	f
+min	image/bsds/Matrix.cc	/^Matrix min (const Matrix& a, double b) {$/;"	f
+min	image/bsds/Matrix.cc	/^Matrix min (double a, const Matrix& b) {$/;"	f
+min	image/bsds/Matrix.cc	/^Matrix::min () const $/;"	f	class:Matrix
+min	image/bsds/Matrix.cc	/^Matrix::min (int& index) const $/;"	f	class:Matrix
+min	image/bsds/Matrix.cc	/^double min (const Matrix& a) { return a.min(); }$/;"	f
+min	image/bsds/Matrix.cc	/^double min (const Matrix& a, int& index) { return a.min(index); }$/;"	f
+min2Int	util.sml	/^  val min2Int = max2 Int.>$/;"	v
+minInt	util.sml	/^  val minInt = max Int.>$/;"	v
+min_epsilon	image/bsds/csa.hh	/^double		min_epsilon;	\/* snap to this value when epsilon small *\/$/;"	m	class:CSA
+minus	math/complex.sml	/^  fun minus i1 i2 = $/;"	f
+minus	math/complex.sml	/^ val minus : number -> number -> number$/;"	v
+mismatchException	image/image_common.sml	/^  exception mismatchException$/;"	e
+mod	image/bsds/Matrix.cc	/^static inline double mod (double x, double y) { $/;"	f	file:
+modify	array2d.sml	/^  fun modify ( f : 'a -> 'a )$/;"	f
+modify	image/canny.sml	/^    val modify = GrayscaleImageReal.modify$/;"	v
+modify	image/image.sml	/^  fun modify ( f : pixel -> pixel )$/;"	f
+modify	image/image.sml	/^  val modify : ( pixel -> pixel ) -> image -> unit$/;"	v
+modifyi	array2d.sml	/^  fun modifyi ( f : int * 'a -> 'a )$/;"	f
+modifyi	image/image.sml	/^  fun modifyi ( f : int * pixel -> pixel )$/;"	f
+modifyi	image/image.sml	/^  val modifyi : ( int * pixel -> pixel ) -> image -> unit$/;"	v
+modifyij	array2d.sml	/^  fun modifyij ( f : int * int * 'a -> 'a )$/;"	f
+modifyxy	image/image.sml	/^  fun modifyxy ( f : int * int * pixel -> pixel )$/;"	f
+modifyxy	image/image.sml	/^  val modifyxy : ( int * int * pixel -> pixel ) -> image -> unit$/;"	v
+msg	image/bsds/Exception.cc	/^Exception::msg () const$/;"	f	class:Exception
+mtimes	image/bsds/Matrix.cc	/^Matrix mtimes (const Matrix& a, const Matrix& b)$/;"	f
+multiplier	image/bsds/match.cc	/^static const int multiplier = 100;$/;"	v	file:
+myclock	image/bsds/csa.hh	/^unsigned	myclock()$/;"	f	class:CSA
+n	image/bsds/csa.hh	/^unsigned	n, m;$/;"	m	class:CSA
+ncols	image/bsds/Matrix.cc	/^Matrix::ncols () const $/;"	f	class:Matrix
+ncols	image/bsds/Matrix.cc	/^ncols (const Matrix& a)$/;"	f
+neg_two_sigma2_inv	image/filter_util.sml	/^    val neg_two_sigma2_inv = sigma2_inv * ~0.5;$/;"	v
+negative	math/complex.sml	/^  fun negative (a, b) = $/;"	f
+negative	math/complex.sml	/^ val negative : number -> number$/;"	v
+newHeight	image/image.sml	/^    val newHeight = Real.ceil(Real.max($/;"	v
+newImage	image/image.sml	/^    val newImage = zeroImage(newWidth, newHeight);$/;"	v
+newWidth	image/image.sml	/^    val newWidth = Real.ceil(Real.max($/;"	v
+next	image/bsds/csa_types.h	/^				struct	rhs_node	*prev, *next;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::
+nextLine	image/bsds/String.cc	/^String::nextLine (FILE* fp)$/;"	f	class:String
+next_best	image/bsds/csa_types.h	/^				double	next_best;$/;"	m	struct:lhs_node
+nextpow2	image/bsds/Matrix.cc	/^Matrix::nextpow2 () $/;"	f	class:Matrix
+nextpow2	image/bsds/Matrix.cc	/^nextpow2 (const Matrix& a)$/;"	f
+nextpow2	image/bsds/Matrix.cc	/^static inline double nextpow2 (double x) {$/;"	f	file:
+node_info	image/bsds/csa_types.h	/^					}	node_info;$/;"	m	struct:lhs_node	typeref:struct:lhs_node::__anon1
+node_info	image/bsds/csa_types.h	/^					}	node_info;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::__anon2
+nomem_msg	image/bsds/csa.cc	/^char* CSA::nomem_msg = "Insufficient memory.\\n";$/;"	m	class:CSA	file:
+nomem_msg	image/bsds/csa.hh	/^static char* nomem_msg;$/;"	m	class:CSA
+non_scans	image/bsds/csa.hh	/^		non_scans;$/;"	m	class:CSA
+nongc	tictactimer.sml	/^    val { nongc = { usr = U, sys = S }, $/;"	v
+normalizeReal	image/image_util.sml	/^  fun normalizeReal( Image : GrayscaleImageReal.image )$/;"	f
+normalizeReal'	image/image_util.sml	/^  fun normalizeReal'( Image : GrayscaleImageReal.image )$/;"	f
+normalizeReal''	image/image_util.sml	/^  fun normalizeReal''( Image : GrayscaleImageReal.image )$/;"	f
+nrows	image/bsds/Matrix.cc	/^Matrix::nrows () const $/;"	f	class:Matrix
+nrows	image/bsds/Matrix.cc	/^nrows (const Matrix& a)$/;"	f
+num_buckets	image/bsds/csa.hh	/^long		num_buckets;	\/* number of buckets *\/$/;"	m	class:CSA
+number	math/complex.sml	/^  type number = real * real$/;"	t
+number	math/complex.sml	/^ type number$/;"	t
+numel	image/bsds/Matrix.cc	/^Matrix::numel () const $/;"	f	class:Matrix
+numel	image/bsds/Matrix.cc	/^numel (const Matrix& a)$/;"	f
+odd	image/filter.sml	/^    fun odd( X : int ) : bool = ( X mod 2 )=1$/;"	f
+oddFilters	image/texton.sml	/^       val oddFilters =  List.tabulate(nori, $/;"	v
+ones	image/bsds/Matrix.cc	/^ones (int rows, int cols) $/;"	f
+ones	image/bsds/Matrix.cc	/^ones (int sz) $/;"	f
+ones	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+operator !=	image/bsds/Point.hh	/^inline int operator!= (const Point2D<T>& a, const Point2D<T>& b) $/;"	f
+operator !=	image/bsds/Point.hh	/^inline int operator!= (const Point3D<T>& a, const Point3D<T>& b) $/;"	f
+operator !=	image/bsds/String.hh	/^inline int operator!= (const String& x, const String& y)$/;"	f
+operator !=	image/bsds/String.hh	/^inline int operator!= (const String& x, const char* y)$/;"	f
+operator !=	image/bsds/String.hh	/^inline int operator!= (const char* x, const String& y)$/;"	f
+operator ()	image/bsds/Array.hh	/^    Elem& operator() (unsigned i) {$/;"	f	class:Array1D
+operator ()	image/bsds/Array.hh	/^    Elem& operator() (unsigned i, unsigned j) {$/;"	f	class:Array2D
+operator ()	image/bsds/Array.hh	/^    Elem& operator() (unsigned i, unsigned j, unsigned k) {$/;"	f	class:Array3D
+operator ()	image/bsds/Array.hh	/^    Elem& operator() (unsigned i, unsigned j, unsigned k, unsigned m) {$/;"	f	class:Array4D
+operator ()	image/bsds/Array.hh	/^    const Elem& operator() (unsigned i) const {$/;"	f	class:Array1D
+operator ()	image/bsds/Array.hh	/^    const Elem& operator() (unsigned i, unsigned j) const {$/;"	f	class:Array2D
+operator ()	image/bsds/Array.hh	/^    const Elem& operator() (unsigned i, unsigned j, unsigned k) const {$/;"	f	class:Array3D
+operator ()	image/bsds/Array.hh	/^    const Elem& operator() (unsigned i, unsigned j, unsigned k, unsigned m) const {$/;"	f	class:Array4D
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (const Matrix& indices) const$/;"	f	class:Matrix
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (int index) $/;"	f	class:Matrix
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (int index) const $/;"	f	class:Matrix
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (int r1, int r2, int c1, int c2) const$/;"	f	class:Matrix
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (int row, int col) $/;"	f	class:Matrix
+operator ()	image/bsds/Matrix.cc	/^Matrix::operator() (int row, int col) const $/;"	f	class:Matrix
+operator <	image/bsds/String.hh	/^inline int operator< (const String& x, const String& y) $/;"	f
+operator <	image/bsds/String.hh	/^inline int operator< (const String& x, const char* y)$/;"	f
+operator <	image/bsds/String.hh	/^inline int operator< (const char* x, const String& y)$/;"	f
+operator <<	image/bsds/Exception.hh	/^inline std::ostream& operator<< (std::ostream& out, const Exception& e) {$/;"	f
+operator <<	image/bsds/String.hh	/^inline std::ostream& operator<< (std::ostream& out, const String& s) {$/;"	f
+operator <=	image/bsds/String.hh	/^inline int operator<= (const String& x, const String& y) $/;"	f
+operator <=	image/bsds/String.hh	/^inline int operator<= (const String& x, const char* y)$/;"	f
+operator <=	image/bsds/String.hh	/^inline int operator<= (const char* x, const String& y)$/;"	f
+operator =	image/bsds/Matrix.cc	/^Matrix::operator= (const Matrix& that) $/;"	f	class:Matrix
+operator =	image/bsds/Matrix.cc	/^Matrix::operator= (const double& val) $/;"	f	class:Matrix
+operator =	image/bsds/String.cc	/^String::operator= (const String& that)$/;"	f	class:String
+operator =	image/bsds/String.cc	/^String::operator= (const char* s)$/;"	f	class:String
+operator ==	image/bsds/Point.hh	/^inline int operator== (const Point2D<T>& a, const Point2D<T>& b) $/;"	f
+operator ==	image/bsds/Point.hh	/^inline int operator== (const Point3D<T>& a, const Point3D<T>& b) $/;"	f
+operator ==	image/bsds/String.hh	/^inline int operator== (const String& x, const String& y) $/;"	f
+operator ==	image/bsds/String.hh	/^inline int operator== (const String& x, const char* y)$/;"	f
+operator ==	image/bsds/String.hh	/^inline int operator== (const char* x, const String& y)$/;"	f
+operator >	image/bsds/String.hh	/^inline int operator> (const String& x, const String& y) $/;"	f
+operator >	image/bsds/String.hh	/^inline int operator> (const String& x, const char* y)$/;"	f
+operator >	image/bsds/String.hh	/^inline int operator> (const char* x, const String& y)$/;"	f
+operator >=	image/bsds/String.hh	/^inline int operator>= (const String& x, const String& y) $/;"	f
+operator >=	image/bsds/String.hh	/^inline int operator>= (const String& x, const char* y)$/;"	f
+operator >=	image/bsds/String.hh	/^inline int operator>= (const char* x, const String& y)$/;"	f
+operator []	image/bsds/String.cc	/^String::operator[] (unsigned i) const$/;"	f	class:String
+operator ^	image/bsds/Matrix.cc	/^Matrix operator^ (const Matrix& a, const Matrix& b) {$/;"	f
+operator ^	image/bsds/Matrix.cc	/^Matrix operator^ (const Matrix& a, double b) {$/;"	f
+operator ^	image/bsds/Matrix.cc	/^Matrix operator^ (double a, const Matrix& b) {$/;"	f
+operator ^=	image/bsds/Matrix.cc	/^Matrix& Matrix::operator^= (const Matrix& that) {$/;"	f	class:Matrix
+operator ^=	image/bsds/Matrix.cc	/^Matrix& Matrix::operator^= (const double& val) {$/;"	f	class:Matrix
+operator const char*	image/bsds/String.hh	/^    operator const char* () const { return text(); }$/;"	f	class:String
+otsu	image/threshold.sml	/^  fun otsu ( Image : Image.image, NumBins : int ) : real list =$/;"	f
+otsu	image/threshold.sml	/^  val otsu : Image.image * int -> real list$/;"	v
+outer	image/filter_util.sml	/^     val outer = createGaussianMaskGPB2D 0 (sigma,$/;"	v
+outlierCostDefault	image/bsds/correspondPixels.cc	/^static const double outlierCostDefault = 100;$/;"	v	file:
+output	image/pnm_text.sml	/^    fun output( Output : BinIO.outstream, S : string ) : unit =$/;"	f
+outputSize	image/image_common.sml	/^  datatype outputSize = original | full$/;"	t
+p	image/bsds/csa_types.h	/^				double	p;$/;"	m	struct:lhs_node
+p	image/bsds/csa_types.h	/^				double	p;$/;"	m	struct:rhs_node
+p_refine	image/bsds/csa.hh	/^int	p_refine()$/;"	f	class:CSA
+p_refine_time	image/bsds/csa.hh	/^		p_refine_time;$/;"	m	class:CSA
+p_refines	image/bsds/csa.hh	/^unsigned	p_refines,$/;"	m	class:CSA
+p_update	image/bsds/csa.hh	/^void	p_update()$/;"	f	class:CSA
+p_update_time	image/bsds/csa.hh	/^		p_update_time;$/;"	m	class:CSA
+p_updates	image/bsds/csa.hh	/^unsigned	p_updates,$/;"	m	class:CSA
+pack	image/image_util.sml	/^    fun pack( Images, Index ) : unit =$/;"	f
+packBooleanIntoWord8	image/image_util.sml	/^  fun packBooleanIntoWord8( Images : BooleanImage.image list )$/;"	f
+parse	image/bsds/csa.hh	/^unsigned long	parse(const int* graph)$/;"	f	class:CSA
+parse	image/pnm_text.sml	/^      fun parse( Input : BinIO.instream,$/;"	f
+parse	image/pnm_text.sml	/^      fun parse( Tokens : string list )$/;"	f
+parseFormat	image/pnm_text.sml	/^    fun parseFormat( Input : BinIO.instream ) : format =$/;"	f
+parseHeader	image/pnm_text.sml	/^    fun parseHeader( Input : BinIO.instream ) $/;"	f
+parseInt	image/pnm_text.sml	/^    fun parseInt( Input : BinIO.instream ) : int =$/;"	f
+parsePixels	image/pnm_text.sml	/^    fun parsePixels( Input : BinIO.instream, Depth : int, ParseBits : bool )$/;"	f
+parseWord	image/pnm_text.sml	/^    fun parseWord( Input : BinIO.instream ) : word =$/;"	f
+parse_cmdline	image/bsds/csa.hh	/^void	parse_cmdline()$/;"	f	class:CSA
+parse_error	image/bsds/csa.hh	/^void parse_error(int err_index)$/;"	f	class:CSA
+percentage	image/threshold.sml	/^  fun percentage( Image : Image.image, NumBins : int, Percentage : real ) $/;"	f
+percentage	image/threshold.sml	/^  val percentage : Image.image * int * real -> real list$/;"	v
+pixel	image/boolean_image.sml	/^  type pixel = element$/;"	t
+pixel	image/color_image.sml	/^  type pixel = element * element * element $/;"	t
+pixel	image/filter.sml	/^  type pixel$/;"	t
+pixel	image/grayscale_image.sml	/^  type pixel = element $/;"	t
+pixel	image/image.sml	/^    type pixel = Spec.pixel$/;"	t
+pixel	image/image.sml	/^  type pixel $/;"	t
+pixel	image/image.sml	/^  type pixel = Spec.pixel$/;"	t
+pixel	image/image.sml	/^  type pixel$/;"	t
+pixel	image/pnm.sml	/^  type pixel$/;"	t
+pixel	image/threshold.sml	/^  type pixel$/;"	t
+pixelAdd	image/boolean_image.sml	/^  fun pixelAdd( X : bool, Y : bool ) : bool = ( X orelse Y )$/;"	f
+pixelAdd	image/color_image.sml	/^  fun pixelAdd( X as ( XR, XG, XB ) : pixel, Y as ( YR, YG, YB ) : pixel ) = $/;"	f
+pixelAdd	image/filter.sml	/^  val pixelAdd : pixel * pixel -> pixel$/;"	v
+pixelAdd	image/grayscale_image.sml	/^  val pixelAdd = Int.+$/;"	v
+pixelAdd	image/grayscale_image.sml	/^  val pixelAdd = Real.+$/;"	v
+pixelAdd	image/grayscale_image.sml	/^  val pixelAdd = Word8.+$/;"	v
+pixelAdd	image/image.sml	/^    val pixelAdd = Spec.pixelAdd$/;"	v
+pixelAdd	image/image.sml	/^  val pixelAdd : pixel * pixel -> pixel$/;"	v
+pixelEqual	image/boolean_image.sml	/^  fun pixelEqual( X : pixel, Y : pixel ) : bool = $/;"	f
+pixelEqual	image/color_image.sml	/^  fun pixelEqual( X as ( XR, XG, XB ) : pixel, Y as ( YR, YG, YB ) : pixel ) $/;"	f
+pixelEqual	image/grayscale_image.sml	/^  fun pixelEqual( X : pixel, Y : pixel ) : bool = $/;"	f
+pixelEqual	image/image.sml	/^  val pixelEqual : pixel * pixel -> bool$/;"	v
+pixelFromWords	image/boolean_image.sml	/^  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel =$/;"	f
+pixelFromWords	image/color_image.sml	/^  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel =$/;"	f
+pixelFromWords	image/grayscale_image.sml	/^  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel = $/;"	f
+pixelFromWords	image/image.sml	/^    val pixelFromWords = Spec.pixelFromWords$/;"	v
+pixelFromWords	image/image.sml	/^  val pixelFromWords : word list * word * bool -> pixel$/;"	v
+pixelFromWords	image/pnm.sml	/^  val pixelFromWords : Word.word list * word * bool -> pixel$/;"	v
+pixelMul	image/boolean_image.sml	/^  fun pixelMul( X : bool, Y : bool ) : bool = ( X andalso Y )$/;"	f
+pixelMul	image/color_image.sml	/^  fun pixelMul( X as ( XR, XG, XB ) : pixel, Y as ( YR, YG, YB ) : pixel ) = $/;"	f
+pixelMul	image/filter.sml	/^  val pixelMul : pixel * pixel -> pixel$/;"	v
+pixelMul	image/grayscale_image.sml	/^  val pixelMul = Int.*$/;"	v
+pixelMul	image/grayscale_image.sml	/^  val pixelMul = Real.*$/;"	v
+pixelMul	image/grayscale_image.sml	/^  val pixelMul = Word8.*$/;"	v
+pixelMul	image/image.sml	/^    val pixelMul = Spec.pixelMul$/;"	v
+pixelMul	image/image.sml	/^  val pixelMul : pixel * pixel -> pixel$/;"	v
+pixelMul'	image/boolean_image.sml	/^  fun pixelMul'( X : bool, Y : real) : bool = X$/;"	f
+pixelMul'	image/color_image.sml	/^  fun pixelMul'( x as ( XR, XG, XB ) : pixel, y : real ) = $/;"	f
+pixelMul'	image/color_image.sml	/^  fun pixelMul'( x as (xr, xg, xb) : pixel, y : real) =$/;"	f
+pixelMul'	image/grayscale_image.sml	/^  fun pixelMul' (x : pixel, y : real) = raise ImageCommon.formatException "Not implemented"$/;"	f
+pixelMul'	image/grayscale_image.sml	/^  fun pixelMul'( x : pixel, y : real) = Real.round(real x * y)$/;"	f
+pixelMul'	image/grayscale_image.sml	/^  val pixelMul' = Real.*$/;"	v
+pixelMul'	image/image.sml	/^  val pixelMul' : pixel * real -> pixel$/;"	v
+pixelSub	image/boolean_image.sml	/^  fun pixelSub( X : bool, Y : bool ) : bool = ( X andalso not Y ) $/;"	f
+pixelSub	image/color_image.sml	/^  fun pixelSub( X as ( XR, XG, XB ) : pixel, Y as ( YR, YG, YB ) : pixel ) = $/;"	f
+pixelSub	image/grayscale_image.sml	/^  val pixelSub = Int.-$/;"	v
+pixelSub	image/grayscale_image.sml	/^  val pixelSub = Real.-$/;"	v
+pixelSub	image/grayscale_image.sml	/^  val pixelSub = Word8.-$/;"	v
+pixelSub	image/image.sml	/^  val pixelSub : pixel * pixel -> pixel$/;"	v
+pixelToString	image/boolean_image.sml	/^  fun pixelToString( X : pixel ) : string = $/;"	f
+pixelToString	image/color_image.sml	/^  fun pixelToString( ( XR, XG, XB ) : pixel ) : string =$/;"	f
+pixelToString	image/grayscale_image.sml	/^  fun pixelToString( X : pixel ) : string = $/;"	f
+pixelToString	image/grayscale_image.sml	/^  fun pixelToString( X : pixel ) : string =$/;"	f
+pixelToString	image/image.sml	/^  val pixelToString : pixel -> string$/;"	v
+pixelToWords	image/boolean_image.sml	/^  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) $/;"	f
+pixelToWords	image/color_image.sml	/^  fun pixelToWords( X as ( XR, XG, XB ) : pixel, $/;"	f
+pixelToWords	image/grayscale_image.sml	/^  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) $/;"	f
+pixelToWords	image/image.sml	/^    val pixelToWords = Spec.pixelToWords$/;"	v
+pixelToWords	image/image.sml	/^  val pixelToWords : pixel * word * bool -> word list$/;"	v
+pixelToWords	image/pnm.sml	/^  val pixelToWords : pixel * word * bool -> Word.word list$/;"	v
+plus	math/complex.sml	/^  fun plus (a1, b1) (a2, b2) = $/;"	f
+plus	math/complex.sml	/^ val plus : number -> number -> number$/;"	v
+pnmException	image/pnm.sml	/^  exception pnmException of string$/;"	e
+pnmException	image/pnm_common.sml	/^  exception pnmException of string$/;"	e
+pnmImageException	image/image.sml	/^    exception pnmImageException of string$/;"	e
+pnmImageException	image/pnm.sml	/^  exception pnmImageException of string$/;"	e
+po_cost_thresh	image/bsds/csa.hh	/^double		po_cost_thresh;$/;"	m	class:CSA
+po_work_thresh	image/bsds/csa.hh	/^WORK_TYPE	po_work_thresh;	\/* work threshhold for price-in checks *\/$/;"	m	class:CSA
+pow2	image/bsds/Matrix.cc	/^Matrix::pow2 () $/;"	f	class:Matrix
+pow2	image/bsds/Matrix.cc	/^pow2 (const Matrix& a)$/;"	f
+pow2	image/bsds/Matrix.cc	/^static inline double pow2 (double x) { return pow(2,x); }$/;"	f	file:
+prev	image/bsds/csa_types.h	/^				struct	rhs_node	*prev, *next;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::rhs_node
+price_in_mch_arc	image/bsds/csa_defs.h	192;"	d
+price_in_rev	image/bsds/csa_defs.h	146;"	d
+price_in_rev	image/bsds/csa_defs.h	175;"	d
+price_in_unm_arc	image/bsds/csa_defs.h	180;"	d
+price_out_mch_arc	image/bsds/csa_defs.h	217;"	d
+price_out_rev	image/bsds/csa_defs.h	159;"	d
+price_out_rev	image/bsds/csa_defs.h	176;"	d
+price_out_unm_arc	image/bsds/csa_defs.h	205;"	d
+priced_in	image/bsds/csa_types.h	/^					unsigned	priced_in : 1;$/;"	m	struct:rhs_node::__anon2
+priced_out	image/bsds/csa_types.h	/^				struct	lr_arc	*priced_out;$/;"	m	struct:lhs_node	typeref:struct:lhs_node::lr_arc
+priced_out	image/bsds/csa_types.h	/^				struct	rl_arc	*priced_out;$/;"	m	struct:rhs_node	typeref:struct:rhs_node::rl_arc
+printArray	print_util.sml	/^  fun printArray ( toString : 'a -> string )$/;"	f
+printList	print_util.sml	/^  fun printList ( toString : 'a -> string )$/;"	f
+prod	image/bsds/Matrix.cc	/^Matrix::prod () const $/;"	f	class:Matrix
+prod	image/bsds/Matrix.cc	/^double prod (const Matrix& a) { return a.prod(); }$/;"	f
+pushes	image/bsds/csa.hh	/^		pushes,$/;"	m	class:CSA
+q_create	image/bsds/csa.hh	/^queue	q_create(unsigned size)$/;"	f	class:CSA
+q_destroy	image/bsds/csa.hh	/^void	q_destroy(queue q)$/;"	f	class:CSA
+q_empty	image/bsds/csa_defs.h	57;"	d
+qnan	image/bsds/Matrix.cc	/^static const double qnan = *(double*)&_qnan;$/;"	v	file:
+queue	image/bsds/csa_types.h	/^				}	*queue;$/;"	t	typeref:struct:queue_st
+queue_st	image/bsds/csa_types.h	/^typedef	struct	queue_st	{$/;"	s
+r_scan	image/bsds/csa.hh	/^void	r_scan(register rhs_ptr w)$/;"	f	class:CSA
+r_scans	image/bsds/csa.hh	/^		r_scans,$/;"	m	class:CSA
+rand	image/bsds/Matrix.cc	/^rand (int rows, int cols) $/;"	f
+rand	image/bsds/Matrix.cc	/^rand (int sz) $/;"	f
+rand	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+rand	image/bsds/Random.cc	/^Random Random::rand;$/;"	m	class:Random	file:
+rand	image/bsds/Random.hh	/^    static Random rand;$/;"	m	class:Random
+randn	image/bsds/Matrix.cc	/^randn (int rows, int cols) $/;"	f
+randn	image/bsds/Matrix.cc	/^randn (int sz) $/;"	f
+randn	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+re	math/complex.sml	/^      val re = Real.\/(Real.+(Real.*(a1, a2), Real.*(b1, b2)) ,magnitude)$/;"	v
+re	math/complex.sml	/^  fun re (a, b) =$/;"	f
+re	math/complex.sml	/^ val re : number -> real$/;"	v
+reached_nodes	image/bsds/csa.hh	/^stack		reached_nodes; \/* nodes reached in topological ordering *\/$/;"	m	class:CSA
+read	image/pnm_binary.sml	/^      fun read( Index : int ) : word list list =$/;"	f
+read	text_file_util.sml	/^    fun read() : 'a list = $/;"	f
+readCSInts	text_file_util.sml	/^  val readCSInts : string -> int list = $/;"	v
+readCSReals	text_file_util.sml	/^  val readCSReals : string -> real list = $/;"	v
+readCSV	text_file_util.sml	/^  fun readCSV ( fromString : string -> 'a ) $/;"	f
+readDSV	text_file_util.sml	/^  fun readDSV ( isDelim : char -> bool ) $/;"	f
+readFilenames	text_file_util.sml	/^  fun readFilenames( File : string ) : string list =$/;"	f
+readPixel	image/pnm_binary.sml	/^    fun readPixel( Input : BinIO.instream, Depth : int, MaxVal : word ) $/;"	f
+readPixel	image/pnm_binary.sml	/^    fun readPixel( Input : BinIO.instream, X : int ) $/;"	f
+readPixelsAsBits	image/pnm_binary.sml	/^    fun readPixelsAsBits( Input : BinIO.instream,$/;"	f
+readPixelsAsBytes	image/pnm_binary.sml	/^    fun readPixelsAsBytes( Input : BinIO.instream, $/;"	f
+readWhites	image/pnm_text.sml	/^      fun readWhites( InComment : bool ) : unit =$/;"	f
+readWord	image/pnm_binary.sml	/^    fun readWord( Input : BinIO.instream, MaxVal : word ) : word =$/;"	f
+rebuilds	image/bsds/csa.hh	/^unsigned	rebuilds,$/;"	m	class:CSA
+refine	image/bsds/csa.hh	/^void	refine()$/;"	f	class:CSA
+refine_time	image/bsds/csa.hh	/^		refine_time;$/;"	m	class:CSA
+refines	image/bsds/csa.hh	/^		refines,$/;"	m	class:CSA
+relabelings	image/bsds/csa.hh	/^		relabelings,$/;"	m	class:CSA
+rem	image/bsds/Matrix.cc	/^static inline double rem (double x, double y) { $/;"	f	file:
+remove	list_util.sml	/^  fun remove( eq : 'a * 'a -> bool ) ( Y : 'a, Xs : 'a list ) : 'a list =$/;"	f
+repmat	image/bsds/Matrix.cc	/^Matrix::repmat (int m, int n) const$/;"	f	class:Matrix
+repmat	image/bsds/Matrix.cc	/^repmat (const Matrix& a, int m, int n)$/;"	f
+reseed	image/bsds/Random.cc	/^Random::reseed (u_int64_t seed)$/;"	f	class:Random
+reset	image/bsds/Random.cc	/^Random::reset ()$/;"	f	class:Random
+reset	image/bsds/Timer.hh	/^Timer::reset ()$/;"	f	class:Timer
+reshape	image/bsds/Matrix.cc	/^Matrix::reshape (int rows, int cols) $/;"	f	class:Matrix
+reshape	image/bsds/Matrix.cc	/^reshape (const Matrix& a, int rows, int cols)$/;"	f
+residual	util.sml	/^    val residual = Real.abs(Real.-(X, Y))$/;"	v
+resize	image/bsds/Array.hh	/^    void resize (unsigned d0, unsigned d1) {$/;"	f	class:Array2D
+resize	image/bsds/Array.hh	/^    void resize (unsigned d0, unsigned d1, unsigned d2) {$/;"	f	class:Array3D
+resize	image/bsds/Array.hh	/^    void resize (unsigned d0, unsigned d1, unsigned d2, unsigned d3) {$/;"	f	class:Array4D
+resize	image/bsds/Array.hh	/^    void resize (unsigned n) {$/;"	f	class:Array1D
+resize	image/bsds/Matrix.cc	/^Matrix::resize (int rows, int cols, FillType type)$/;"	f	class:Matrix
+result_a	image/bsds/csa.hh	/^    int* result_a;$/;"	m	class:CSA
+result_b	image/bsds/csa.hh	/^    int* result_b;$/;"	m	class:CSA
+result_cost	image/bsds/csa.hh	/^    int result_cost;$/;"	m	class:CSA
+result_costs	image/bsds/csa.hh	/^    int* result_costs;$/;"	m	class:CSA
+result_n	image/bsds/csa.hh	/^    int result_n;$/;"	m	class:CSA
+rev	image/bsds/csa_types.h	/^				struct	lr_arc	*rev;$/;"	m	struct:rl_arc	typeref:struct:rl_arc::lr_arc
+rev	image/bsds/csa_types.h	/^				struct	rl_arc	*rev;$/;"	m	struct:lr_arc	typeref:struct:lr_arc::rl_arc
+rfw	image/grayscale_image.sml	/^    val rfw = Real.fromInt o Word.toInt$/;"	v
+rhs_node	image/bsds/csa_types.h	/^typedef	struct	rhs_node	{$/;"	s
+rhs_ptr	image/bsds/csa_types.h	/^				}	*rhs_ptr;$/;"	t	typeref:struct:rhs_node
+rl_aptr	image/bsds/csa_types.h	/^				}	*rl_aptr;$/;"	t	typeref:struct:rl_arc
+rl_arc	image/bsds/csa_types.h	/^typedef	struct	rl_arc		{$/;"	s
+rmax	image/bsds/Matrix.cc	/^Matrix rmax (const Matrix& a) { return a.rmax(); }$/;"	f
+rmax	image/bsds/Matrix.cc	/^Matrix rmax (const Matrix& a, Matrix& indices) { return a.rmax(indices); }$/;"	f
+rmax	image/bsds/Matrix.cc	/^Matrix::rmax () const $/;"	f	class:Matrix
+rmax	image/bsds/Matrix.cc	/^Matrix::rmax (Matrix& indices) const $/;"	f	class:Matrix
+rmin	image/bsds/Matrix.cc	/^Matrix rmin (const Matrix& a) { return a.rmin(); }$/;"	f
+rmin	image/bsds/Matrix.cc	/^Matrix rmin (const Matrix& a, Matrix& indices) { return a.rmin(indices); }$/;"	f
+rmin	image/bsds/Matrix.cc	/^Matrix::rmin () const $/;"	f	class:Matrix
+rmin	image/bsds/Matrix.cc	/^Matrix::rmin (Matrix& indices) const $/;"	f	class:Matrix
+rot90	image/bsds/Matrix.cc	/^Matrix::rot90 (int k) $/;"	f	class:Matrix
+rot90	image/bsds/Matrix.cc	/^rot90 (const Matrix& a, int k)$/;"	f
+rotate	image/image.sml	/^  fun rotate (img : image, by : real ) : image =$/;"	f
+rotate	image/image.sml	/^  val rotate : (image * real) -> image$/;"	v
+rotateCrop	image/image.sml	/^  fun rotateCrop(img : image, by : real, newWidth : int, newHeight : int) $/;"	f
+rotateCrop	image/image.sml	/^  val rotateCrop : (image * real * int * int) -> image$/;"	v
+rotated	image/filter_util.sml	/^   val rotated = GrayscaleImageReal.rotateCrop$/;"	v
+round	image/bsds/Matrix.cc	/^Matrix::round () $/;"	f	class:Matrix
+round	image/bsds/Matrix.cc	/^round (const Matrix& a)$/;"	f
+rprod	image/bsds/Matrix.cc	/^Matrix rprod (const Matrix& a) { return a.rprod(); }$/;"	f
+rprod	image/bsds/Matrix.cc	/^Matrix::rprod () const $/;"	f	class:Matrix
+rsum	image/bsds/Matrix.cc	/^Matrix rsum (const Matrix& a) { return a.rsum(); }$/;"	f
+rsum	image/bsds/Matrix.cc	/^Matrix::rsum () const $/;"	f	class:Matrix
+rtli	image/color_image.sml	/^    val rtli = Real.toLargeInt IEEEReal.TO_NEAREST$/;"	v
+running	image/bsds/Timer.hh	/^    enum State { stopped, running };$/;"	e	enum:Timer::State
+same	list_util.sml	/^  fun same ( eq : 'a * 'a -> bool ) ( Xs : 'a list ) : bool =$/;"	f
+samesize	image/bsds/Matrix.cc	/^Matrix::samesize (const Matrix& a) const$/;"	f	class:Matrix
+samesize	image/bsds/Matrix.cc	/^samesize (const Matrix& a, const Matrix& b)$/;"	f
+save	image/image.sml	/^  fun save( Image : image, Filename : string ) : unit = $/;"	f
+save	image/image.sml	/^  val save : image * string -> unit$/;"	v
+save	image/pnm.sml	/^  fun save( Image as { Width, Height, Values } : Image.image, $/;"	f
+save	image/pnm.sml	/^  val save : Image.image * string * format * word -> unit$/;"	v
+save'	image/image.sml	/^  fun save' ( Format : PNMCommon.format, MaxVal : word )$/;"	f
+save'	image/image.sml	/^  val save': PNMCommon.format * word -> image * string -> unit$/;"	v
+scale_factor	image/bsds/csa.hh	/^double		scale_factor;	\/* scaling factor *\/$/;"	m	class:CSA
+scanned	image/bsds/csa.hh	/^rhs_ptr	scanned;$/;"	m	class:CSA
+scans	image/bsds/csa.hh	/^		scans,$/;"	m	class:CSA
+scatter	image/bsds/Matrix.cc	/^Matrix::scatter (const Matrix& indices, const Matrix& values)$/;"	f	class:Matrix
+scatter	image/bsds/Matrix.cc	/^Matrix::scatter (const Matrix& indices, double value)$/;"	f	class:Matrix
+scatter	image/bsds/Matrix.cc	/^scatter (const Matrix& a, const Matrix& indices, const Matrix& values)$/;"	f
+scatter	image/bsds/Matrix.cc	/^scatter (const Matrix& a, const Matrix& indices, double value)$/;"	f
+score	image/f_measure.sml	/^  type score = int * int * int * int * real * real * real$/;"	t
+score	image/score.sml	/^  type score $/;"	t
+sec	image/bsds/Matrix.cc	/^sec (const Matrix& a)$/;"	f
+sec	image/bsds/Matrix.cc	/^static inline double sec (double x) { return cos(1.0\/x); }$/;"	f	file:
+sec	image/bsds/Matrix.cc	/^void Matrix::sec ()$/;"	f	class:Matrix
+sech	image/bsds/Matrix.cc	/^sech (const Matrix& a)$/;"	f
+sech	image/bsds/Matrix.cc	/^static inline double sech (double x) { return cosh(1.0\/x); }$/;"	f	file:
+sech	image/bsds/Matrix.cc	/^void Matrix::sech ()$/;"	f	class:Matrix
+setdiag	image/bsds/Matrix.cc	/^Matrix::setdiag (const Matrix& d, int k) $/;"	f	class:Matrix
+setdiag	image/bsds/Matrix.cc	/^Matrix::setdiag (double val, int k) $/;"	f	class:Matrix
+show_lhs	image/bsds/csa.hh	/^void	show_lhs()$/;"	f	class:CSA
+show_lhs_node	image/bsds/csa.hh	/^void	show_lhs_node(int lhs_id)$/;"	f	class:CSA
+show_rhs	image/bsds/csa.hh	/^void	show_rhs()$/;"	f	class:CSA
+show_rhs_node	image/bsds/csa.hh	/^void	show_rhs_node(int rhs_id)$/;"	f	class:CSA
+sigma2_inv	image/filter_util.sml	/^    val sigma2_inv = 1.0 \/ (sigma * sigma);$/;"	v
+sigmaInner	image/filter_util.sml	/^     val sigmaInner = sigma \/ scaleFactor;$/;"	v
+sigmaX	image/filter_util.sml	/^   val sigmaX = sigma \/ elongation$/;"	v
+sigmaY	image/filter_util.sml	/^   val sigmaY = sigma $/;"	v
+sign	image/bsds/Matrix.cc	/^Matrix::sign () $/;"	f	class:Matrix
+sign	image/bsds/Matrix.cc	/^sign (const Matrix& a)$/;"	f
+sin	image/bsds/Matrix.cc	/^sin (const Matrix& a)$/;"	f
+sin	image/bsds/Matrix.cc	/^void Matrix::sin ()$/;"	f	class:Matrix
+sinh	image/bsds/Matrix.cc	/^sinh (const Matrix& a)$/;"	f
+sinh	image/bsds/Matrix.cc	/^void Matrix::sinh ()$/;"	f	class:Matrix
+size	image/bsds/Array.hh	/^    int size () const {$/;"	f	class:Array1D
+size	image/bsds/Array.hh	/^    int size (unsigned d) const {$/;"	f	class:Array2D
+size	image/bsds/Array.hh	/^    int size (unsigned d) const {$/;"	f	class:Array3D
+size	image/bsds/Array.hh	/^    int size (unsigned d) const {$/;"	f	class:Array4D
+size	image/bsds/Matrix.cc	/^Matrix::size () const $/;"	f	class:Matrix
+size	image/bsds/Matrix.cc	/^size (const Matrix& a)$/;"	f
+size	image/filter_util.sml	/^    val size = 2 * support + 1;$/;"	v
+snan	image/bsds/Matrix.cc	/^static const double snan = *(double*)&_snan;$/;"	v	file:
+sort	image/bsds/Sort.hh	/^sort (Closure cl, int n)$/;"	f
+sortCmp	image/bsds/Sort.hh	/^static inline int sortCmp (T* a, int i, int j) {$/;"	f
+sortSwap	image/bsds/Sort.hh	/^static inline void sortSwap (T* a, int i, int j) {$/;"	f
+sort_insert	image/bsds/csa.hh	837;"	d
+sp_aug	image/bsds/csa.hh	/^void	sp_aug()$/;"	f	class:CSA
+sp_aug_time	image/bsds/csa.hh	/^		sp_aug_time;$/;"	m	class:CSA
+sp_augs	image/bsds/csa.hh	/^unsigned	sp_augs,$/;"	m	class:CSA
+sqrt	image/bsds/Matrix.cc	/^Matrix::sqrt () $/;"	f	class:Matrix
+sqrt	image/bsds/Matrix.cc	/^sqrt (const Matrix& a)$/;"	f
+srched	image/bsds/csa_types.h	/^					unsigned	srched : 1;$/;"	m	struct:rhs_node::__anon2
+srchng	image/bsds/csa_types.h	/^					unsigned	srchng : 1;$/;"	m	struct:rhs_node::__anon2
+st_create	image/bsds/csa.hh	/^stack	st_create(unsigned size)$/;"	f	class:CSA
+st_destroy	image/bsds/csa.hh	/^void st_destroy(stack s)$/;"	f	class:CSA
+st_empty	image/bsds/csa_defs.h	48;"	d
+st_pop	image/bsds/csa.hh	/^char	*st_pop(stack s)$/;"	f	class:CSA
+st_push	image/bsds/csa_defs.h	42;"	d
+st_reset	image/bsds/csa.hh	/^void	st_reset(stack s)$/;"	f	class:CSA
+stack	image/bsds/csa_types.h	/^				}	*stack;$/;"	t	typeref:struct:stack_st
+stack_st	image/bsds/csa_types.h	/^typedef	struct	stack_st	{$/;"	s
+start	image/bsds/Timer.hh	/^Timer::start ()$/;"	f	class:Timer
+state	image/pnm_text.sml	/^    datatype state = $/;"	t
+stop	image/bsds/Timer.hh	/^Timer::stop ()$/;"	f	class:Timer
+stopped	image/bsds/Timer.hh	/^    enum State { stopped, running };$/;"	e	enum:Timer::State
+storage	image/bsds/csa_types.h	/^				char		**storage;$/;"	m	struct:queue_st
+store_results	image/bsds/csa.hh	/^void store_results()$/;"	f	class:CSA
+sub	array2d.sml	/^  fun sub( Array as { Width, Values, ... } : 'a array, I : int, J : int ) $/;"	f
+sub	image/canny.sml	/^    val sub = GrayscaleImageReal.sub$/;"	v
+sub	image/image.sml	/^  fun sub( Image as { Width, Values, ... } : image, X : int, Y : int ) $/;"	f
+sub	image/image.sml	/^  val sub : image * int * int -> pixel$/;"	v
+sub	image/image_util.sml	/^    val sub = GrayscaleImageReal.sub$/;"	v
+sub	image/morphology.sml	/^      fun sub( Image : BooleanImage.image, X : int, Y : int ) : bool =$/;"	f
+sub'	array2d.sml	/^  fun sub'( Array as { Values, ... } : 'a array, I : int ) : 'a =$/;"	f
+sub'	image/canny.sml	/^    val sub' = GrayscaleImageReal.sub'$/;"	v
+sub'	image/image.sml	/^  fun sub'( Image as { Values, ... } : image, Index : int ) : pixel =$/;"	f
+sub'	image/image.sml	/^  val sub' : image * int -> pixel$/;"	v
+sub2ind	image/bsds/Matrix.cc	/^Matrix::sub2ind (const Matrix& i, const Matrix& j, Matrix& ind)$/;"	f	class:Matrix
+sub2ind	image/bsds/Matrix.cc	/^void sub2ind ($/;"	f
+subtract	image/image.sml	/^  fun subtract( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, $/;"	f
+subtract	image/image.sml	/^  val subtract : image * image -> image$/;"	v
+subtract'	image/image.sml	/^  fun subtract'( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, $/;"	f
+subtract'	image/image.sml	/^  val subtract' : image * image -> unit$/;"	v
+sum	image/bsds/Matrix.cc	/^Matrix::sum () const $/;"	f	class:Matrix
+sum	image/bsds/Matrix.cc	/^double sum (const Matrix& a) { return a.sum(); }$/;"	f
+sum	image/image_util.sml	/^    val sum = (GrayscaleImageReal.foldl $/;"	v
+sumCols	image/probability_rand_index.sml	/^  fun sumCols( Index : int, Sum : int, Sums : int list ) : int list =$/;"	f
+sumRows	image/probability_rand_index.sml	/^  fun sumRows( Index : int, Sum : int, Sums : int list ) : int list =$/;"	f
+sumSquares	image/probability_rand_index.sml	/^  fun sumSquares( Xs : int list ) : int = $/;"	f
+system	image/bsds/Timer.hh	/^Timer::system ()$/;"	f	class:Timer
+t0	image/image.sml	/^             val t0 = if (not(x0 = x1)) then $/;"	v
+t1	image/image.sml	/^             val t1 = if (not(x0 = x1)) then $/;"	v
+ta_ptr	image/bsds/csa.hh	/^				}	*ta_ptr;$/;"	t	class:CSA	typeref:struct:CSA::temp_arc
+tabulatexy	image/image.sml	/^  fun tabulatexy (width : int, height : int, f : int * int -> pixel) : image =$/;"	f
+tabulatexy	image/image.sml	/^  val tabulatexy : (int * int * (int * int -> pixel))  -> image$/;"	v
+tac	tictactimer.sml	/^  fun tac( Timer as ( Name, CPUTimer, RealTimer ) : tictactimer ) : unit =$/;"	f
+tac	tictactimer.sml	/^  val tac : tictactimer  -> unit$/;"	v
+tail	image/bsds/csa.hh	/^				lhs_ptr	tail;$/;"	m	struct:CSA::temp_arc
+tail	image/bsds/csa_types.h	/^				char		**tail;$/;"	m	struct:queue_st
+tail	image/bsds/csa_types.h	/^				lhs_ptr	tail;$/;"	m	struct:lr_arc
+tail	image/bsds/csa_types.h	/^				lhs_ptr	tail;$/;"	m	struct:rl_arc
+tail_lhs_node	image/bsds/csa.hh	/^lhs_ptr	head_lhs_node, tail_lhs_node;$/;"	m	class:CSA
+tail_lr_arc	image/bsds/csa.hh	/^lr_aptr	head_lr_arc, tail_lr_arc;$/;"	m	class:CSA
+tail_rhs_node	image/bsds/csa.hh	/^rhs_ptr	head_rhs_node, tail_rhs_node;$/;"	m	class:CSA
+tail_rl_arc	image/bsds/csa.hh	/^rl_aptr	head_rl_arc, tail_rl_arc;$/;"	m	class:CSA
+tan	image/bsds/Matrix.cc	/^tan (const Matrix& a)$/;"	f
+tan	image/bsds/Matrix.cc	/^void Matrix::tan ()$/;"	f	class:Matrix
+tanh	image/bsds/Matrix.cc	/^tanh (const Matrix& a)$/;"	f
+tanh	image/bsds/Matrix.cc	/^void Matrix::tanh ()$/;"	f	class:Matrix
+temp_arc	image/bsds/csa.hh	/^typedef	struct	temp_arc	{$/;"	s	class:CSA
+test	image/grayscale_image.sml	/^  fun test() = print "test";$/;"	f
+text	image/bsds/String.hh	/^    const char* text () const { return _text; }$/;"	f	class:String
+thicken	image/morphology.sml	/^  fun thicken( Image as { Width, Height, ... } : BooleanImage.image ) $/;"	f
+thin	image/morphology.sml	/^  fun thin( Image as { Width, Height, ... }: BooleanImage.image ) $/;"	f
+thresholdOptions	image/canny.sml	/^  datatype thresholdOptions = $/;"	t
+thresholds	image/image.sml	/^  val thresholds : image -> real list = thresholds' ( otsu 256 )$/;"	v
+thresholds	image/image.sml	/^  val thresholds : image -> real list$/;"	v
+thresholds'	image/image.sml	/^  fun thresholds' ( Method : thresholdsMethod ) $/;"	f
+thresholds'	image/image.sml	/^  val thresholds' : ImageCommon.thresholdsMethod -> image -> real list$/;"	v
+thresholdsMethod	image/image_common.sml	/^  datatype thresholdsMethod =$/;"	t
+tic	tictactimer.sml	/^  fun tic( Name : string ) : tictactimer =$/;"	f
+tic	tictactimer.sml	/^  val tic : string -> tictactimer  $/;"	v
+tictactimer	tictactimer.sml	/^  type tictactimer  = string * Timer.cpu_timer * Timer.real_timer$/;"	t
+tictactimer	tictactimer.sml	/^  type tictactimer $/;"	t
+times	math/complex.sml	/^  fun times (a1 : real, b1 : real) (a2 : real, b2 : real) = $/;"	f
+times	math/complex.sml	/^ val times : number -> number -> number$/;"	v
+toString	image/f_measure.sml	/^  fun toString( Score as ( CP, SP, CR, SR, P, R, F ) : score ) $/;"	f
+toString	image/image.sml	/^  fun toString( Image as { Width, Height, ... } : image ) : string =$/;"	f
+toString	image/image.sml	/^  val toString : image -> string$/;"	v
+toString	image/score.sml	/^  val toString : score -> string$/;"	v
+toString	list_util.sml	/^  fun toString ( toString : 'a -> string )$/;"	f
+toString	math/complex.sml	/^  fun toString (a, b) =$/;"	f
+toString	math/complex.sml	/^ val toString : number -> string$/;"	v
+token	image/pnm_text.sml	/^            NONE => raise pnmException"Could not read tuple type token."$/;"	t
+top	image/bsds/csa_types.h	/^				char	**top;$/;"	m	struct:stack_st
+top_sort	image/bsds/csa.hh	/^int	top_sort()$/;"	f	class:CSA
+total_e	image/bsds/csa.hh	/^unsigned	total_e;	\/* total excess *\/$/;"	m	class:CSA
+transformed	math/signalUtil.sml	/^       val transformed = dft(vector);$/;"	v
+transpose	image/bsds/Matrix.cc	/^Matrix::transpose () $/;"	f	class:Matrix
+transpose	image/bsds/Matrix.cc	/^transpose (const Matrix& a)$/;"	f
+transposed	image/canny.sml	/^    val transposed = GrayscaleImageReal.transposed$/;"	v
+transposed	image/image.sml	/^  fun transposed( Image as { Width, Height, ... } : image ) : image =$/;"	f
+transposed	image/image.sml	/^  val transposed : image -> image$/;"	v
+tril	image/bsds/Matrix.cc	/^Matrix::tril (int k) $/;"	f	class:Matrix
+tril	image/bsds/Matrix.cc	/^tril (const Matrix& a, int k)$/;"	f
+triu	image/bsds/Matrix.cc	/^Matrix::triu (int k) $/;"	f	class:Matrix
+triu	image/bsds/Matrix.cc	/^triu (const Matrix& a, int k)$/;"	f
+trunc	image/filter.sml	/^    fun trunc( X : int, Max : int ) : int = $/;"	f
+truth	image/f_measure.sml	/^  type truth = BooleanImage.image$/;"	t
+truth	image/score.sml	/^  type truth$/;"	t
+ty	image/image.sml	/^             val ty = if (not(y0 = y1)) then $/;"	v
+u_int32_max	image/bsds/Random.hh	/^    static const u_int32_t u_int32_max = 4294967295u;$/;"	m	class:Random
+u_scan	image/bsds/csa.hh	/^unsigned	u_scan(rhs_ptr w)$/;"	f	class:CSA
+u_scans	image/bsds/csa.hh	/^		u_scans,$/;"	m	class:CSA
+ui32	image/bsds/Random.hh	/^Random::ui32 () $/;"	f	class:Random
+ui32	image/bsds/Random.hh	/^Random::ui32 (u_int32_t a, u_int32_t b)$/;"	f	class:Random
+uint64	image/bsds/Timer.cc	/^typedef unsigned long long uint64;$/;"	t	file:
+undef	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+unique	list_util.sml	/^  fun unique( eq : 'a * 'a -> bool ) ( Xs : 'a list ) : 'a list =$/;"	f
+unpack	image/image_util.sml	/^    fun unpack( Index ) : BooleanImage.image list =$/;"	f
+unpackBooleanFromWord8	image/image_util.sml	/^  fun unpackBooleanFromWord8( Image : GrayscaleImageWord8.image, $/;"	f
+upd_work_thresh	image/bsds/csa.hh	/^WORK_TYPE	upd_work_thresh;\/* work threshhold for global update *\/$/;"	m	class:CSA
+update	array2d.sml	/^  fun update( Array as { Width, Values, ... } : 'a array, $/;"	f
+update	image/image.sml	/^  fun update( Image as { Width, Values, ... } : image, $/;"	f
+update	image/image.sml	/^  val update : image * int * int * pixel -> unit$/;"	v
+update	ml/k_means.sml	/^      fun update( I : int ) : unit =$/;"	f
+update'	array2d.sml	/^  fun update'( Array as { Width, Values, ... } : 'a array, $/;"	f
+update'	image/image.sml	/^  fun update'( Image as { Width, Values, ... } : image, $/;"	f
+update'	image/image.sml	/^  val update': image * int * pixel -> unit$/;"	v
+updateMeans	ml/k_means.sml	/^    fun updateMeans() : unit = $/;"	f
+update_epsilon	image/bsds/csa.hh	/^int	update_epsilon()$/;"	f	class:CSA
+user	image/bsds/Timer.hh	/^Timer::user ()$/;"	f	class:Timer
+valid	image/morphology.sml	/^    fun valid( Edge : bool, Mask : bool option ) : bool =$/;"	f
+w	image/bsds/csa.hh	/^rhs_ptr	w;$/;"	m	class:CSA
+w	image/bsds/match.cc	/^    double w;	\/\/ distance between pixels$/;"	m	struct:Edge	file:
+w8fw	image/pnm_binary.sml	/^      val w8fw = Word8.fromInt o Word.toInt$/;"	v
+wfli	image/color_image.sml	/^    val wfli = Word.fromLargeInt$/;"	v
+wfr	image/grayscale_image.sml	/^    val wfr = Word.fromInt o Real.toInt IEEEReal.TO_NEAREST$/;"	v
+wfw8	image/pnm_binary.sml	/^      val wfw8 = Word.fromInt o Word8.toInt$/;"	v
+wordFromString	image/pnm_text.sml	/^    fun wordFromString( S : string ) : word = $/;"	f
+write	image/pnm_binary.sml	/^      fun write( Index : int, Wss : word list list ) : unit =$/;"	f
+write	text_file_util.sml	/^    fun write( Xs : 'a list ) : unit =$/;"	f
+writeCSReals	text_file_util.sml	/^  val writeCSReals : real list * string -> unit = writeCSV Real.toString$/;"	v
+writeCSV	text_file_util.sml	/^  fun writeCSV( toString : 'a -> string ) $/;"	f
+writeDSV	text_file_util.sml	/^  fun writeDSV ( Delim : string, Columns : int )$/;"	f
+writeFilenames	text_file_util.sml	/^  fun writeFilenames( Filenames : string list, File : string ) : unit =$/;"	f
+writeFormat	image/pnm_text.sml	/^    fun writeFormat( Output : BinIO.outstream, Format : format ) : unit =$/;"	f
+writeHeader	image/pnm_text.sml	/^    fun writeHeader( Output : BinIO.outstream, $/;"	f
+writeInt	image/pnm_text.sml	/^    fun writeInt( Output : BinIO.outstream, X : int ) : unit =$/;"	f
+writePixel	image/pnm_binary.sml	/^    fun writePixel( Output : BinIO.outstream, MaxVal : word, Words : word list )$/;"	f
+writePixel	image/pnm_binary.sml	/^    fun writePixel( Output : BinIO.outstream, X : int, Ws : word list ) $/;"	f
+writePixels	image/pnm_text.sml	/^    fun writePixels( Output : BinIO.outstream, Pixels : word list list ) $/;"	f
+writePixelsAsBits	image/pnm_binary.sml	/^    fun writePixelsAsBits( Output : BinIO.outstream, $/;"	f
+writePixelsAsBytes	image/pnm_binary.sml	/^    fun writePixelsAsBytes( Output : BinIO.outstream, $/;"	f
+writeWord	image/pnm_binary.sml	/^    fun writeWord( Output : BinIO.outstream, MaxVal : word, W : word ) : unit =$/;"	f
+writeWord	image/pnm_text.sml	/^    fun writeWord( Output : BinIO.outstream, X : word ) : unit =$/;"	f
+writeWords	image/pnm_text.sml	/^          fun writeWords( Ws : word list ) : unit =$/;"	f
+x	image/bsds/Point.hh	/^    T x,y,z;$/;"	m	class:Point3D
+x	image/bsds/Point.hh	/^    T x,y;$/;"	m	class:Point2D
+x	image/image.sml	/^       val x = u * Math.cos(by) + v * Math.sin(by) + (real (width - 1)) \/ 2.0;$/;"	v
+x0	image/image.sml	/^          val x0 = Real.floor x$/;"	v
+x1	image/image.sml	/^          val x1 = Real.ceil x$/;"	v
+y	image/bsds/Point.hh	/^    T x,y,z;$/;"	m	class:Point3D
+y	image/bsds/Point.hh	/^    T x,y;$/;"	m	class:Point2D
+y	image/image.sml	/^       val y = v * Math.cos(by) - u * Math.sin(by) + (real (height - 1)) \/ 2.0;$/;"	v
+y0	image/image.sml	/^          val y0 = Real.floor y$/;"	v
+y1	image/image.sml	/^          val y1 = Real.ceil y$/;"	v
+z	image/bsds/Point.hh	/^    T x,y,z;$/;"	m	class:Point3D
+zeroImage	image/image.sml	/^  fun zeroImage( Width : int, Height : int ) : image = $/;"	f
+zeroImage	image/image.sml	/^  val zeroImage : int * int -> image$/;"	v
+zeros	image/bsds/Matrix.cc	/^zeros (int rows, int cols) $/;"	f
+zeros	image/bsds/Matrix.cc	/^zeros (int sz) $/;"	f
+zeros	image/bsds/Matrix.hh	/^        undef, zeros, ones, eye, rand, randn$/;"	e	enum:Matrix::FillType
+~Array1D	image/bsds/Array.hh	/^    ~Array1D () {$/;"	f	class:Array1D
+~Array2D	image/bsds/Array.hh	/^    ~Array2D () {$/;"	f	class:Array2D
+~Array3D	image/bsds/Array.hh	/^    ~Array3D () {$/;"	f	class:Array3D
+~Array4D	image/bsds/Array.hh	/^    ~Array4D () {$/;"	f	class:Array4D
+~CSA	image/bsds/csa.cc	/^CSA::~CSA () $/;"	f	class:CSA
+~Exception	image/bsds/Exception.cc	/^Exception::~Exception ()$/;"	f	class:Exception
+~Matrix	image/bsds/Matrix.cc	/^Matrix::~Matrix () $/;"	f	class:Matrix
+~String	image/bsds/String.cc	/^String::~String ()$/;"	f	class:String
+~Timer	image/bsds/Timer.hh	/^Timer::~Timer ()$/;"	f	class:Timer
