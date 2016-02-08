@@ -1,0 +1,4 @@
+This folder contains code from the Berkeley Segmentation Dataset 500 (BSDS500).
+The article "Contour Detection and Hierarchical Image Segmentation" by Pablo Arbelaez et al. contains more information.
+
+See the separate source files for copyright and license information.

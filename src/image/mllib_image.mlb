@@ -1,0 +1,30 @@
+$(SML_LIB)/basis/basis.mlb
+../mllib_general.mlb
+../math/mllib_math.mlb
+image_common.sml
+pnm_common.sml
+pnm_text.sml
+pnm_binary.sml
+pnm.sml
+util.sml
+filter.sml
+threshold.sml
+image.sml
+boolean_image.sml
+image_word.sml
+image_real.sml
+image_int.sml
+grayscale_image.sml
+color_image.sml
+image_util.sml
+filter_util.sml
+morphology.sml
+canny.sml
+score.sml
+ann
+  "allowFFI true"
+in
+  f_measure.sml
+end
+probability_rand_index.sml
+texton.sml
