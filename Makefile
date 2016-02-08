@@ -17,4 +17,4 @@ $(BSDS_OBJECTS): %.o: %.cc
 .PHONY: clean
 
 clean:
-	rm tests/mllib_tests $(BSDS_LIB)/*.o 
+	rm src/tags tests/mllib_tests $(BSDS_LIB)/*.o 
