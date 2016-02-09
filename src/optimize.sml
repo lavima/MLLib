@@ -14,75 +14,75 @@ struct
                            dimension *)
 
 
-  fun brute ( Dimensions : int, Resolutions : bruteResolution list )
+  fun brute ( dimensions : int, resolutions : bruteResolution list )
             ( f : real list -> real ) 
       : real list =
   let 
 
-    fun getCount( Res : bruteResolution ) : int =
-      case Res of 
-        full X => X
-      | lessEqual X => X
+    fun getCount( res : bruteResolution ) : int =
+      case res of 
+        full x => x
+      | lessEqual x => x
 
-    fun checkRes( Index : int, 
-                  Res : bruteResolution, 
-                  Arg : real, 
-                  Args : real list ) 
+    fun checkRes( index : int, 
+                  res : bruteResolution, 
+                  arg : real, 
+                  args : real list ) 
         : bool =
-      case Index<=( getCount Res ) of
+      case index<=( getCount res ) of
         false => false 
       | true =>
-          case Res of
+          case res of
             full _ => true
           | lessEqual _ => 
-              case Args of 
+              case args of 
                 [] => true
-              | PrevArg::_ => Arg<=PrevArg
+              | prevArg::_ => arg<=prevArg
 
 
-    val Max = ref 0.0
-    val Values = ref []
+    val max = ref 0.0
+    val values = ref []
 
-    fun iterate( Dimension : int, 
-                 Ress : bruteResolution list,
-                 Args : real list ) 
+    fun iterate( dimension : int, 
+                 ress : bruteResolution list,
+                 args : real list ) 
         : unit =
     let 
-      val Res::RRess = Ress
+      val res::rress = ress
 
-      val Delta = 1.0/( real( getCount Res ) )
+      val delta = 1.0/( real( getCount res ) )
 
-      fun iterate'( Index : int ) 
+      fun iterate'( index : int ) 
           : unit =
-        case ( real Index )*Delta of Arg =>
-        case checkRes( Index, Res, Arg, Args ) of 
+        case ( real index )*delta of arg =>
+        case checkRes( index, res, arg, args ) of 
           false => () 
         | true => 
           let
-            val Args' = Arg::Args
+            val args' = arg::args
           in
-            case Dimension<( Dimensions-1 ) of
+            case dimension<( dimensions-1 ) of
               false =>
               let
-                val Eval = f( Args' )
+                val eval = f( args' )
                 val _ =
-                  if Eval>( !Max ) then (
-                    Max := Eval;
-                    Values := Args' )
+                  if eval>( !max ) then (
+                    max := eval;
+                    values := args' )
                   else
                     ()
               in
-                iterate'( Index+1 )
+                iterate'( index+1 )
               end
             | true => (
-                iterate( Dimension+1, RRess, Args' );
-                iterate'( Index+1 ) )
+                iterate( dimension+1, rress, args' );
+                iterate'( index+1 ) )
           end
     in
       iterate' 0
     end
   in
-    ( iterate( 0, Resolutions, [] ); !Values )
+    ( iterate( 0, resolutions, [] ); !values )
   end
 
 end (* structure Optimize *)

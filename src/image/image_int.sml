@@ -11,6 +11,6 @@ struct
 
   val elementCompare = Int.compare
 
-  fun elementFromReal X = Real.trunc( X*255.0 )
+  fun elementFromReal x = Real.trunc( x*255.0 )
 
 end (* structure ImageInt *)

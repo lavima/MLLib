@@ -8,18 +8,18 @@
 structure MathUtil =
 struct
   
-  fun avg( Xs : real list ) : real =
-    ( List.foldl ( fn( X, Sum ) => Sum+X ) 0.0 Xs ) / real( List.length Xs )
+  fun avg( xs : real list ) : real =
+    ( List.foldl ( fn( x, sum ) => sum+x ) 0.0 xs ) / real( List.length xs )
 
-  fun lerp( X : real, Y : real, T : real ) : real =
-    X*(1.0-T)+Y*T
+  fun lerp( x : real, y : real, t : real ) : real =
+    x*(1.0-t)+y*t
 
   
-  fun blerp( X1 : real, X2 : real, Y1 : real, Y2 : real, T1 : real, T2 : real )
+  fun blerp( x1 : real, x2 : real, y1 : real, y2 : real, t1 : real, t2 : real )
       : real =
-    ( T1 - 1.0 )*( T2 - 1.0 )*X1 + 
-    T1*( 1.0 - T2 )*X2 + 
-    T2*( 1.0 - T1 )*Y1 + 
-    T1*T2*Y2
+    ( t1 - 1.0 )*( t2 - 1.0 )*x1 + 
+    t1*( 1.0 - t2 )*x2 + 
+    t2*( 1.0 - t1 )*y1 + 
+    t1*t2*y2
 
 end (* struct MathUtil *)

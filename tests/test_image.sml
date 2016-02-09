@@ -358,7 +358,7 @@ val _ =
     fn[ Score1 as ( _, _, _, _, _, _, F1), Score2 as ( _, _, _, _, _, _, F2 ) ] => 
       (* Uncommment for a single evaluation *)
       Util.approxEqReal( F1, 0.666, 3 ) andalso 
-      Util.approxEqReal( F2, 0.495956270745496, 3 ) 
+      Util.approxEqReal( F2, 0.495956270745496, 2 ) 
       (* P = 0.352722029988466
          R = 0.835059185285489
          F = 0.495956270745496 *)
@@ -406,6 +406,6 @@ val _ =
       in
         Option.valOf( GrayscaleImageReal.load("output1.pgm") )
       end ,
-    fn {Height = height, Width = width, ...} => height = 482 andalso width = 322 )
+    fn { height, width, ...} => height = 482 andalso width = 322 )
 
 

@@ -11,9 +11,9 @@ signature FILTER_IMAGE =
 sig
   
   type pixel
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
-  val ZeroPixel : pixel
+  val zeroPixel : pixel
 
   val createZero : int * int -> image
   
@@ -51,141 +51,141 @@ struct
 
   local
 
-    fun odd( X : int ) : bool = ( X mod 2 )=1
+    fun odd( x : int ) : bool = ( x mod 2 )=1
 
-    fun filter( Image : Image.image, 
-                Mask : Image.image, 
-                BorderExtension : borderExtension,
-                OutputShape : outputSize, 
+    fun filter( image : Image.image, 
+                mask : Image.image, 
+                extension : borderExtension,
+                outputShape : outputSize, 
                 loopMask : int * int * int * Image.pixel -> Image.pixel ) 
         : Image.image =
     let
 
-      val { Width, Height, Values } = Image
-      val { Width=MaskWidth, Height=MaskHeight, Values=MaskPixels, ... } = Mask
+      val { width, height, values } = image
+      val { width=maskWidth, height=maskHeight, values=maskPixels, ... } = mask
 
-      val Output as 
-        { Width=OutputWidth, Height=OutputHeight, Values=OutputPixels, ... } = 
-            Image.createZero( Width, Height )
+      val output as 
+        { width=outputWidth, height=outputHeight, values=outputPixels, ... } = 
+            Image.createZero( width, height )
 
-      val TotalSize = Width*Height
+      val totalSize = width*height
       
-      fun loop( Index : int ) =
-        case Index<TotalSize of 
+      fun loop( index : int ) =
+        case index<totalSize of 
           false => ()
         | true => ( 
           let
-            val X = Index mod Width
-            val Y = Index div Width
-            val Sum = loopMask( X, Y, 0, Image.ZeroPixel )
-            val _ = Array.update( OutputPixels, Y*Width+X, Sum )
+            val x = index mod width
+            val y = index div width
+            val sum = loopMask( x, y, 0, Image.zeroPixel )
+            val _ = Array.update( outputPixels, y*width+x, sum )
           in 
-            loop( Index+1 )
+            loop( index+1 )
           end )
 
       val _ = loop 0
     in
-      Output
+      output
     end
 
     (*
-    * Truncate an integer X to the interval [0,Max) 
+    * Truncate an integer x to the interval [0,max) 
     *)
-    fun trunc( X : int, Max : int ) : int = 
-      case X>=0 andalso X<Max of 
-        true => X
+    fun trunc( x : int, max : int ) : int = 
+      case x>=0 andalso x<max of 
+        true => x
       | false =>
-          case X<0 of 
+          case x<0 of 
             true => 0
-          | false => Max-1
+          | false => max-1
 
   in (* local *)
 
-    fun correlate ( BorderExtension : borderExtension, OutputSize : outputSize )
-                  ( Image : Image.image, Mask : Image.image ) 
+    fun correlate ( extension : borderExtension, outputSize : outputSize )
+                  ( image : Image.image, mask : Image.image ) 
         : Image.image =
     let
 
-      val { Width, Height, Values } = Image
-      val { Width=MaskWidth, Height=MaskHeight, Values=MaskPixels } = Mask
+      val { width, height, values } = image
+      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
       
-      val CenterX = 
-        if odd MaskWidth then 
-          MaskWidth div 2 
+      val centerX = 
+        if odd maskWidth then 
+          maskWidth div 2 
         else 
-          ( MaskWidth div 2 )-1
-      val CenterY =  
-        if odd MaskHeight then 
-          MaskHeight div 2 
+          ( maskWidth div 2 )-1
+      val centerY =  
+        if odd maskHeight then 
+          maskHeight div 2 
         else 
-          ( MaskHeight div 2 )-1
-      val MaskTotal = MaskWidth*MaskHeight
+          ( maskHeight div 2 )-1
+      val maskTotal = maskWidth*maskHeight
 
-      fun loopMask( X : int, Y : int, Index : int, Sum : Image.pixel ) 
+      fun loopMask( x : int, y : int, index : int, sum : Image.pixel ) 
           : Image.pixel =
-        case Index<MaskTotal of
-          false => Sum
+        case index<maskTotal of
+          false => sum
         | true => 
           let
-            val XX = X+(Index mod MaskWidth-CenterX)
-            val YY = Y+(Index div MaskWidth-CenterY)
-            val ImageIndex = trunc( YY, Height )*Width+trunc( XX, Width )
+            val xx = x+(index mod maskWidth-centerX)
+            val yy = y+(index div maskWidth-centerY)
+            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
           in
-            loopMask( X, Y, Index+1, 
+            loopMask( x, y, index+1, 
               Image.pixelAdd( 
-                Sum, 
+                sum, 
                 Image.pixelMul( 
-                  Array.sub( MaskPixels, Index ), 
-                  Array.sub( Values, ImageIndex ) ) ) )
+                  Array.sub( maskPixels, index ), 
+                  Array.sub( values, imageIndex ) ) ) )
           end 
     in
-      filter( Image, Mask, BorderExtension, OutputSize, loopMask )
+      filter( image, mask, extension, outputSize, loopMask )
     end
 
 
     (* 
     * Convolve an image with a two-dimensional mask 
     *)
-    fun convolve ( BorderExtension : borderExtension, OutputSize : outputSize )
-                 ( Image : Image.image, Mask : Image.image ) 
+    fun convolve ( extension : borderExtension, outputSize : outputSize )
+                 ( image : Image.image, mask : Image.image ) 
         : Image.image =
     let
 
-      val { Width, Height, Values } = Image
-      val { Width=MaskWidth, Height=MaskHeight, Values=MaskPixels } = Mask
+      val { width, height, values } = image
+      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
 
-      val CenterX = 
-        if odd MaskWidth then 
-          MaskWidth div 2 
+      val centerX = 
+        if odd maskWidth then 
+          maskWidth div 2 
         else 
-          ( MaskWidth div 2 )-1
-      val CenterY =  
-        if odd MaskHeight then 
-          MaskHeight div 2 
+          ( maskWidth div 2 )-1
+      val centerY =  
+        if odd maskHeight then 
+          maskHeight div 2 
         else 
-          ( MaskHeight div 2 )-1
-      val MaskTotal = MaskWidth*MaskHeight
+          ( maskHeight div 2 )-1
+      val maskTotal = maskWidth*maskHeight
 
-      fun loopMask( X : int, Y : int, Index : int, Sum : Image.pixel ) 
+      fun loopMask( x : int, y : int, index : int, sum : Image.pixel ) 
           : Image.pixel =
-        case Index<MaskTotal of
-          false => Sum
+        case index<maskTotal of
+          false => sum
         | true => 
           let
-            val RIndex = MaskTotal-1-Index
-            val XX = X+( Index mod MaskWidth-CenterX )
-            val YY = Y+( Index div MaskWidth-CenterY )
-            val ImageIndex = trunc( YY, Height )*Width+trunc( XX, Width )
+            val rindex = maskTotal-1-index
+            val xx = x+( index mod maskWidth-centerX )
+            val yy = y+( index div maskWidth-centerY )
+            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
           in
-            loopMask( X, Y, Index+1, 
+            loopMask( x, y, index+1, 
               Image.pixelAdd( 
-                Sum, 
+                sum, 
                 Image.pixelMul( 
-                  Array.sub( MaskPixels, RIndex ), 
-                  Array.sub( Values, ImageIndex ) ) ) )
+                  Array.sub( maskPixels, rindex ), 
+                  Array.sub( values, imageIndex ) ) ) )
           end 
     in
-      filter( Image, Mask, BorderExtension, OutputSize, loopMask )
+      filter( image, mask, extension, outputSize, loopMask )
     end
 
   end (* local *)

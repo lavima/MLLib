@@ -11,28 +11,28 @@ struct
   * Curried polymorphic print list function
   *)
   fun printList ( toString : 'a -> string )
-                ( Xs : 'a list ) 
+                ( xs : 'a list ) 
       : unit =
   let
-    fun iter( Xs : 'a list ) : unit =
-      case Xs of
-        [ X ] => print( toString X )
-      | X::RXs => ( print( toString X ^ ", " ); iter RXs ) 
+    fun iter( xs : 'a list ) : unit =
+      case xs of
+        [ x ] => print( toString x )
+      | x::rxs => ( print( toString x ^ ", " ); iter rxs ) 
   in (
     print"[ "; 
-    iter Xs;
+    iter xs;
     print" ]" )
   end
 
   fun printArray ( toString : 'a -> string )
-                 ( A : 'a array ) 
+                 ( xs : 'a array ) 
       : unit =
   let
-    fun iter( Index : int ) : unit =
-      if Index<( ( Array.length A )-1 ) then
-        ( print( toString( Array.sub( A, Index ) ) ^ ", " ); iter( Index+1 ) ) 
+    fun iter( index : int ) : unit =
+      if index<( ( Array.length xs )-1 ) then
+        ( print( toString( Array.sub( xs, index ) ) ^ ", " ); iter( index+1 ) ) 
       else
-        print( toString( Array.sub( A, Index ) ) )
+        print( toString( Array.sub( xs, index ) ) )
   in (
     print"[ "; 
     iter 0;

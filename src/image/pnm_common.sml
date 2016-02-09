@@ -20,14 +20,14 @@ struct
     rawPPM | 
     rawPAM of int
 
-  fun getDepth( Format : format ) : int =
-    case Format of
+  fun getDepth( f : format ) : int =
+    case f of
       plainPBM => 1
     | plainPGM => 1
     | plainPPM => 3
     | rawPBM => 1
     | rawPGM => 1
     | rawPPM => 3
-    | rawPAM Depth => Depth
+    | rawPAM depth => depth
 
 end (* structure PNMCommon *)

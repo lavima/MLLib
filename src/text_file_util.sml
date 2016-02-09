@@ -11,66 +11,66 @@ struct
   
   fun readDSV ( isDelim : char -> bool ) 
               ( fromString : string -> 'a ) 
-              ( Filename : string )
+              ( filename : string )
       : 'a list =
   let
 
-    val In = TextIO.openIn Filename
+    val input = TextIO.openIn filename
 
     fun read() : 'a list = 
-      case TextIO.inputLine In of 
+      case TextIO.inputLine input of 
         NONE => []
-      | SOME Line => 
+      | SOME line => 
         let
-          val Xs = String.tokens isDelim Line
+          val xs = String.tokens isDelim line
         in
-          ( List.map fromString Xs ) @ read()
+          ( List.map fromString xs ) @ read()
         end
 
-    val Xs = read()
+    val xs = read()
 
-    val _ = TextIO.closeIn In
+    val _ = TextIO.closeIn input
 
   in
-    Xs
+    xs
   end
   
-  fun writeDSV ( Delim : string, Columns : int )
+  fun writeDSV ( delim : string, columns : int )
                ( toString : 'a -> string ) 
-               ( Xs : 'a list, Filename : string ) : unit =
+               ( xs : 'a list, filename : string ) : unit =
   let
-    val Out = TextIO.openOut Filename
+    val output = TextIO.openOut filename
 
-    fun write( Xs : 'a list ) : unit =
-      case ( List.length Xs )>Columns of
+    fun write( xs : 'a list ) : unit =
+      case ( List.length xs )>columns of
         false => (
-          TextIO.output( Out, 
+          TextIO.output( output, 
             String.concat( 
               List.map 
-                ( fn X => toString X ^ Delim )  
-                ( List.take( Xs, ( List.length Xs )-1 ) ) ) );
-          TextIO.output( Out, toString( List.last Xs ) ) )
+                ( fn x => toString x ^ delim )  
+                ( List.take( xs, ( List.length xs )-1 ) ) ) );
+          TextIO.output( output, toString( List.last xs ) ) )
       | true => (
-          TextIO.output( Out, 
+          TextIO.output( output, 
             String.concat( 
               List.map 
-                ( fn X => toString X ^ Delim )  
-                ( List.take( Xs, Columns ) ) ) );
-          TextIO.output( Out, "\n" );
-          write( List.drop( Xs, Columns ) ) )
+                ( fn x => toString x ^ delim )  
+                ( List.take( xs, columns ) ) ) );
+          TextIO.output( output, "\n" );
+          write( List.drop( xs, columns ) ) )
 
-    val _ = write Xs
+    val _ = write xs
 
-    val _ = TextIO.closeOut Out
+    val _ = TextIO.closeOut output
 
   in
     ()
   end
 
   fun readCSV ( fromString : string -> 'a ) 
-              ( Filename : string ) 
+              ( filename : string ) 
       : 'a list = 
-    readDSV ( fn C => C= #"," ) fromString Filename
+    readDSV ( fn c => c= #"," ) fromString filename
 
   val readCSInts : string -> int list = 
     readCSV ( Option.valOf o Int.fromString )
@@ -78,21 +78,20 @@ struct
     readCSV ( Option.valOf o Real.fromString )
 
   fun writeCSV( toString : 'a -> string ) 
-              ( Xs : 'a list, Filename : string ) : unit =
-    writeDSV ( ",", 20 ) toString ( Xs, Filename )
+              ( xs : 'a list, filename : string ) : unit =
+    writeDSV ( ",", 20 ) toString ( xs, filename )
 
   val writeCSReals : real list * string -> unit = writeCSV Real.toString
 
-  fun readFilenames( File : string ) : string list =
+  fun readFilenames( file : string ) : string list =
     readDSV 
-      ( fn C => C= #"\n" ) 
-      ( fn S => 
+      ( fn c => c= #"\n" ) 
+      ( fn s => 
           String.implode( 
-            List.filter ( not o Char.isSpace ) ( String.explode S ) ) )
-      File
+            List.filter ( not o Char.isSpace ) ( String.explode s ) ) )
+      file
 
-  fun writeFilenames( Filenames : string list, File : string ) : unit =
-    writeDSV ( "", 1 ) ( fn S => S ) ( Filenames, File )
-
+  fun writeFilenames( filenames : string list, file : string ) : unit =
+    writeDSV ( "", 1 ) ( fn s => s ) ( filenames, file )
 
 end (* structure TextFileUtil *)

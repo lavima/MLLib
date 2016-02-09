@@ -10,20 +10,20 @@ struct
 
   type tictactimer  = string * Timer.cpu_timer * Timer.real_timer
 
-  fun tic( Name : string ) : tictactimer =
-    ( Name, Timer.startCPUTimer(), Timer.startRealTimer() )
+  fun tic( name : string ) : tictactimer =
+    ( name, Timer.startCPUTimer(), Timer.startRealTimer() )
 
-  fun tac( Timer as ( Name, CPUTimer, RealTimer ) : tictactimer ) : unit =
+  fun tac( timer as ( name, cpuTimer, realTimer ) : tictactimer ) : unit =
   let
-    val { nongc = { usr = U, sys = S }, 
-          gc = { usr = GCU, sys = GCS } } = 
-      Timer.checkCPUTimes CPUTimer
-    val R = Timer.checkRealTimer RealTimer 
+    val { nongc = { usr = u, sys = s }, 
+          gc = { usr = gcu, sys = gcs } } = 
+      Timer.checkCPUTimes cpuTimer
+    val r = Timer.checkRealTimer realTimer 
   in
-    ( print( "** " ^ Name ^ " **\n" );
-      print( "Real: " ^ Time.toString R ^ "\n" );
-      print( "CPU: " ^ Time.toString U ^ " " ^ Time.toString S ^ "\n" );
-      print( "GC: " ^ Time.toString GCU ^ " " ^ Time.toString GCS ^ "\n" );
+    ( print( "** " ^ name ^ " **\n" );
+      print( "Real: " ^ Time.toString r ^ "\n" );
+      print( "CPU: " ^ Time.toString u ^ " " ^ Time.toString s ^ "\n" );
+      print( "GC: " ^ Time.toString gcu ^ " " ^ Time.toString gcs ^ "\n" );
       print( "\n" ) )
   end
 

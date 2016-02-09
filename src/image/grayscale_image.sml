@@ -8,10 +8,10 @@
 structure GrayscaleImageSpec = 
 struct
 
-  val Depth = 1
+  val depth = 1
 
-  val PNMFormat = PNMCommon.plainPGM
-  val PNMMaxVal = 0w255 
+  val pnmFormat = PNMCommon.plainPGM
+  val pnmMaxVal = 0w255 
 
 end (* structure GrayscaleImageSpec *)
 
@@ -27,7 +27,7 @@ struct
 
   type element = Word8.word 
   type pixel = element 
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
   val pixelAdd = Word8.+
   val pixelSub = Word8.-
@@ -35,38 +35,38 @@ struct
   fun pixelMul' (x : pixel, y : real) = raise ImageCommon.formatException "Not implemented"
      (* Word8.fromInt(Real.round ((real Word8.toInt(x)) * y))*)
 
-  val ZeroPixel : pixel = 0w0
+  val zeroPixel : pixel = 0w0
 
-  fun pixelEqual( X : pixel, Y : pixel ) : bool = 
-    Util.eq elementCompare ( X, Y )
+  fun pixelEqual( x : pixel, y : pixel ) : bool = 
+    Util.eq elementCompare ( x, y )
 
-  fun getElement( Pixel : pixel, I : int ) : element =
-    if I>0 orelse I<0 then
+  fun getElement( p : pixel, i : int ) : element =
+    if i>0 orelse i<0 then
       raise ImageCommon.formatException"There is only one element"
     else
-      Pixel
+      p
 
   
-  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel = 
-    case Ws of 
-      [ W ] => 
-        if not Invert then
-          Word8.fromInt( Word.toInt W ) 
+  fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
+    case ws of 
+      [ w ] => 
+        if not invert then
+          Word8.fromInt( Word.toInt w ) 
         else
-          Word8.fromInt( Word.toInt( MaxVal-W ) ) 
+          Word8.fromInt( Word.toInt( maxVal-w ) ) 
     | _ => raise ImageCommon.formatException( 
-             "Unexpected number of words: " ^ Int.toString( List.length Ws ) )
+             "Unexpected number of words: " ^ Int.toString( List.length ws ) )
 
-  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) 
+  fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
       : word list =
-  if not Invert then
-    [ Word.fromInt( Word8.toInt X ) ]
+  if not invert then
+    [ Word.fromInt( Word8.toInt x ) ]
   else
-    [ MaxVal-Word.fromInt( Word8.toInt X ) ]
+    [ maxVal-Word.fromInt( Word8.toInt x ) ]
 
 
-  fun pixelToString( X : pixel ) : string = 
-    Word8.toString X
+  fun pixelToString( x : pixel ) : string = 
+    Word8.toString x
 
 end
 
@@ -85,10 +85,10 @@ struct
 
   type element = int 
   type pixel = element 
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
 
-  val ZeroPixel = 0
+  val zeroPixel = 0
 
 
   val pixelAdd = Int.+
@@ -96,42 +96,42 @@ struct
   val pixelMul = Int.*
   fun pixelMul'( x : pixel, y : real) = Real.round(real x * y)
 
-  fun pixelEqual( X : pixel, Y : pixel ) : bool = 
-    Util.eq elementCompare ( X, Y )
+  fun pixelEqual( x : pixel, y : pixel ) : bool = 
+    Util.eq elementCompare ( x, y )
 
 
-  fun getElement( Pixel : pixel, I : int ) : element =
-    if I>0 orelse I<0 then
+  fun getElement( p : pixel, i : int ) : element =
+    if i>0 orelse i<0 then
       raise ImageCommon.formatException"There is only one element"
     else
-      Pixel
+      p
 
-  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel = 
-    case Ws of 
-      [ W ] => 
-        if not Invert then
-          Word.toInt W
+  fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
+    case ws of 
+      [ w ] => 
+        if not invert then
+          Word.toInt w
         else
-          Word.toInt( MaxVal-W )
+          Word.toInt( maxVal-w )
     | _ => raise ImageCommon.formatException( 
-             "Unexpected number of words: " ^ Int.toString( List.length Ws ) )
+             "Unexpected number of words: " ^ Int.toString( List.length ws ) )
 
-  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) 
+  fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
       : word list =
   let
-    val MaxVal' = Real.fromLargeInt( Word.toLargeInt MaxVal )
-    val MaxInt = real( Option.valOf Int.maxInt )
-    val MinInt = real( Option.valOf Int.minInt )
+    val maxVal' = Real.fromLargeInt( Word.toLargeInt maxVal )
+    val maxInt = real( Option.valOf Int.maxInt )
+    val minInt = real( Option.valOf Int.minInt )
     val wfr = Word.fromInt o Real.toInt IEEEReal.TO_NEAREST
   in
-    if not Invert then
-      [ wfr( ( ( real X )-MinInt )/( MaxInt-MinInt )*MaxVal' ) ]
+    if not invert then
+      [ wfr( ( ( real x )-minInt )/( maxInt-minInt )*maxVal' ) ]
     else
-      [ MaxVal-wfr( ( ( real X )-MinInt )/( MaxInt-MinInt )*MaxVal' ) ]
+      [ maxVal-wfr( ( ( real x )-minInt )/( maxInt-minInt )*maxVal' ) ]
   end
 
-  fun pixelToString( X : pixel ) : string = 
-    Int.toString X
+  fun pixelToString( x : pixel ) : string = 
+    Int.toString x
 
 end
 
@@ -151,10 +151,10 @@ struct
 
   type element = real
   type pixel = element 
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
 
-  val ZeroPixel = 0.0
+  val zeroPixel = 0.0
 
 
   val pixelAdd = Real.+
@@ -164,55 +164,55 @@ struct
 
 
 
-  fun pixelEqual( X : pixel, Y : pixel ) : bool = 
-    Util.eq elementCompare ( X, Y )
+  fun pixelEqual( x : pixel, y : pixel ) : bool = 
+    Util.eq elementCompare ( x, y )
 
-  fun getElement( Pixel : pixel, I : int ) : element =
-    if I>0 orelse I<0 then
+  fun getElement( p : pixel, i : int ) : element =
+    if i>0 orelse i<0 then
       raise ImageCommon.formatException"There is only one element"
     else
-      Pixel
+      p
 
 
-  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) 
+  fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
       : word list =
   let
     val _ = 
-      if X>1.0 orelse X<0.0 then
+      if x>1.0 orelse x<0.0 then
         raise ImageCommon.formatException"The pixel is not normalized"
       else 
         ()
 
-    val MaxVal' = real( Word.toInt MaxVal )
-    val Val = 
-      if not Invert then
-        X*MaxVal'
+    val maxVal' = real( Word.toInt maxVal )
+    val value = 
+      if not invert then
+        x*maxVal'
       else
-        MaxVal'-X*MaxVal'
+        maxVal'-x*maxVal'
   in
-    if Real.isFinite Val then 
-      [ Word.fromInt( Real.toInt IEEEReal.TO_NEAREST Val ) ]
+    if Real.isFinite value then 
+      [ Word.fromInt( Real.toInt IEEEReal.TO_NEAREST value ) ]
     else 
       [ 0w0 ]
   end
 
-  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel = 
+  fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
   let
     val rfw = Real.fromInt o Word.toInt
-    val MaxVal' = rfw MaxVal 
+    val maxVal' = rfw maxVal 
   in
-    case Ws of 
-      [ W ] => 
-        if not Invert then 
-          ( rfw W )/MaxVal'
+    case ws of 
+      [ w ] => 
+        if not invert then 
+          ( rfw w )/maxVal'
         else
-          rfw( MaxVal-W )/MaxVal' 
+          rfw( maxVal-w )/maxVal' 
     | _ => raise ImageCommon.formatException( 
-             "Unexpected number of words: " ^ Int.toString( List.length Ws ) )
+             "Unexpected number of words: " ^ Int.toString( List.length ws ) )
   end
 
-  fun pixelToString( X : pixel ) : string =
-    Real.fmt StringCvt.EXACT X
+  fun pixelToString( x : pixel ) : string =
+    Real.fmt StringCvt.EXACT x
 
   fun test() = print "test";
 

@@ -5,7 +5,7 @@ sig
   type truth
   type score 
 
-  val Zero : score
+  val zeroScore : score
   
   val add : score * score -> score
   

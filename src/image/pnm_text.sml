@@ -28,68 +28,68 @@ struct
       getTupleType 
 
 
-    fun input1( Input : BinIO.instream ) : char option =
-      case BinIO.input1 Input of 
+    fun input1( inp : BinIO.instream ) : char option =
+      case BinIO.input1 inp of 
         NONE => NONE
-      | SOME W => SOME( Char.chr( Word8.toInt W ) )
+      | SOME w => SOME( Char.chr( Word8.toInt w ) )
 
-    fun lookahead( Input : BinIO.instream ) : char option =
-      case BinIO.lookahead Input of 
+    fun lookahead( inp : BinIO.instream ) : char option =
+      case BinIO.lookahead inp of 
         NONE => NONE
-      | SOME W => SOME( Char.chr( Word8.toInt W ) )
+      | SOME w => SOME( Char.chr( Word8.toInt w ) )
 
-    fun output( Output : BinIO.outstream, S : string ) : unit =
+    fun output( out : BinIO.outstream, s : string ) : unit =
       List.app
-        ( fn C => BinIO.output1( Output, Word8.fromInt( Char.ord C ) ) )
-        ( String.explode S )
+        ( fn c => BinIO.output1( out, Word8.fromInt( Char.ord c ) ) )
+        ( String.explode s )
 
 
-    fun wordFromString( S : string ) : word = 
-      case StringCvt.scanString ( Word.scan StringCvt.DEC ) S of
-        NONE => raise pnmException("Couldn't convert " ^ S ^ " to a word." )
-      | SOME W => W
+    fun wordFromString( s : string ) : word = 
+      case StringCvt.scanString ( Word.scan StringCvt.DEC ) s of
+        NONE => raise pnmException("Couldn't convert " ^ s ^ " to a word." )
+      | SOME w => w
 
-    fun getToken( Input : BinIO.instream, ParseBits : bool ) : string option = 
+    fun getToken( inp : BinIO.instream, parseBits : bool ) : string option = 
     let
-      fun readWhites( InComment : bool ) : unit =
-        case lookahead( Input ) of 
+      fun readWhites( inComment : bool ) : unit =
+        case lookahead( inp ) of 
           NONE => ()
-        | SOME C =>
-            if Char.isSpace C orelse InComment then 
-              ( input1 Input; 
-                readWhites( if C= #"\n" then false else InComment ) )
-            else if C= #"#" then
-              ( input1 Input; readWhites true )
+        | SOME c =>
+            if Char.isSpace c orelse inComment then 
+              ( input1 inp; 
+                readWhites( if c= #"\n" then false else inComment ) )
+            else if c= #"#" then
+              ( input1 inp; readWhites true )
             else
               ()
 
       fun buildToken() : string list option =
-        case input1 Input of 
+        case input1 inp of 
           NONE => NONE
-        | SOME C =>
-            if ParseBits then
-              SOME [ String.str C ]
-            else if Char.isSpace C then
+        | SOME c =>
+            if parseBits then
+              SOME [ String.str c ]
+            else if Char.isSpace c then
               SOME []
-            else if C= #"#" then
+            else if c= #"#" then
               ( readWhites true; buildToken() )
             else
               case buildToken() of 
-                NONE => SOME [ String.str C ]
-              | SOME Cs => SOME( String.str C::Cs )
+                NONE => SOME [ String.str c ]
+              | SOME cs => SOME( String.str c::cs )
 
       val _ = readWhites false
     in
       case buildToken() of 
         NONE => NONE
-      | SOME Cs => SOME( String.concat Cs )
+      | SOME cs => SOME( String.concat cs )
     end
 
-    fun parseFormat( Input : BinIO.instream ) : format =
-      case getToken( Input, false ) of
+    fun parseFormat( inp : BinIO.instream ) : format =
+      case getToken( inp, false ) of
         NONE => raise pnmException"Could not read format token."
-      | SOME Token =>
-          case Token of 
+      | SOME token =>
+          case token of 
             "P1" => plainPBM
           | "P2" => plainPGM
           | "P3" => plainPPM
@@ -97,193 +97,193 @@ struct
           | "P5" => rawPGM
           | "P6" => rawPPM
           | "P7" => rawPAM 0
-          | _ => raise pnmException( "Wrong magic number: " ^ Token )
+          | _ => raise pnmException( "Wrong magic number: " ^ token )
 
-    fun writeFormat( Output : BinIO.outstream, Format : format ) : unit =
-      case Format of
-        plainPBM => output( Output, "P1" )
-      | plainPGM => output( Output, "P2" )
-      | plainPPM => output( Output, "P3" )
-      | rawPBM => output( Output, "P4" )
-      | rawPGM => output( Output, "P5" )
-      | rawPPM => output( Output, "P6" )
-      | rawPAM _ => output( Output, "P7" )
+    fun writeFormat( out : BinIO.outstream, fmt : format ) : unit =
+      case fmt of
+        plainPBM => output( out, "P1" )
+      | plainPGM => output( out, "P2" )
+      | plainPPM => output( out, "P3" )
+      | rawPBM => output( out, "P4" )
+      | rawPGM => output( out, "P5" )
+      | rawPPM => output( out, "P6" )
+      | rawPAM _ => output( out, "P7" )
 
-    fun parseInt( Input : BinIO.instream ) : int =
-      case getToken( Input, false ) of 
+    fun parseInt( inp : BinIO.instream ) : int =
+      case getToken( inp, false ) of 
         NONE => raise pnmException"Could not read integer token."
-      | SOME Token =>
-          case Int.fromString( Token ) of
-            SOME X => X
-          | NONE => raise pnmException( Token ^ " is not an integer" )
+      | SOME token =>
+          case Int.fromString( token ) of
+            SOME x => x
+          | NONE => raise pnmException( token ^ " is not an integer" )
 
-    fun writeInt( Output : BinIO.outstream, X : int ) : unit =
-      output( Output, Int.toString X )
+    fun writeInt( out : BinIO.outstream, x : int ) : unit =
+      output( out, Int.toString x )
 
-    fun parseWord( Input : BinIO.instream ) : word =
-      case getToken( Input, false ) of 
+    fun parseWord( inp : BinIO.instream ) : word =
+      case getToken( inp, false ) of 
         NONE => raise pnmException"Could not read unsigned integer token."
-      | SOME Token => wordFromString Token
+      | SOME token => wordFromString token
       
-    fun writeWord( Output : BinIO.outstream, X : word ) : unit =
-      output( Output, Word.fmt StringCvt.DEC X )
+    fun writeWord( out : BinIO.outstream, x : word ) : unit =
+      output( out, Word.fmt StringCvt.DEC x )
 
   in
 
-    fun parseHeader( Input : BinIO.instream ) 
+    fun parseHeader( inp : BinIO.instream ) 
         : format * int * int * word * string list =
     let
-      fun parse( Input : BinIO.instream,
-                 State : state, 
-                 Image as 
-                  ( Format : format, 
-                    Width : int, 
-                    Height : int, 
-                    MaxVal : word,
-                    TupleTypes : string list ) )
+      fun parse( inp : BinIO.instream,
+                 s : state, 
+                 im as 
+                  ( fmt : format, 
+                    width : int, 
+                    height : int, 
+                    maxVal : word,
+                    tupleTypes : string list ) )
           : format * int * int * word * string list =
-      case State of 
+      case s of 
         getFormat => ( 
         let
-          val Format' = parseFormat Input
+          val fmt' = parseFormat inp
         in
-          case Format of
+          case fmt of
             rawPAM _ =>
-              parse( Input, getIdentifier, 
-                ( Format', Width, Height, MaxVal, TupleTypes ) )
+              parse( inp, getIdentifier, 
+                ( fmt', width, height, maxVal, tupleTypes ) )
           | _ =>
-              parse( Input, getWidth, 
-                ( Format', Width, Height, MaxVal, TupleTypes ) )
+              parse( inp, getWidth, 
+                ( fmt', width, height, maxVal, tupleTypes ) )
         end )
       | getIdentifier => (
-          case getToken( Input, false ) of 
+          case getToken( inp, false ) of 
             NONE => raise pnmException"Could not read identifier token"
-          | SOME Token =>
-              case Token of 
-                "WIDTH" => parse( Input, getWidth, Image )
-              | "HEIGHT" => parse( Input, getHeight, Image )
-              | "DEPTH" => parse( Input, getDepth, Image )
-              | "MAXVAL" => parse( Input, getMaxVal, Image )
-              | "TUPLTYPE" => parse( Input, getTupleType, Image )
+          | SOME token =>
+              case token of 
+                "WIDTH" => parse( inp, getWidth, im )
+              | "HEIGHT" => parse( inp, getHeight, im )
+              | "DEPTH" => parse( inp, getDepth, im )
+              | "MAXVAL" => parse( inp, getMaxVal, im )
+              | "TUPLTYPE" => parse( inp, getTupleType, im )
               | "ENDHDR" => 
-                  ( Format, Width, Height, MaxVal, 
-                      List.rev TupleTypes ) )
+                  ( fmt, width, height, maxVal, 
+                      List.rev tupleTypes ) )
       | getWidth => ( 
-          parse( Input, 
-            case Format of rawPAM _ => getIdentifier | _ => getHeight, 
-            ( Format, parseInt Input, Height, MaxVal, TupleTypes ) ) )
+          parse( inp, 
+            case fmt of rawPAM _ => getIdentifier | _ => getHeight, 
+            ( fmt, parseInt inp, height, maxVal, tupleTypes ) ) )
       | getHeight => (
-          if Format=rawPBM orelse Format=plainPBM then
-            ( Format, Width, parseInt Input, MaxVal, TupleTypes )
+          if fmt=rawPBM orelse fmt=plainPBM then
+            ( fmt, width, parseInt inp, maxVal, tupleTypes )
           else
-            parse( Input, 
-              case Format of rawPAM _ => getIdentifier | _ => getMaxVal, 
-              ( Format, Width, parseInt Input, MaxVal, TupleTypes ) ) )
+            parse( inp, 
+              case fmt of rawPAM _ => getIdentifier | _ => getMaxVal, 
+              ( fmt, width, parseInt inp, maxVal, tupleTypes ) ) )
       | getDepth => 
         let
-          val Depth = parseInt Input
+          val depth = parseInt inp
         in 
-          parse( Input, getIdentifier,
-            ( rawPAM Depth, Width, Height, MaxVal, TupleTypes ) )
+          parse( inp, getIdentifier,
+            ( rawPAM depth, width, height, maxVal, tupleTypes ) )
         end
       | getMaxVal => (
-          case Format of
+          case fmt of
             rawPAM _ =>
-              parse( Input, getIdentifier,  
-                ( Format, Width, Height, parseWord Input, TupleTypes ) )
+              parse( inp, getIdentifier,  
+                ( fmt, width, height, parseWord inp, tupleTypes ) )
           | _ =>
-            ( Format, Width, Height, parseWord Input, List.rev TupleTypes ) )
+            ( fmt, width, height, parseWord inp, List.rev tupleTypes ) )
       | getTupleType => (
-          case getToken( Input, false ) of 
+          case getToken( inp, false ) of 
             NONE => raise pnmException"Could not read tuple type token."
-          | SOME Token =>
-              parse( Input, getIdentifier, 
-                ( Format, Width, Height, MaxVal, Token::TupleTypes ) ) )
+          | SOME token =>
+              parse( inp, getIdentifier, 
+                ( fmt, width, height, maxVal, token::tupleTypes ) ) )
     in
-      parse( Input, getFormat, ( plainPBM, 0, 0, 0w0, [] ) ) 
+      parse( inp, getFormat, ( plainPBM, 0, 0, 0w0, [] ) ) 
     end
 
-    fun writeHeader( Output : BinIO.outstream, 
-                     Image as ( Format : format, Width : int, Height : int, 
-                       Depth : int, MaxVal : word, TupleTypes : string list ) )
+    fun writeHeader( out : BinIO.outstream, 
+                     im as ( fmt : format, width : int, height : int, 
+                       depth : int, maxVal : word, tupleTypes : string list ) )
         : unit = 
     let
       val _ = 
-        if not( ( PNMCommon.getDepth Format )=Depth ) then
+        if not( ( PNMCommon.getDepth fmt )=depth ) then
           raise pnmException
             "The depth of the image does not match the depth of the format"
         else
           ()
     in
-      case Format of
-        rawPAM Depth => (
-          writeFormat( Output, Format );
-          output( Output, "\nWIDTH ");
-          writeInt( Output, Width );
-          output( Output, "\nHEIGHT ");
-          writeInt( Output, Height );
-          output( Output, "\nDEPTH ");
-          writeInt( Output, Depth );
-          output( Output, "\nMAXVAL ");
-          writeWord( Output, MaxVal );
-          output( Output, "\nENDHDR\n") )
+      case fmt of
+        rawPAM depth => (
+          writeFormat( out, fmt );
+          output( out, "\nWIDTH ");
+          writeInt( out, width );
+          output( out, "\nHEIGHT ");
+          writeInt( out, height );
+          output( out, "\nDEPTH ");
+          writeInt( out, depth );
+          output( out, "\nMAXVAL ");
+          writeWord( out, maxVal );
+          output( out, "\nENDHDR\n") )
       | _ => (
-          writeFormat( Output, Format );
-          output( Output, " ");
-          writeInt( Output, Width );
-          output( Output, " ");
-          writeInt( Output, Height );
-          if not( Format=rawPBM orelse Format=plainPBM ) then (
-            output( Output, " ");
-            writeWord( Output, MaxVal ) )
+          writeFormat( out, fmt );
+          output( out, " ");
+          writeInt( out, width );
+          output( out, " ");
+          writeInt( out, height );
+          if not( fmt=rawPBM orelse fmt=plainPBM ) then (
+            output( out, " ");
+            writeWord( out, maxVal ) )
           else
             () ; 
-          output( Output, "\n" ) )
+          output( out, "\n" ) )
     end
 
 
-    fun parsePixels( Input : BinIO.instream, Depth : int, ParseBits : bool )
+    fun parsePixels( inp : BinIO.instream, depth : int, parseBits : bool )
         : word list list = 
     let
-      fun parse( Tokens : string list )
+      fun parse( tokens : string list )
           : word list list =
-        case Tokens of 
+        case tokens of 
           [] => (
-            case getToken( Input, ParseBits ) of 
+            case getToken( inp, parseBits ) of 
               NONE => []
-            | SOME Token => parse [ Token ] )
+            | SOME token => parse [ token ] )
         | _ => (
-            case List.length Tokens<Depth of
+            case List.length tokens<depth of
               false => 
-                ( List.map ( fn X => wordFromString X ) ( List.rev Tokens ) ) 
+                ( List.map ( fn x => wordFromString x ) ( List.rev tokens ) ) 
                   :: parse []
             | true => ( 
-                case getToken( Input, ParseBits ) of 
+                case getToken( inp, parseBits ) of 
                   NONE => 
                     raise pnmException"Not enough input tokens for pixel." 
-                | SOME Token =>
-                    parse( Token::Tokens ) ) )
+                | SOME token =>
+                    parse( token::tokens ) ) )
     in
       parse []
     end
 
-    fun writePixels( Output : BinIO.outstream, Pixels : word list list ) 
+    fun writePixels( out : BinIO.outstream, pixels : word list list ) 
         : unit =
-      case Pixels of 
+      case pixels of 
         [] => ()
-      | Ws::RPixels => 
+      | ws::pixels' => 
         let
-          fun writeWords( Ws : word list ) : unit =
-            case Ws of 
+          fun writeWords( ws : word list ) : unit =
+            case ws of 
               [] => ()
-            | W::RWs => (
-                writeWord( Output, W );
-                output( Output, " " );
-                writeWords RWs )
+            | w::ws' => (
+                writeWord( out, w );
+                output( out, " " );
+                writeWords ws' )
         in (
-          writeWords Ws;
-          output( Output, "\n" );
-          writePixels( Output, RPixels ) )
+          writeWords ws;
+          output( out, "\n" );
+          writePixels( out, pixels' ) )
         end
 
   end (* local *)

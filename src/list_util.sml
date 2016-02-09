@@ -9,101 +9,102 @@
 structure ListUtil =
 struct
 
-  fun appi ( f : int * 'a -> unit ) ( Xs : 'a list ) : unit =
+  fun appi ( f : int * 'a -> unit ) ( xs : 'a list ) : unit =
   let
-    fun appi'( I : int, Xs' ) : unit =
-      case Xs' of 
+    fun appi'( i : int, xs' ) : unit =
+      case xs' of 
         [] => ()
-      | X::RXs' => ( f( I, X ); appi'( I+1, RXs' ) )
+      | x::rxs' => ( f( i, x ); appi'( i+1, rxs' ) )
   in
-    appi'( 0, Xs )
+    appi'( 0, xs )
   end
 
-  fun mapi ( f : int * 'a -> 'b ) ( Xs : 'a list ) 
+  fun mapi ( f : int * 'a -> 'b ) ( xs : 'a list ) 
       : 'b list =
   let
-    fun mapi'( I : int, Xs' ) : 'b list =
-      case Xs' of
+    fun mapi'( i : int, xs' ) : 'b list =
+      case xs' of
         [] => []
-      | X::RXs' => f( I, X )::mapi'( I+1, RXs' )
+      | x::rxs' => f( i, x )::mapi'( i+1, rxs' )
   in
-    mapi'( 0, Xs )
+    mapi'( 0, xs )
   end
 
-  fun foldli ( f : int * 'a * 'b -> 'b ) ( Init : 'b ) ( Xs : 'a list ) 
+  fun foldli ( f : int * 'a * 'b -> 'b ) ( init : 'b ) ( xs : 'a list ) 
       : 'b =
   let
-    fun foldli' ( I : int, Accum : 'b, Xs' ) : 'b =
-      case Xs' of
-        [] => Accum
-      | X::RXs' => foldli'( I+1, f( I, X, Accum ), RXs' )
+    fun foldli' ( i : int, accum : 'b, xs' ) : 'b =
+      case xs' of
+        [] => accum
+      | x::rxs' => foldli'( i+1, f( i, x, accum ), rxs' )
   in
-    foldli'( 0, Init, Xs )
+    foldli'( 0, init, xs )
   end
 
-  fun same ( eq : 'a * 'a -> bool ) ( Xs : 'a list ) : bool =
-    case Xs of
+
+  fun same ( eq : 'a * 'a -> bool ) ( xs : 'a list ) : bool =
+    case xs of
       [] => true
-    | [ X ] => true
-    | X::RXs => 
+    | [ x ] => true
+    | x::rxs => 
         List.foldl 
-          ( fn( Y, Same ) => 
-              if eq( X, Y ) then
-                Same
+          ( fn( y, same ) => 
+              if eq( x, y ) then
+                same
               else
                 false )
           true
-          RXs
+          rxs
 
   (*
   * Determine whether two lists are identical. 
   *)
-  fun equal ( eq : 'a * 'a -> bool ) ( Xs : 'a list, Ys : 'a list ) : bool =
+  fun equal ( eq : 'a * 'a -> bool ) ( xs : 'a list, ys : 'a list ) : bool =
   let
     fun equal'( [], [] ) = true
       | equal'( [], _ ) = false
       | equal'( _, [] ) = false
-      | equal'( X::Xs', Y::Ys' ) = eq( X, Y ) andalso equal'( Xs', Ys' )
+      | equal'( x::xs', y::ys' ) = eq( x, y ) andalso equal'( xs', ys' )
   in
-    equal'( Xs, Ys )
+    equal'( xs, ys )
   end
   
   (*
   * Determine whether an item is part of a list or not.
   *)
-  fun member( eq : 'a * 'a -> bool ) ( Y : 'a, Xs : 'a list ) : bool =
-    case Xs of 
+  fun member( eq : 'a * 'a -> bool ) ( y : 'a, xs : 'a list ) : bool =
+    case xs of 
       [] => false
-    | X::RXs => 
-        if eq( Y, X ) then
+    | x::rxs => 
+        if eq( y, x ) then
           true
         else
-          member eq ( Y, RXs )
+          member eq ( y, rxs )
 
   (*
-  *  Remove the first occurrence of Y from Xs 
+  *  Remove the first occurrence of y from xs 
   *)
-  fun remove( eq : 'a * 'a -> bool ) ( Y : 'a, Xs : 'a list ) : 'a list =
-    case Xs of 
+  fun remove( eq : 'a * 'a -> bool ) ( y : 'a, xs : 'a list ) : 'a list =
+    case xs of 
       [] => [] 
-    | X::RXs => 
-        if eq( Y, X ) then
-          RXs
+    | x::rxs => 
+        if eq( y, x ) then
+          rxs
         else
-          X::( remove eq ( Y, RXs ) )
+          x::( remove eq ( y, rxs ) )
 
   (* 
   * Retrieve the unique elements of a list. 
   *)
-  fun unique( eq : 'a * 'a -> bool ) ( Xs : 'a list ) : 'a list =
-    case Xs of
+  fun unique( eq : 'a * 'a -> bool ) ( xs : 'a list ) : 'a list =
+    case xs of
       [] => []
-    | X::RXs =>
-        case unique eq RXs of Ys =>
-        if member eq ( X, Ys ) then
-          Ys
+    | x::rxs =>
+        case unique eq rxs of ys =>
+        if member eq ( x, ys ) then
+          ys
         else
-          X::Ys 
+          x::ys 
 
   (*
   * Generate a list of elements with the  specified increment in the specified 
@@ -114,16 +115,16 @@ struct
   fun fromTo ( inc : 'a -> 'a, less : 'a * 'a -> bool ) ( L : 'a, H : 'a ) 
       : 'a list =
   let
-    fun fromTo'( I : 'a ) : 'a list =
-      case less( H, I ) of
+    fun fromTo'( i : 'a ) : 'a list =
+      case less( H, i ) of
         true => []
-      | false => I::fromTo'( inc I )
+      | false => i::fromTo'( inc i )
   in
     fromTo' L
   end
 
-  val fromToInt = fromTo ( fn X => X+1, Int.< )
-  val fromToReal = fromTo ( fn X => X+1.0, Real.< )
+  val fromToInt = fromTo ( fn x => x+1, Int.< )
+  val fromToReal = fromTo ( fn x => x+1.0, Real.< )
 
 
   (*
@@ -132,10 +133,10 @@ struct
   * The two lists must be equal in length, or else the function will throw an 
   * unmatched exception
   *)
-  fun combine( Xs : 'a list, Ys : 'b list ) : ( 'a * 'b ) list = 
-    case ( Xs, Ys ) of
+  fun combine( xs : 'a list, ys : 'b list ) : ( 'a * 'b ) list = 
+    case ( xs, ys ) of
       ( [], [] ) => []
-    | ( X::RXs, Y::RYs ) => ( X, Y )::combine( RXs, RYs )
+    | ( x::rxs, y::rys ) => ( x, y )::combine( rxs, rys )
 
   (*
   * Combine three list into a list of three tuples
@@ -143,29 +144,29 @@ struct
   * The three lists must be equal in length, or else the function will throw an 
   * unmatched exception
   *)
-  fun combine3( Xs : 'a list, Ys : 'b list, Zs : 'c list ) 
+  fun combine3( xs : 'a list, ys : 'b list, zs : 'c list ) 
       : ( 'a * 'b * 'c ) list = 
-    case ( Xs, Ys, Zs ) of
+    case ( xs, ys, zs ) of
       ( [], [], [] ) => []
-    | ( X::RXs, Y::RYs, Z::RZs ) => ( X, Y, Z )::combine3( RXs, RYs, RZs )
+    | ( x::rxs, y::rys, z::rzs ) => ( x, y, z )::combine3( rxs, rys, rzs )
 
 
-  fun binaryOp ( op' : 'a * 'a -> 'a ) ( Xs : 'a list, Ys : 'a list ) 
+  fun binaryOp ( op' : 'a * 'a -> 'a ) ( xs : 'a list, ys : 'a list ) 
       : 'a list =
-    case ( Xs, Ys ) of 
+    case ( xs, ys ) of 
       ( [], [] ) => []
-    | ( X::Xs', Y::Ys' ) => op'( X, Y )::binaryOp op' ( Xs', Ys' )
+    | ( x::xs', y::ys' ) => op'( x, y )::binaryOp op' ( xs', ys' )
 
   fun toString ( toString : 'a -> string )
-               ( Xs : 'a list ) 
+               ( xs : 'a list ) 
       : string =
   let
-    fun iter( Xs : 'a list ) : string =
-      case Xs of
-        [ X ] => toString X
-      | X::RXs => toString X ^ ", " ^ iter RXs 
+    fun iter( xs : 'a list ) : string =
+      case xs of
+        [ x ] => toString x
+      | x::rxs => toString x ^ ", " ^ iter rxs 
   in
-    "[ " ^ iter Xs ^ " ]" 
+    "[ " ^ iter xs ^ " ]" 
   end
 
 

@@ -89,13 +89,13 @@ sig
   
   type element
   type pixel 
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
   
-  val Depth : int
-  val ZeroPixel : pixel
+  val depth : int
+  val zeroPixel : pixel
 
-  val PNMFormat : PNMCommon.format
-  val PNMMaxVal : word
+  val pnmFormat : PNMCommon.format
+  val pnmMaxVal : word
 
   val pixelAdd : pixel * pixel -> pixel
   val pixelSub : pixel * pixel -> pixel
@@ -137,8 +137,8 @@ struct
   val image = Array2D.array
   val fromList = Array2D.fromList
 
-  fun zeroImage( Width : int, Height : int ) : image = 
-    image( Width, Height, Spec.ZeroPixel )
+  fun zeroImage( width : int, height : int ) : image = 
+    image( width, height, Spec.zeroPixel )
 
 
   structure PNMImage : PNM_IMAGE =
@@ -155,8 +155,8 @@ struct
 
     val createImage = fromList
 
-    val Format = Spec.PNMFormat
-    val Depth = Spec.Depth
+    val format = Spec.pnmFormat
+    val depth = Spec.depth
 
   end (* structure PNMImage *)
 
@@ -164,170 +164,170 @@ struct
   structure PNM = PNMFun( PNMImage )
 
 
-  fun load( Filename : string ) : image option = 
-    SOME( PNM.load Filename )
-    handle PNM.pnmException Msg => (
-      print( "Could not load image from " ^ Filename ^ ": " ^ Msg ^ "\n" );
+  fun load( filename : string ) : image option = 
+    SOME( PNM.load filename )
+    handle PNM.pnmException msg => (
+      print( "Could not load image from " ^ filename ^ ": " ^ msg ^ "\n" );
       NONE )
 
-  fun save' ( Format : PNMCommon.format, MaxVal : word )
-            ( Image : image, Filename : string ) 
+  fun save' ( format : PNMCommon.format, maxVal : word )
+            ( im : image, filename : string ) 
       : unit = 
-    PNM.save( Image, Filename, Format, MaxVal ) 
-    handle PNM.pnmException Msg =>
-      print( "Could not save image to " ^ Filename ^ ": " ^ Msg ^ "\n" )
+    PNM.save( im, filename, format, maxVal ) 
+    handle PNM.pnmException msg =>
+      print( "Could not save image to " ^ filename ^ ": " ^ msg ^ "\n" )
       
-  fun save( Image : image, Filename : string ) : unit = 
-    save' ( Spec.PNMFormat, Spec.PNMMaxVal ) ( Image, Filename )
+  fun save( im : image, filename : string ) : unit = 
+    save' ( Spec.pnmFormat, Spec.pnmMaxVal ) ( im, filename )
 
 
-  fun sub( Image as { Width, Values, ... } : image, X : int, Y : int ) 
+  fun sub( im as { width, values, ... } : image, x : int, y : int ) 
       : pixel =
-    Array.sub( Values, Y*Width+X )
+    Array.sub( values, y*width+x )
 
-  fun sub'( Image as { Values, ... } : image, Index : int ) : pixel =
-    Array.sub( Values, Index )
+  fun sub'( im as { values, ... } : image, index : int ) : pixel =
+    Array.sub( values, index )
 
 
-  fun update( Image as { Width, Values, ... } : image, 
-              X : int, Y : int, Pixel : pixel ) 
+  fun update( im as { width, values, ... } : image, 
+              x : int, y : int, pix : pixel ) 
       : unit =
-    Array.update( Values, Y*Width+X, Pixel )
+    Array.update( values, y*width+x, pix )
 
-  fun update'( Image as { Width, Values, ... } : image, 
-               Index : int, Pixel : pixel ) 
+  fun update'( im as { width, values, ... } : image, 
+               index : int, pix : pixel ) 
       : unit =
-    Array.update( Values, Index, Pixel )
+    Array.update( values, index, pix )
 
 
-  fun add( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, 
-           Image2 as { Width=Width2, Height=Height2, Values=Values2 } : image ) 
+  fun add( { width=width1, height=height1, values=values1 } : image, 
+           { width=width2, height=height2, values=values2 } : image ) 
       : image = 
-    if Width1=Width2 andalso Height1=Height2 then
+    if width1=width2 andalso height1=height2 then
     let
-      val Output as { Values=OutputValues, ... } = zeroImage( Width1, Height1 )
+      val output as { values=outputValues, ... } = zeroImage( width1, height1 )
       val _ = 
         Array.modifyi 
-          ( fn( I, _ ) => 
+          ( fn( i, _ ) => 
               Spec.pixelAdd( 
-                Array.sub( Values1, I ), 
-                Array.sub( Values2, I ) ) )
-          OutputValues
+                Array.sub( values1, i ), 
+                Array.sub( values2, i ) ) )
+          outputValues
     in
-      Output
+      output
     end
     else
       raise mismatchException
 
-  fun add'( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, 
-            Image2 as { Width=Width2, Height=Height2, Values=Values2 } : image )
+  fun add'( { width=width1, height=height1, values=values1 } : image, 
+            { width=width2, height=height2, values=values2 } : image )
       : unit = 
-    if Width1=Width2 andalso Height1=Height2 then
+    if width1=width2 andalso height1=height2 then
       Array.modifyi 
-        ( fn( I, X ) => 
-            Spec.pixelAdd( X, Array.sub( Values2, I ) ) )
-        Values1
+        ( fn( i, x ) => 
+            Spec.pixelAdd( x, Array.sub( values2, i ) ) )
+        values1
     else
       raise mismatchException
 
-  fun subtract( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, 
-                Image2 as { Width=Width2, Height=Height2, Values=Values2 } : image ) 
+  fun subtract( { width=width1, height=height1, values=values1 } : image, 
+                { width=width2, height=height2, values=values2 } : image ) 
       : image = 
-    if Width1=Width2 andalso Height1=Height2 then
+    if width1=width2 andalso height1=height2 then
     let
-      val Output as { Values=OutputValues, ... } = zeroImage( Width1, Height1 )
+      val output as { values=outputValues, ... } = zeroImage( width1, height1 )
       val _ = 
         Array.modifyi 
-          ( fn( I, _ ) => 
+          ( fn( i, _ ) => 
               Spec.pixelSub( 
-                Array.sub( Values1, I ), 
-                Array.sub( Values2, I ) ) )
-          OutputValues
+                Array.sub( values1, i ), 
+                Array.sub( values2, i ) ) )
+          outputValues
     in
-      Output
+      output
     end
     else
       raise mismatchException
 
-  fun subtract'( Image1 as { Width=Width1, Height=Height1, Values=Values1 } : image, 
-                 Image2 as { Width=Width2, Height=Height2, Values=Values2 } : image ) 
+  fun subtract'( { width=width1, height=height1, values=values1 } : image, 
+                 { width=width2, height=height2, values=values2 } : image ) 
       : unit = 
-    if Width1=Width2 andalso Height1=Height2 then
+    if width1=width2 andalso height1=height2 then
       Array.modifyi 
-        ( fn( I, X ) => 
-            Spec.pixelSub( X, Array.sub( Values2, I ) ) )
-        Values1
+        ( fn( i, x ) => 
+            Spec.pixelSub( x, Array.sub( values2, i ) ) )
+        values1
     else
       raise mismatchException
 
 
   fun app ( f : pixel -> unit )
-          ( Image as { Values, ... } : image )
+          ( im as { values, ... } : image )
       : unit =
-    Array.app f Values
+    Array.app f values
 
   fun appi ( f : int * pixel -> unit )
-           ( Image as { Values, ... } : image )
+           ( im as { values, ... } : image )
       : unit =
-    Array.appi f Values
+    Array.appi f values
 
   fun appxy ( f : int * int * pixel -> unit )
-            ( Image as { Width, Values, ... } : image )
+            ( im as { width, values, ... } : image )
       : unit =
-    Array.appi ( fn( I, Pixel ) => f( I mod Width, I div Width, Pixel ) ) Values
+    Array.appi ( fn( i, pix ) => f( i mod width, i div width, pix ) ) values
 
   fun foldl ( f : pixel * 'a -> 'a )
-            ( Start : 'a )
-            ( Image as { Values, ... } : image ) : 'a =
-    Array.foldl f Start Values
+            ( start : 'a )
+            ( im as { values, ... } : image ) : 'a =
+    Array.foldl f start values
 
   fun foldli ( f : int * pixel * 'a -> 'a )
-             ( Start : 'a )
-             ( Image as { Values, ... } : image ) : 'a =
-    Array.foldli f Start Values
+             ( start : 'a )
+             ( im as { values, ... } : image ) : 'a =
+    Array.foldli f start values
 
   fun foldlxy ( f : int * int * pixel * 'a -> 'a )
-             ( Start : 'a )
-             ( Image as { Width, Values, ... } : image ) : 'a =
+             ( start : 'a )
+             ( im as { width, values, ... } : image ) : 'a =
     Array.foldli 
-      ( fn( I, Pixel, X ) => f( I mod Width, I div Width, Pixel, X ) ) 
-      Start 
-      Values
+      ( fn( i, pix, x ) => f( i mod width, i div width, pix, x ) ) 
+      start 
+      values
 
   fun foldr ( f : pixel * 'a -> 'a )
-            ( Start : 'a )
-            ( Image as { Values, ... } : image ) : 'a =
-    Array.foldr f Start Values
+            ( start : 'a )
+            ( im as { values, ... } : image ) : 'a =
+    Array.foldr f start values
 
   fun foldri ( f : int * pixel * 'a -> 'a )
-             ( Start : 'a )
-             ( Image as { Values, ... } : image ) : 'a =
-    Array.foldri f Start Values
+             ( start : 'a )
+             ( im as { values, ... } : image ) : 'a =
+    Array.foldri f start values
 
   fun foldrxy ( f : int * int * pixel * 'a -> 'a )
-             ( Start : 'a )
-             ( Image as { Width, Values, ... } : image ) : 'a =
+             ( start : 'a )
+             ( im as { width, values, ... } : image ) : 'a =
     Array.foldri 
-      ( fn( I, Pixel, X ) => f( I mod Width, I div Width, Pixel, X ) ) 
-      Start 
-      Values
+      ( fn( i, pix, x ) => f( i mod width, i div width, pix, x ) ) 
+      start 
+      values
 
   fun modify ( f : pixel -> pixel )
-             ( Image as { Values, ... } : image ) 
+             ( im as { values, ... } : image ) 
       : unit =
-    Array.modify f Values
+    Array.modify f values
 
   fun modifyi ( f : int * pixel -> pixel )
-             ( Image as { Values, ... } : image ) 
+             ( im as { values, ... } : image ) 
       : unit =
-    Array.modifyi f Values
+    Array.modifyi f values
 
   fun modifyxy ( f : int * int * pixel -> pixel )
-             ( Image as { Width, Values, ... } : image ) 
+             ( im as { width, values, ... } : image ) 
       : unit =
     Array.modifyi 
-      ( fn( I, Pixel ) => f( I mod Width, I div Width, Pixel ) ) 
-      Values
+      ( fn( i, pix ) => f( i mod width, i div width, pix ) ) 
+      values
 
   fun tabulatexy (width : int, height : int, f : int * int -> pixel) : image =
     let
@@ -339,64 +339,64 @@ struct
      
 
 
-  fun toString( Image as { Width, Height, ... } : image ) : string =
+  fun toString( im as { width, height, ... } : image ) : string =
     String.concat( 
       List.foldr
-        ( fn( Y, Strings ) => 
+        ( fn( y, strings ) => 
             "\n" :: ( 
               List.foldr
-                ( fn( X, Strings' ) => 
-                    ( Spec.pixelToString( sub( Image, X, Y ) ) ^ ", " ) ::
-                        Strings' )
-                Strings
-                ( List.tabulate( Width, fn X => X ) ) ) )
+                ( fn( x, strings' ) => 
+                    ( Spec.pixelToString( sub( im, x, y ) ) ^ ", " ) ::
+                        strings' )
+                strings
+                ( List.tabulate( width, fn x => x ) ) ) )
         []
-        ( List.tabulate( Height, fn X => X ) ) )
+        ( List.tabulate( height, fn x => x ) ) )
 
 
-  fun histograms( Image : image, NumBins : int ) 
+  fun histograms( im : image, numBins : int ) 
       : int Array.array list = 
   let
 
-    val Factor = 1.0/( ( real NumBins )-1.0 )
+    val f = 1.0/( ( real numBins )-1.0 )
 
-    val Delims = 
+    val delims = 
       List.tabulate( 
-        NumBins+1, 
-        fn X => Spec.elementFromReal( ( ( real X )-0.5 )*Factor ) )
+        numBins+1, 
+        fn x => Spec.elementFromReal( ( ( real x )-0.5 )*f ) )
  
     (*
     * Get the index of the histogram bin to place an element. 
     *)
-    fun getIndex( Delims : element list, Element : element, Index : int )
+    fun getIndex( delims : element list, element : element, index : int )
         : int =
-      case Delims of 
-        Low::( RDelims as High::_ ) =>
-          if not ( Spec.elementCompare( Element, Low )=LESS ) andalso
-             Spec.elementCompare( Element, High )=LESS then
-            Index
+      case delims of 
+        low::( delims' as high::_ ) =>
+          if not ( Spec.elementCompare( element, low )=LESS ) andalso
+             Spec.elementCompare( element, high )=LESS then
+            index
           else
-            getIndex( RDelims, Element, Index+1 )
+            getIndex( delims', element, index+1 )
       | _ => raise Overflow
           
-    fun collect( Channel : int ) : int Array.array list = 
-      case Channel<Spec.Depth of
+    fun collect( channel : int ) : int Array.array list = 
+      case channel<Spec.depth of
         false => []
       | true => 
         let
-          val Histogram = Array.array( NumBins, 0 )
+          val histogram = Array.array( numBins, 0 )
           val _ = appxy
-            ( fn( X, Y, Pixel ) => 
+            ( fn( x, y, pix ) => 
               let
-                val Index = 
-                  getIndex( Delims, Spec.getElement( Pixel, Channel ), 0 )
-                val Count = Array.sub( Histogram, Index )
+                val index = 
+                  getIndex( delims, Spec.getElement( pix, channel ), 0 )
+                val count = Array.sub( histogram, index )
               in
-                Array.update( Histogram, Index, Count+1 ) 
+                Array.update( histogram, index, count+1 ) 
               end )
-            Image
+            im
         in
-          Histogram::collect( Channel+1 )
+          histogram::collect( channel+1 )
         end
 
   in
@@ -404,46 +404,46 @@ struct
   end
 
 
-  fun transposed( Image as { Width, Height, ... } : image ) : image =
+  fun transposed( im as { width, height, ... } : image ) : image =
   let
-    val Out = zeroImage( Height, Width )
+    val out = zeroImage( height, width )
     val _ =
       appxy
-        ( fn( X, Y, Pixel ) => update( Out, Y, X, Pixel ) )
-        Image
+        ( fn( x, y, pix ) => update( out, y, x, pix ) )
+        im
   in
-    Out
+    out
   end
 
-  fun equal( Image1 : image, Image2 : image ) : bool = 
+  fun equal( im1 : image, im2 : image ) : bool = 
   let
-    val { Width=Width1, Height=Height1, ... } = Image1
-    val { Width=Width2, Height=Height2, ... } = Image2
+    val { width=width1, height=height1, ... } = im1
+    val { width=width2, height=height2, ... } = im2
 
-    val Num = Width1*Height1
+    val num = width1*height1
 
-    fun check( Index : int ) : bool =
-    case Index<Num of
+    fun check( index : int ) : bool =
+    case index<num of
       false => true
     | true =>
       let
-        val Pixel1 = sub'( Image1, Index )
-        val Pixel2 = sub'( Image2, Index )
+        val pix1 = sub'( im1, index )
+        val pix2 = sub'( im2, index )
       in
-        if Spec.pixelEqual( Pixel1, Pixel2 ) then
-          check( Index+1 )
+        if Spec.pixelEqual( pix1, pix2 ) then
+          check( index+1 )
         else
           false
       end
   in
-    if Width1=Width2 andalso Height1=Height2 then
+    if width1=width2 andalso height1=height2 then
       check 0
     else
       false
   end
 
-  fun fill( Image : image, Pixel : pixel ) : unit =
-    modify ( fn _ => Pixel ) Image
+  fun fill( im : image, pix : pixel ) : unit =
+    modify ( fn _ => pix ) im
 
 
   structure FilterImage : FILTER_IMAGE = 
@@ -452,7 +452,7 @@ struct
     type pixel = Spec.pixel
     type image = Spec.image
 
-    val ZeroPixel = Spec.ZeroPixel
+    val zeroPixel = Spec.zeroPixel
     val createZero = zeroImage
 
     val pixelAdd = Spec.pixelAdd
@@ -479,14 +479,14 @@ struct
   structure Thresholds = ThresholdsFun( ThresholdsImage )
 
 
-  fun thresholds' ( Method : thresholdsMethod ) 
-                  ( Image : image )
+  fun thresholds' ( method : thresholdsMethod ) 
+                  ( im : image )
       : real list =
-    case Method of
-      percentage( NumBins, Percentage ) =>
-        Thresholds.percentage( Image, NumBins, Percentage )
-    | otsu NumBins =>
-        Thresholds.otsu( Image, NumBins )
+    case method of
+      percentage( numBins, percent ) =>
+        Thresholds.percentage( im, numBins, percent )
+    | otsu numBins =>
+        Thresholds.otsu( im, numBins )
 
   val thresholds : image -> real list = thresholds' ( otsu 256 )
 
@@ -497,7 +497,7 @@ struct
   fun rotateCrop(img : image, by : real, newWidth : int, newHeight : int) 
              : image =
   let
-    val { Width = width, Height=height, ... } = img
+    val { width = width, height=height, ... } = img
 
     val newImage = zeroImage(newWidth, newHeight);
     
@@ -564,7 +564,7 @@ struct
 
   fun rotate (img : image, by : real ) : image =
   let
-    val { Width = width, Height=height, ... } = img
+    val { width = width, height=height, ... } = img
     val newWidth = Real.ceil(Real.max(
         abs((real width) * Math.cos(by) - (real height) * Math.sin(by)),
         abs((real width) * Math.cos(by) + (real height) * Math.sin(by))));

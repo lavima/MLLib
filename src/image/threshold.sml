@@ -10,7 +10,7 @@ signature THRESHOLDS_IMAGE =
 sig
   
   type pixel
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
   val histograms : image * int -> int Array.array list
 
@@ -31,92 +31,92 @@ struct
 
   structure Image = Image
 
-  fun percentage( Image : Image.image, NumBins : int, Percentage : real ) 
+  fun percentage( im : Image.image, numBins : int, percentage : real ) 
       : real list =
   let
-    val { Width, Height, ... } = Image
+    val { width, height, ... } = im
 
-    val [ Histogram ] = Image.histograms( Image, NumBins )
+    val [ histogram ] = Image.histograms( im, numBins )
 
-    val NumPixels = Width*Height
+    val numPixels = width*height
 
-    val NormalizedHistogram = Array.array( NumBins, 0.0 ) 
+    val normalizedHistogram = Array.array( numBins, 0.0 ) 
     val _ = Array.appi
-      ( fn( I, X ) =>
-          Array.update( NormalizedHistogram, I, 
-                        real X/real NumPixels ) )
-      Histogram
+      ( fn( i, x ) =>
+          Array.update( normalizedHistogram, i, 
+                        real x/real numPixels ) )
+      histogram
 
-    val Inc = 1.0/( real NumBins )
+    val inc = 1.0/( real numBins )
 
-    val ( _, _, Threshold ) = 
+    val ( _, _, threshold ) = 
       Array.foldl
-        ( fn( X, ( Sum, Current, Threshold ) ) => 
-            if Sum>Percentage andalso not( Threshold>0.0 ) then
-              ( Sum+X, Current+Inc, Current )
+        ( fn( x, ( sum, current, threshold ) ) => 
+            if sum>percentage andalso not( threshold>0.0 ) then
+              ( sum+x, current+inc, current )
             else
-              ( Sum+X, Current+Inc, Threshold ) )
+              ( sum+x, current+inc, threshold ) )
         ( 0.0, 0.0, 0.0 )
-        NormalizedHistogram
+        normalizedHistogram
   in
-    [ Threshold ]
+    [ threshold ]
   end
 
-  fun otsu ( Image : Image.image, NumBins : int ) : real list =
+  fun otsu ( im : Image.image, numBins : int ) : real list =
   let
-    val { Width, Height, ... } = Image
+    val { width, height, ... } = im
 
-    val [ Histogram ] = Image.histograms( Image, NumBins )
+    val [ histogram ] = Image.histograms( im, numBins )
 
-    val NumPixels = Width*Height
+    val numPixels = width*height
 
-    val NormalizedHistogram = Array.array( NumBins, 0.0 ) 
+    val normalizedHistogram = Array.array( numBins, 0.0 ) 
     val _ = Array.appi
-      ( fn( I, X ) =>
-          Array.update( NormalizedHistogram, I, 
-                        real X/real NumPixels ) )
-      Histogram
+      ( fn( i, x ) =>
+          Array.update( normalizedHistogram, i, 
+                        real x/real numPixels ) )
+      histogram
 
-    val Mean =
+    val mean =
       Array.foldli
-        ( fn( I, P, Mean ) =>
-            Mean+( real I*P ) )
+        ( fn( i, p, mean ) =>
+            mean+( real i*p ) )
         0.0
-        NormalizedHistogram
+        normalizedHistogram
 
-    val ( _, Thresholds ) =
+    val ( _, thresholds ) =
       Array.foldli
-        ( fn( I, _, ( Max, Thresholds ) ) => 
+        ( fn( i, _, ( max, thresholds ) ) => 
           let
-            val ( ProbBack, CumMean ) =
+            val ( probBack, cumMean ) =
               Array.foldli
-                ( fn( J, P, ( PB, CM ) ) =>
-                  if J<=I then
-                    ( PB+P, CM+real J*P ) 
+                ( fn( j, p, ( pb, cm ) ) =>
+                  if j<=i then
+                    ( pb+p, cm+real j*p ) 
                   else
-                    ( PB, CM ) )
+                    ( pb, cm ) )
                 ( 0.0, 0.0 )
-                NormalizedHistogram
+                normalizedHistogram
 
-            val VarClass = 
+            val varClass = 
               let
-                val X = Mean*ProbBack-CumMean
+                val x = mean*probBack-cumMean
               in
-                X*X/( ProbBack*( 1.0-ProbBack ) )
+                x*x/( probBack*( 1.0-probBack ) )
               end
 
           in
-            if Real.isNan VarClass orelse VarClass<Max then
-              ( Max, Thresholds )
-            else if VarClass>Max then
-              ( VarClass, [ real I ] )
+            if Real.isNan varClass orelse varClass<max then
+              ( max, thresholds )
+            else if varClass>max then
+              ( varClass, [ real i ] )
             else 
-              ( Max, ( real I )::Thresholds )
+              ( max, ( real i )::thresholds )
           end )
         ( 0.0, [ 0.0 ] )
-        NormalizedHistogram
+        normalizedHistogram
   in
-    [ ( MathUtil.avg Thresholds )/real( NumBins-1 ) ]
+    [ ( MathUtil.avg thresholds )/real( numBins-1 ) ]
   end
 
 end (* structure Threshold *)

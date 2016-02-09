@@ -11,78 +11,78 @@ struct
 
   type element = bool
   type pixel = element
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
 
-  val Depth = 1
+  val depth = 1
 
-  val ZeroPixel = false 
+  val zeroPixel = false 
 
-  val PNMFormat = PNMCommon.plainPBM
-  val PNMMaxVal = 0w1 
+  val pnmFormat = PNMCommon.plainPBM
+  val pnmMaxVal = 0w1 
 
   
-  fun pixelAdd( X : bool, Y : bool ) : bool = ( X orelse Y )
-  fun pixelSub( X : bool, Y : bool ) : bool = ( X andalso not Y ) 
-  fun pixelMul( X : bool, Y : bool ) : bool = ( X andalso Y )
-  fun pixelMul'( X : bool, Y : real) : bool = X
+  fun pixelAdd( x : bool, y : bool ) : bool = ( x orelse y )
+  fun pixelSub( x : bool, y : bool ) : bool = ( x andalso not y ) 
+  fun pixelMul( x : bool, y : bool ) : bool = ( x andalso y )
+  fun pixelMul'( x : bool, y : real) : bool = x
   
-  fun elementCompare( X : element, Y : element ) : order =
-    if X=Y then
+  fun elementCompare( x : element, y : element ) : order =
+    if x=y then
       EQUAL
-    else if X andalso not Y then
+    else if x andalso not y then
       GREATER
     else 
       LESS
 
-  fun pixelEqual( X : pixel, Y : pixel ) : bool = 
-    Util.eq elementCompare ( X, Y )
+  fun pixelEqual( x : pixel, y : pixel ) : bool = 
+    Util.eq elementCompare ( x, y )
 
-  fun getElement( Pixel : pixel, I : int ) : element =
-    if I>0 orelse I<0 then
+  fun getElement( pixel : pixel, i : int ) : element =
+    if i>0 orelse i<0 then
       raise ImageCommon.formatException"There is only one element"
     else
-      Pixel
+      pixel
 
-  fun elementFromReal X = 
-    if X>0.0 then 
+  fun elementFromReal x = 
+    if x>0.0 then 
       true
     else
       false
 
 
-  fun pixelFromWords( Ws : word list, MaxVal : word, Invert : bool ) : pixel =
-    case Ws of 
-      [ W ] => 
-        if Invert then
-          if W>0w0 then
+  fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =
+    case ws of 
+      [ w ] => 
+        if invert then
+          if w>0w0 then
             false
           else 
             true
         else
-          if W>0w0 then
+          if w>0w0 then
             true
           else 
             false
     | _ => raise ImageCommon.formatException( 
-             "Unexpected number of words: " ^ Int.toString( List.length Ws ) )
+             "Unexpected number of words: " ^ Int.toString( List.length ws ) )
 
-  fun pixelToWords( X : pixel, MaxVal : word, Invert : bool ) 
+  fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
       : word list =
-    if Invert then
-      if X then
+    if invert then
+      if x then
         [ 0w0 ]
       else
-        [ MaxVal ]
+        [ maxVal ]
     else
-      if X then
-        [ MaxVal ]
+      if x then
+        [ maxVal ]
       else
         [ 0w0 ]
 
   
-  fun pixelToString( X : pixel ) : string = 
-    Bool.toString X
+  fun pixelToString( x : pixel ) : string = 
+    Bool.toString x
 
 
 end (* structure BooleanImageSpec *)

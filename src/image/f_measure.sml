@@ -12,26 +12,26 @@ struct
 
   type score = int * int * int * int * real * real * real
 
-  val Zero : score = ( 0, 0, 0, 0, 0.0, 0.0, 0.0 )
+  val zeroScore : score = ( 0, 0, 0, 0, 0.0, 0.0, 0.0 )
 
-  fun add( S1 as ( CP1, SP1, CR1, SR1, P1, R1, F1 ) : score, 
-           S2 as ( CP2, SP2, CR2, SR2, P2, R2, F2 ) : score ) 
+  fun add( ( cp1, sp1, cr1, sr1, p1, r1, f1 ) : score, 
+           ( cp2, sp2, cr2, sr2, p2, r2, f2 ) : score ) 
       : score =
-    ( CP1+CP2, SP1+SP2, CR1+CR2, SR1+SR2, P1+P2, R1+R2, F1+F2 )
+    ( cp1+cp2, sp1+sp2, cr1+cr2, sr1+sr2, p1+p2, r1+r2, f1+f2 )
 
-  fun compare( S1 as ( _, _, _, _, _, _, F1 ) : score, 
-            S2 as ( _, _, _, _, _, _, F2 ) : score ) : order =
-    Real.compare( F1, F2 )
+  fun compare( ( _, _, _, _, _, _, f1 ) : score, 
+               ( _, _, _, _, _, _, f2 ) : score ) : order =
+    Real.compare( f1, f2 )
 
-  fun toString( Score as ( CP, SP, CR, SR, P, R, F ) : score ) 
+  fun toString( ( cp, sp, cr, sr, p, r, f ) : score ) 
       : string =
-    " Count Precision: " ^ Int.toString CP ^
-    " Sum Precision: " ^ Int.toString SP ^
-    " Count Recall: " ^ Int.toString CR ^
-    " Sum Recall: " ^ Int.toString SR ^
-    " Precision: " ^ Real.toString P ^
-    " Recall: " ^ Real.toString R ^
-    " F-measure: " ^ Real.toString F
+    " Count Precision: " ^ Int.toString cp ^
+    " Sum Precision: " ^ Int.toString sp ^
+    " Count Recall: " ^ Int.toString cr ^
+    " Sum Recall: " ^ Int.toString sr ^
+    " Precision: " ^ Real.toString p ^
+    " Recall: " ^ Real.toString r ^
+    " F-measure: " ^ Real.toString f
 
 end (* structure FMeasureCommon *)
 
@@ -46,141 +46,141 @@ struct
   type image = BooleanImage.image
   type truth = BooleanImage.image
   
-  val DefaultMaxDist = 0.0075
-  val DefaultOutlierCost = 100.0;
+  val defaultMaxDist = 0.0075
+  val defaultOutlierCost = 100.0;
 
   val matchEdges  = _import"fiMatchEdges" : 
     real Array.array * real Array.array * 
     int * int * real * real * 
     real Array.array * real Array.array -> real;
 
-  fun evaluate( Image as { Width, Height, Values } : image, 
-                Truths : truth list ) 
+  fun evaluate( image as { width, height, values } : image, 
+                truths : truth list ) 
       : score =
   let
     
-    val Diagonal = Math.sqrt( real( Width*Width + Height*Height ) )
+    val diagonal = Math.sqrt( real( width*width + height*height ) )
 
-    val MaxDist = DefaultMaxDist
-    val OutlierCost = DefaultOutlierCost
+    val maxDist = defaultMaxDist
+    val outlierCost = defaultOutlierCost
 
-    val ImageReal = ImageUtil.convertBooleanToTransposedReal Image
+    val imageReal = ImageUtil.convertBooleanToTransposedReal image
 
-    val TruthReal = GrayscaleImageReal.image( Height, Width, 0.0 )
-    val Match1 = GrayscaleImageReal.image( Height, Width, 0.0 )
-    val Match2 = GrayscaleImageReal.image( Height, Width, 0.0 )
+    val truthReal = GrayscaleImageReal.image( height, width, 0.0 )
+    val match1 = GrayscaleImageReal.image( height, width, 0.0 )
+    val match2 = GrayscaleImageReal.image( height, width, 0.0 )
 
 
-    val ( SumR, CountR, AccumMatch ) =
+    val ( sumR, countR, accumMatch ) =
       List.foldl 
-        ( fn( Truth, ( SumR, CountR, AccumMatch ) ) =>
+        ( fn( truth, ( sumR, countR, accumMatch ) ) =>
           let
-            val _ = ImageUtil.copyBooleanToTransposedReal( Truth, TruthReal )
+            val _ = ImageUtil.copyBooleanToTransposedReal( truth, truthReal )
 
-            val Cost = 
-              matchEdges( #Values ImageReal, #Values TruthReal, 
-                          Width, Height, 
-                          MaxDist*Diagonal, OutlierCost*MaxDist*Diagonal,
-                          #Values Match1, #Values Match2 )
+            val cost = 
+              matchEdges( #values imageReal, #values truthReal, 
+                          width, height, 
+                          maxDist*diagonal, outlierCost*maxDist*diagonal,
+                          #values match1, #values match2 )
 
             val _ = 
               GrayscaleImageReal.appxy
-                ( fn( X, Y, M ) => 
-                    if M>0.0 then
-                      BooleanImage.update( AccumMatch, X, Y, true )
+                ( fn( x, y, m ) => 
+                    if m>0.0 then
+                      BooleanImage.update( accumMatch, x, y, true )
                     else
                       () )
-                Match1
+                match1
 
-            val CountR = 
+            val countR = 
               GrayscaleImageReal.foldl
-                ( fn( M, Count ) => 
-                    if M>0.0 then
-                      Count+1
+                ( fn( m, count ) => 
+                    if m>0.0 then
+                      count+1
                     else
-                      Count )
-                CountR
-                Match2
+                      count )
+                countR
+                match2
 
-            val SumR = 
+            val sumR = 
               BooleanImage.foldlxy
-                ( fn( X, Y, M, Sum ) => 
-                    if M then
-                      Sum+1
+                ( fn( x, y, m, sum ) => 
+                    if m then
+                      sum+1
                     else
-                      Sum )
-                SumR
-                Truth
+                      sum )
+                sumR
+                truth
 
-            val _ = GrayscaleImageReal.fill( Match1, 0.0 )
-            val _ = GrayscaleImageReal.fill( Match2, 0.0 )
+            val _ = GrayscaleImageReal.fill( match1, 0.0 )
+            val _ = GrayscaleImageReal.fill( match2, 0.0 )
 
           in
-            ( SumR, CountR, AccumMatch ) 
+            ( sumR, countR, accumMatch ) 
           end )
-        ( 0, 0, BooleanImage.image( Height, Width, false ) )
-        Truths
+        ( 0, 0, BooleanImage.image( height, width, false ) )
+        truths
     
-    val SumP = 
+    val sumP = 
       BooleanImage.foldl
-        ( fn( V, Sum ) => 
-            if V then
-              Sum+1 
+        ( fn( v, sum ) => 
+            if v then
+              sum+1 
             else
-              Sum )
+              sum )
         0
-        Image
+        image
 
-    val CountP = 
+    val countP = 
       BooleanImage.foldl
-        ( fn( V, Count ) => 
-            if V then
-              Count+1 
+        ( fn( v, count ) => 
+            if v then
+              count+1 
             else
-              Count )
+              count )
         0
-        AccumMatch
+        accumMatch
 
-    val P = real CountP/( case SumP>0 of false => 1.0 | true => real SumP )
-    val R = real CountR/( case SumR>0 of false => 1.0 | true => real SumR )
-    val F = 2.0*P*R/( case ( P+R )>0.0 of false => 1.0 | true => ( P+R ) )
+    val p = real countP/( case sumP>0 of false => 1.0 | true => real sumP )
+    val r = real countR/( case sumR>0 of false => 1.0 | true => real sumR )
+    val f = 2.0*p*r/( case ( p+r )>0.0 of false => 1.0 | true => ( p+r ) )
   in
-    ( CountP, SumP, CountR, SumR, P, R, F )
+    ( countP, sumP, countR, sumR, p, r, f )
   end
 
-  fun evaluateList( List : ( image * truth list ) list ) : score =
+  fun evaluateList( evalList : ( image * truth list ) list ) : score =
   let
-    fun eval( List : ( image * truth list ) list, Accum : score ) : score =
-      case List of
-        [] => Accum
-      | ( Image, Truths )::RList => 
-          eval( RList, add( Accum, evaluate( Image, Truths ) ) )
+    fun eval( evalList : ( image * truth list ) list, accum : score ) : score =
+      case evalList of
+        [] => accum
+      | ( image, truths )::evalList' => 
+          eval( evalList', add( accum, evaluate( image, truths ) ) )
 
-    val ( CP, SP, CR, SR, _, _, _ ) = eval( List, Zero )
+    val ( cp, sp, cr, sr, _, _, _ ) = eval( evalList, zeroScore )
 
-    val P = real CP/( case SP>0 of false => 1.0 | true => real SP )
-    val R = real CR/( case SR>0 of false => 1.0 | true => real SR )
-    val F = 2.0*P*R/( case ( P+R )>0.0 of false => 1.0 | true => ( P+R ) )
+    val p = real cp/( case sp>0 of false => 1.0 | true => real sp )
+    val r = real cr/( case sr>0 of false => 1.0 | true => real sr )
+    val f = 2.0*p*r/( case ( p+r )>0.0 of false => 1.0 | true => ( p+r ) )
   in 
-    ( CP, SP, CR, SR, P, R, F )
+    ( cp, sp, cr, sr, p, r, f )
   end
 
-  fun evaluateListAvg( List : ( image * truth list ) list ) : score =
+  fun evaluateListAvg( evalList : ( image * truth list ) list ) : score =
   let
-    fun eval( List : ( image * truth list ) list, Accum : score ) : score =
-      case List of
-        [] => Accum
-      | ( Image, Truths )::RList => 
-          eval( RList, add( Accum, evaluate( Image, Truths ) ) )
+    fun eval( evalList : ( image * truth list ) list, accum : score ) : score =
+      case evalList of
+        [] => accum
+      | ( image, truths )::evalList' => 
+          eval( evalList', add( accum, evaluate( image, truths ) ) )
       
-    val ( CP, SP, CR, SR, P, R, F ) = eval( List, Zero )
-    val Length = List.length List
-    val Length' = real Length
-    val Score = 
-      ( CP div Length, SP div Length, CR div Length, SR div Length, 
-        P/Length', R/Length', F/Length' )
+    val ( cp, sp, cr, sr, p, r, f ) = eval( evalList, zeroScore )
+    val length = List.length evalList
+    val length' = real length
+    val score = 
+      ( cp div length, sp div length, cr div length, sr div length, 
+        p/length', r/length', f/length' )
   in 
-    Score
+    score
   end
 
 end (* structure FMeasureBerkeleyEdge *)
@@ -197,87 +197,87 @@ struct
   type image = BooleanImage.image
   type truth = BooleanImage.image
 
-  val DefaultMaxDist = 0.0075
-  val DefaultOutlierCost = 100.0;
+  val defaultMaxDist = 0.0075
+  val defaultOutlierCost = 100.0;
 
-  fun evaluate( Image as { Width, Height, Values } : image, 
-                Truths : truth list ) 
+  fun evaluate( image as { width, height, values } : image, 
+                truths : truth list ) 
       : score =
   let
-    val [ Truth as { Values=TruthPixels, ... } ] = Truths
-    val Diagonal = Math.sqrt( real Width*real Width + real Height*real Height )
-    val MaxDistance = DefaultMaxDist*Diagonal
+    val [ truth as { values=TruthPixels, ... } ] = truths
+    val diagonal = Math.sqrt( real width*real width + real height*real height )
+    val MaxDistance = defaultMaxDist*diagonal
     val Degree = 6
-    val OutlierCost = DefaultOutlierCost*MaxDistance
+    val outlierCost = defaultOutlierCost*MaxDistance
     val Multiplier = 100.0
 
 
-    val M1 = Array2D.array( Width, Height, 0.0 )
-    val M2 = Array2D.array( Width, Height, 0.0 )
+    val M1 = Array2D.array( width, height, 0.0 )
+    val M2 = Array2D.array( width, height, 0.0 )
 
-    val Match1 = Array2D.array( Width, Height, ( ~1, ~1 ) )
-    val Match2 = Array2D.array( Width, Height, ( ~1, ~1 ) )
+    val match1 = Array2D.array( width, height, ( ~1, ~1 ) )
+    val match2 = Array2D.array( width, height, ( ~1, ~1 ) )
 
-    val R = Real.ceil DefaultMaxDist
+    val r = Real.ceil defaultMaxDist
 
-    val Matchable1 = Array2D.array( Width, Height, false )
-    val Matchable2 = Array2D.array( Width, Height, false )
+    val Matchable1 = Array2D.array( width, height, false )
+    val matchable2 = Array2D.array( width, height, false )
 
     val MaxDistance2 = MaxDistance*MaxDistance
 
-    val RToR = fromToInt( ~R, R )
+    val RToR = fromToInt( ~r, r )
     val _ = 
       BooleanImage.appxy
         ( fn( X1, Y1, Edge ) =>
             if Edge then
               List.app
-                ( fn V => 
+                ( fn v => 
                     List.app
                       ( fn U => 
                         let
-                          val D2 = real( U*U+V*V )
+                          val D2 = real( U*U+v*v )
                           val X2 = X1+U
-                          val Y2 = Y1+V
+                          val Y2 = Y1+v
                         in
                           if ( D2>MaxDistance2 ) orelse
-                             ( X2<0 orelse X2>=Width ) orelse
-                             ( Y2<0 orelse Y2>=Height ) orelse
-                             not ( BooleanImage.sub( Truth, X2, Y2 ) ) then
+                             ( X2<0 orelse X2>=width ) orelse
+                             ( Y2<0 orelse Y2>=height ) orelse
+                             not ( BooleanImage.sub( truth, X2, Y2 ) ) then
                             ()
                           else (
                             Array2D.update( Matchable1, Y1, X1, true );
-                            Array2D.update( Matchable2, Y2, X2, true ) )
+                            Array2D.update( matchable2, Y2, X2, true ) )
                         end )
                       RToR )
                 RToR
             else
               () )
-        Image
+        image
 
-    val PixToNode1 = Array2D.array( Width, Height, ~1 )
-    val PixToNode2 = Array2D.array( Width, Height, ~1 )
+    val pixToNode1 = Array2D.array( width, height, ~1 )
+    val pixToNode2 = Array2D.array( width, height, ~1 )
     val ( NumNodes1, NumNodes2, RevNodeToPix1, RevNodeToPix2 ) =
       BooleanImage.foldlxy
-        ( fn( X, Y, _, ( Num1, Num2, Rev1, Rev2 ) ) => 
+        ( fn( x, y, _, ( Num1, Num2, Rev1, Rev2 ) ) => 
           let
             val ( Num1', Rev1' ) =
-              if Array2D.sub( Matchable1, Y, X ) then (
-                Array2D.update( PixToNode1, Y, X, Num1 );
-                ( Num1+1, ( X, Y )::Rev1 ) )
+              if Array2D.sub( Matchable1, y, x ) then (
+                Array2D.update( pixToNode1, y, x, Num1 );
+                ( Num1+1, ( x, y )::Rev1 ) )
               else
                 ( Num1, Rev1 )
 
             val ( Num2', Rev2' ) =
-              if Array2D.sub( Matchable2, Y, X ) then (
-                Array2D.update( PixToNode2, Y, X, Num2 );
-                ( Num2+1, ( X, Y )::Rev2 ) )
+              if Array2D.sub( matchable2, y, x ) then (
+                Array2D.update( pixToNode2, y, x, Num2 );
+                ( Num2+1, ( x, y )::Rev2 ) )
               else
                 ( Num2, Rev2 )
           in
             ( Num1', Num2', Rev1', Rev2' )
           end )
         ( 0, 0, [], [] )
-        Image
+        image
 
     val NodeToPix1 = Array.fromList( List.rev RevNodeToPix1 )
     val NodeToPix2 = Array.fromList( List.rev RevNodeToPix2 )
@@ -287,22 +287,22 @@ struct
         ( fn( X1, Y1, Matchable, Edges ) =>
             if Matchable then
               List.foldr
-                ( fn( V, Edges ) => 
+                ( fn( v, Edges ) => 
                     List.foldr
                       ( fn( U, Edges ) => 
                         let
-                          val D2 = real( U*U+V*V )
+                          val D2 = real( U*U+v*v )
                           val X2 = X1+U
-                          val Y2 = Y1+V
+                          val Y2 = Y1+v
                         in
                           if ( D2>MaxDistance2 ) orelse
-                             ( X2<0 orelse X2>=Width ) orelse
-                             ( Y2<0 orelse Y2>=Height ) orelse
-                             not ( Array2D.sub( Matchable2, Y2, X2 ) ) then
+                             ( X2<0 orelse X2>=width ) orelse
+                             ( Y2<0 orelse Y2>=height ) orelse
+                             not ( Array2D.sub( matchable2, Y2, X2 ) ) then
                             Edges 
                           else (
-                            Array2D.sub( PixToNode1, Y1, X1 ),
-                            Array2D.sub( PixToNode2, Y2, X2 ),
+                            Array2D.sub( pixToNode1, Y1, X1 ),
+                            Array2D.sub( pixToNode2, Y2, X2 ),
                             Math.sqrt D2 ) :: Edges
                         end )
                         Edges
@@ -312,7 +312,7 @@ struct
             else
               Edges )
         []
-        Image )
+        image )
 
     val N = NumNodes1 + NumNodes2
     val NMin = minInt [ NumNodes1, NumNodes2 ]
@@ -323,26 +323,26 @@ struct
     val D3 = minInt [ Degree, NumNodes1, NumNodes2 ]
     val DMax = maxInt [ D1, D2, D3 ]
 
-    val M = Array.length Edges + D1*NumNodes1 + D2*NumNodes2 + D3*NMax + N
+    val m = Array.length Edges + D1*NumNodes1 + D2*NumNodes2 + D3*NMax + N
   in
-    if M=0 then
+    if m=0 then
       ( 0.0, 0.0, 0.0 )
     else
       let
-        val OW = Real.ceil( OutlierCost*Multiplier )
+        val OW = Real.ceil( outlierCost*Multiplier )
         val Outliers = Array.array( DMax, 0 )
-        val IGraph = Array2D.array( M, 3, 0 )
-        val Count = ref 0
+        val IGraph = Array2D.array( m, 3, 0 )
+        val count = ref 0
         val inc = 
-          fn Count => Count := ( !Count )+1
+          fn count => count := ( !count )+1
 
         val _ = List.app
           ( fn( I, J, W ) => ( 
-              Array2D.update( IGraph, !Count, 0, I );
-              Array2D.update( IGraph, !Count, 1, J );
-              Array2D.update( IGraph, !Count, 2, 
+              Array2D.update( IGraph, !count, 0, I );
+              Array2D.update( IGraph, !count, 1, J );
+              Array2D.update( IGraph, !count, 2, 
                 Real.toInt IEEEReal.TO_NEAREST W );
-              inc Count
+              inc count
               ) )
             
       in
@@ -384,7 +384,7 @@ in
   SegmentArray
 end
 
-fun calcPRF( Seg : int list, Truth : int list ) 
+fun calcPRF( seg : int list, truth : int list ) 
   : real * real * real =
 let
   fun getIntersection( Seg1 : int list, Seg2 : int list ) : int list =
@@ -398,13 +398,13 @@ let
             I1::getIntersection( RSeg1, RSeg2 )
     | ( _, _ ) => []
 
-  val Intersection = getIntersection( Seg, Truth )
+  val Intersection = getIntersection( seg, truth )
   val IntersectionSize = real( List.length Intersection )
-  val P = IntersectionSize/real( List.length Seg )
-  val R = IntersectionSize/real( List.length Truth )
+  val p = IntersectionSize/real( List.length seg )
+  val r = IntersectionSize/real( List.length truth )
 
 in
-  ( P, R, P*R/( 0.5*( P+R ) ) )
+  ( p, r, p*r/( 0.5*( p+r ) ) )
 end
 
 (*
@@ -423,31 +423,32 @@ end
 * Weizmann Segmentation Evalution Database 
 * (http://www.wisdom.weizmann.ac.il/~vision/Seg_Evaluation_DB/)
 *)
+
 fun calculate'( lessSeg : 'a * 'a -> bool, 
                 lessTruth : 'b * 'b -> bool, 
-                Seg : 'a list, 
-                Truth : 'b list,
+                seg : 'a list, 
+                truth : 'b list,
                 TruthLabels : 'b list ) 
     : real * real * real =  
 let
   
-  val SegLabels : 'a list = unique( eq lessSeg, Seg )
+  val SegLabels : 'a list = unique( eq lessSeg, seg )
   val SegLabelsArray : 'a Array.array = Array.fromList SegLabels
-  val SegArray : int list Array.array = partition( eq lessSeg, Seg, SegLabels )
+  val SegArray : int list Array.array = partition( eq lessSeg, seg, SegLabels )
 
   val TruthLabelsArray : 'b Array.array = Array.fromList TruthLabels
   val TruthArray : int list Array.array = 
-    partition( eq lessTruth, Truth, TruthLabels )
+    partition( eq lessTruth, truth, TruthLabels )
 
-  fun loopSegments( Truth : int list, I : int ) 
+  fun loopSegments( truth : int list, I : int ) 
     : ( real * real * real ) list =
     case I<Array.length SegLabelsArray of
       false => []
     | true => 
       let
-        val ( P, R, F ) = calcPRF( Array.sub( SegArray, I ), Truth )
+        val ( p, r, f ) = calcPRF( Array.sub( SegArray, I ), truth )
       in
-        ( P, R, F )::loopSegments( Truth, I+1 )
+        ( p, r, f )::loopSegments( truth, I+1 )
       end
 
   fun loopTruths( I : int, Scores : ( real * real * real ) list ) 
@@ -457,9 +458,9 @@ let
       let
         val ( Num, TotalScore as ( TotalP, TotalR, TotalF ) ) =
           foldl( 
-            ( fn( Score as ( P, R, F ), 
-                  ( Count, TScore as ( TP, TR, TF ) ) ) =>
-                ( Count+1.0, ( TP+P, TR+R, TF+F ) ) ), 
+            ( fn( score as ( p, r, f ), 
+                  ( count, TScore as ( TP, TR, TF ) ) ) =>
+                ( count+1.0, ( TP+p, TR+r, TF+f ) ) ), 
             ( 0.0, ( 0.0, 0.0, 0.0 ) ),
             Scores )
       in
@@ -469,13 +470,13 @@ let
       let
         val MaxScore = 
           max(  
-            ( fn( Score1 as ( _, _, F1 ), Score2 as ( _, _, F2 ) ) => 
-                if Real.isNan F1 then
+            ( fn( Score1 as ( _, _, f1 ), Score2 as ( _, _, f2 ) ) => 
+                if Real.isNan f1 then
                   true
-                else if Real.isNan F2 then
+                else if Real.isNan f2 then
                   false 
                 else 
-                  F1<F2 ),
+                  f1<f2 ),
             loopSegments( Array.sub( TruthArray, I ), 0 ) )
       in
         loopTruths( I+1, MaxScore::Scores )
@@ -494,10 +495,10 @@ open FMeasureCommon
 
 fun evaluate( lessSeg : 'a * 'a -> bool, 
               lessTruth : 'b * 'b -> bool, 
-              Seg : 'a list, 
-              Truth : 'b list ) 
+              seg : 'a list, 
+              truth : 'b list ) 
     : score =  
-  calculate'( lessSeg, lessTruth, Seg, Truth, unique( eq lessTruth, Truth ) )
+  calculate'( lessSeg, lessTruth, seg, truth, unique( eq lessTruth, truth ) )
  
 end (* struct *)
 
@@ -508,13 +509,13 @@ open FMeasureCommon
 
 fun evaluate( lessSeg : 'a * 'a -> bool, 
               lessTruth : 'b * 'b -> bool, 
-              Seg : 'a list, 
-              Truth : 'b list ) 
+              seg : 'a list, 
+              truth : 'b list ) 
     : score =  
 let
-  val ForegroundLabel = max( lessTruth, unique( eq lessTruth, Truth ) )
+  val ForegroundLabel = max( lessTruth, unique( eq lessTruth, truth ) )
 in
-  calculate'( lessSeg, lessTruth, Seg, Truth, [ ForegroundLabel ] )
+  calculate'( lessSeg, lessTruth, seg, truth, [ ForegroundLabel ] )
 end
 
 end (* struct *)

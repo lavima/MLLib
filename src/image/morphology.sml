@@ -8,108 +8,108 @@
 structure Morphology =
 struct
 
-  fun thin( Image as { Width, Height, ... }: BooleanImage.image ) 
+  fun thin( im as { width, height, ... }: BooleanImage.image ) 
       : BooleanImage.image =
   let
-    val T = SOME true
-    val F = SOME false
-    val TF = NONE
+    val t = SOME true
+    val f = SOME false
+    val tf = NONE
 
-    val M1 = Array2D.fromList( 3, 3, [ F, F, F, TF, T, TF, T, T, T ] )
-    val M2 = Array2D.fromList( 3, 3, [ TF, F, F, T, T, F, T, T, TF ] )
-    val M3 = Array2D.fromList( 3, 3, [ T, TF, F, T, T, F, T, TF, F ] )
-    val M4 = Array2D.fromList( 3, 3, [ T, T, TF, T, T, F, TF, F, F ] )
-    val M5 = Array2D.fromList( 3, 3, [ T, T, T, TF, T, TF, F, F, F ] )
-    val M6 = Array2D.fromList( 3, 3, [ TF, T, T, F, T, T, F, F, TF ] )
-    val M7 = Array2D.fromList( 3, 3, [ F, TF, T, F, T, T, F, TF, T ] )
-    val M8 = Array2D.fromList( 3, 3, [ F, F, TF, F, T, T, TF, T, T ] )
+    val m1 = Array2D.fromList( 3, 3, [ f, f, f, tf, t, tf, t, t, t ] )
+    val m2 = Array2D.fromList( 3, 3, [ tf, f, f, t, t, f, t, t, tf ] )
+    val m3 = Array2D.fromList( 3, 3, [ t, tf, f, t, t, f, t, tf, f ] )
+    val m4 = Array2D.fromList( 3, 3, [ t, t, tf, t, t, f, tf, f, f ] )
+    val m5 = Array2D.fromList( 3, 3, [ t, t, t, tf, t, tf, f, f, f ] )
+    val m6 = Array2D.fromList( 3, 3, [ tf, t, t, f, t, t, f, f, tf ] )
+    val m7 = Array2D.fromList( 3, 3, [ f, tf, t, f, t, t, f, tf, t ] )
+    val m8 = Array2D.fromList( 3, 3, [ f, f, tf, f, t, t, tf, t, t ] )
 
-    val Masks = [ M1, M2, M3, M4, M5, M6, M7, M8 ]
+    val masks = [ m1, m2, m3, m4, m5, m6, m7, m8 ]
   
 
-    fun valid( Edge : bool, Mask : bool option ) : bool =
-      if Mask=TF then
+    fun valid( edge : bool, mask : bool option ) : bool =
+      if mask=tf then
         true
-      else if Mask=T then
-        Edge
+      else if mask=t then
+        edge
       else 
-        not Edge
+        not edge
 
-    fun iter( Current : BooleanImage.image ) : BooleanImage.image =
+    fun iter( current : BooleanImage.image ) : BooleanImage.image =
     let
-      val Thinned = BooleanImage.image( Width, Height, false )
+      val thinned = BooleanImage.image( width, height, false )
       val _ = BooleanImage.appi
-        ( fn( I, X ) =>
-            BooleanImage.update'( Thinned, I, X ) )
-        Current
+        ( fn( i, x ) =>
+            BooleanImage.update'( thinned, i, x ) )
+        current
 
-      fun sub( Image : BooleanImage.image, X : int, Y : int ) : bool =
-        if X<Width andalso X>=0 andalso Y<Height andalso Y>=0 then
-          BooleanImage.sub( Image, X, Y )
+      fun sub( im : BooleanImage.image, x : int, y : int ) : bool =
+        if x<width andalso x>=0 andalso y<height andalso y>=0 then
+          BooleanImage.sub( im, x, y )
         else 
           false
 
-      fun apply( Masks : bool option Array2D.array list ) : unit =
-        case Masks of
+      fun apply( masks : bool option Array2D.array list ) : unit =
+        case masks of
           [] => ()
-        | Mask::RMasks => 
+        | mask::masks' => 
           let
-            val Matched = BooleanImage.image( Width, Height, false )
+            val matched = BooleanImage.image( width, height, false )
 
             val _ = BooleanImage.appxy
-              ( fn( X, Y, _ ) => 
+              ( fn( x, y, _ ) => 
                 let
-                  val Valid = Array2D.foldlij
-                    ( fn( I, J, M, V ) => 
+                  val valid = Array2D.foldlij
+                    ( fn( i, j, m, v ) => 
                       let 
-                        val E = sub( Thinned, X+J-1, Y+I-1 )
+                        val e = sub( thinned, x+j-1, y+i-1 )
                       in
-                        if V andalso not( valid( E, M ) ) then
+                        if v andalso not( valid( e, m ) ) then
                           false
                         else 
-                          V
+                          v
                       end )
                     true
-                    Mask
+                    mask
                 in
-                  if Valid then
-                    BooleanImage.update( Matched, X, Y, true )
+                  if valid then
+                    BooleanImage.update( matched, x, y, true )
                   else
                     ()                   
                 end )
-              Thinned
+              thinned
            
-            val _ = BooleanImage.subtract'( Thinned, Matched )
+            val _ = BooleanImage.subtract'( thinned, matched )
 
           in
-            apply RMasks
+            apply masks'
           end
 
-      val _ = apply Masks
+      val _ = apply masks
     in
-      if BooleanImage.equal( Current, Thinned ) then
-        Current
+      if BooleanImage.equal( current, thinned ) then
+        current
       else
-        iter Thinned
+        iter thinned
     end
     
   in
-    iter Image
+    iter im
   end
 
-  fun thicken( Image as { Width, Height, ... } : BooleanImage.image ) 
+  fun thicken( im as { width, height, ... } : BooleanImage.image ) 
       : BooleanImage.image =
   let 
-    val Complement = BooleanImage.image( Width, Height, false )
+    val complement = BooleanImage.image( width, height, false )
     val _ = BooleanImage.modifyi
-      ( fn( I, _ ) =>
-          if BooleanImage.sub'( Image, I ) then
+      ( fn( i, _ ) =>
+          if BooleanImage.sub'( im, i ) then
             false
           else 
             true )
-      Complement
+      complement
   in
-    thin Complement
+    thin complement
   end
 
 end (* structure Morphology *)

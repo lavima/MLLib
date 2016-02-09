@@ -10,103 +10,101 @@
 structure Array2D =
 struct
 
-  type 'a array = { Width : int, Height : int, Values : 'a Array.array }
+  type 'a array = { width : int, height : int, values : 'a Array.array }
 
-  fun array( Width : int, Height : int, Val : 'a ) : 'a array = 
-    { Width=Width, Height=Height, Values = Array.array( Width*Height, Val ) }
+  fun array( width : int, height : int, x : 'a ) : 'a array = 
+    { width=width, height=height, values = Array.array( width*height, x ) }
 
-  fun fromList( Width : int, Height : int, Vals : 'a list ) : 'a array =
-    if List.length Vals=Width*Height then
-      { Width=Width, Height=Height, Values=Array.fromList Vals }
+  fun fromList( width : int, height : int, xs : 'a list ) : 'a array =
+    if List.length xs=width*height then
+      { width=width, height=height, values=Array.fromList xs }
     else
       raise Size
 
 
-  fun sub( Array as { Width, Values, ... } : 'a array, I : int, J : int ) 
+  fun sub( { width, values, ... } : 'a array, i : int, j : int ) 
       : 'a =
-    Array.sub( Values, I*Width+J )
+    Array.sub( values, i*width+j )
 
-  fun sub'( Array as { Values, ... } : 'a array, I : int ) : 'a =
-    Array.sub( Values, I )
+  fun sub'( { values, ... } : 'a array, i : int ) : 'a =
+    Array.sub( values, i )
 
 
-  fun update( Array as { Width, Values, ... } : 'a array, 
-              I : int, J : int, Val : 'a ) 
+  fun update( { width, values, ... } : 'a array, i : int, j : int, x : 'a ) 
       : unit =
-    Array.update( Values, I*Width+J, Val )
+    Array.update( values, i*width+j, x )
 
-  fun update'( Array as { Width, Values, ... } : 'a array, 
-               I : int, Val : 'a ) 
+  fun update'( { width, values, ... } : 'a array, i : int, x : 'a ) 
       : unit =
-    Array.update( Values, I, Val )
+    Array.update( values, i, x )
 
 
   fun app ( f : 'a -> unit )
-          ( Array as { Width, Height, Values } : 'a array )
+          ( { values, ... } : 'a array )
       : unit =
-    Array.app f Values
+    Array.app f values
 
   fun appi ( f : int * 'a -> unit )
-           ( Array as { Width, Height, Values } : 'a array )
+           ( { values, ... } : 'a array )
       : unit =
-    Array.appi f Values
+    Array.appi f values
 
   fun appij ( f : int * int * 'a -> unit )
-            ( Array as { Width, Height, Values } : 'a array )
+            ( { width, height, values } : 'a array )
       : unit =
-    Array.appi ( fn( I, Pixel ) => f( I mod Width, I div Width, Pixel ) ) Values
+    Array.appi ( fn( i, pixel ) => f( i mod width, i div width, pixel ) ) values
 
   fun foldl ( f : 'a * 'b -> 'b )
-            ( Start : 'b )
-            ( Array as { Width, Height, Values } : 'a array ) : 'b =
-    Array.foldl f Start Values
+            ( start : 'b )
+            ( { values, ... } : 'a array ) : 'b =
+    Array.foldl f start values
 
   fun foldli ( f : int * 'a * 'b -> 'b )
-             ( Start : 'b )
-             ( Array as { Width, Height, Values } : 'a array ) : 'b =
-    Array.foldli f Start Values
+             ( start : 'b )
+             ( { values, ... } : 'a array ) : 'b =
+    Array.foldli f start values
 
   fun foldlij ( f : int * int * 'a * 'b -> 'b )
-             ( Start : 'b )
-             ( Array as { Width, Height, Values } : 'a array ) : 'b =
+             ( start : 'b )
+             ( { width, height, values } : 'a array ) : 'b =
     Array.foldli 
-      ( fn( I, Pixel, X ) => f( I div Width, I mod Width, Pixel, X ) ) 
-      Start 
-      Values
+      ( fn( i, pixel, x ) => f( i div width, i mod width, pixel, x ) ) 
+      start 
+      values
 
   fun foldr ( f : 'a * 'b -> 'b )
-            ( Start : 'b )
-            ( Array as { Width, Height, Values } : 'a array ) : 'b =
-    Array.foldr f Start Values
+            ( start : 'b )
+            ( { values, ... } : 'a array ) : 'b =
+    Array.foldr f start values
 
   fun foldri ( f : int * 'a * 'b -> 'b )
-             ( Start : 'b )
-             ( Array as { Width, Height, Values } : 'a array ) : 'b =
-    Array.foldri f Start Values
+             ( start : 'b )
+             ( { values, ... } : 'a array ) : 'b =
+    Array.foldri f start values
 
   fun foldrij ( f : int * int * 'a * 'b -> 'b )
-             ( Start : 'b )
-             ( Array as { Width, Height, Values } : 'a array ) : 'b =
+             ( start : 'b )
+             ( { width, height, values } : 'a array ) : 'b =
     Array.foldri 
-      ( fn( I, Pixel, X ) => f( I div Width, I mod Width, Pixel, X ) ) 
-      Start 
-      Values
+      ( fn( i, pixel, x ) => f( i div width, i mod width, pixel, x ) ) 
+      start 
+      values
 
   fun modify ( f : 'a -> 'a )
-             ( Array as { Width, Height, Values } : 'a array ) 
+             ( { values, ... } : 'a array ) 
       : unit =
-    Array.modify f Values
+    Array.modify f values
 
   fun modifyi ( f : int * 'a -> 'a )
-             ( Array as { Width, Height, Values } : 'a array ) 
+             ( { values, ... } : 'a array ) 
       : unit =
-    Array.modifyi f Values
+    Array.modifyi f values
 
   fun modifyij ( f : int * int * 'a -> 'a )
-             ( Array as { Width, Height, Values } : 'a array ) 
+             ( { width, height, values } : 'a array ) 
       : unit =
     Array.modifyi 
-      ( fn( I, Pixel ) => f( I div Width, I mod Width, Pixel ) ) 
-      Values
+      ( fn( i, pixel ) => f( i div width, i mod width, pixel ) ) 
+      values
 
 end (* structure Array2D *)

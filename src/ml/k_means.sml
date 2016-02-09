@@ -8,102 +8,103 @@
 structure KMeans =
 struct
 
-  fun cluster( K : int, 
-               Dimensions : int, 
-               Instances : real list list, 
-               MaxIterations : int ) 
+  fun cluster( k : int, 
+               numDimensions : int, 
+               instances : real list list, 
+               maxIterations : int ) 
       : int list * real list list =
   let
-    val Rand = Random.rand( 31, 29 )
-    val Means = Array.array( K, [] )
-    val Assignment = Array.array( List.length Instances, ~1 )
+    val rand = Random.rand( 31, 29 )
+    val means = Array.array( k, [] )
+    val assignment = Array.array( List.length instances, ~1 )
 
     val _ = 
       Array.modify
-        ( fn _ => List.tabulate( Dimensions, fn _ => Random.randReal Rand ) )
-        Means
+        ( fn _ => 
+            List.tabulate( numDimensions, fn _ => Random.randReal rand ) )
+        means
 
-    fun distance( Instance : real list, MeanIdx : int ) : real = 
+    fun distance( instance : real list, meanIndex : int ) : real = 
       List.foldl
-        ( fn( ( X, Y ), AccumDist ) => 
+        ( fn( ( x, y ), accumDist ) => 
           let
-            val Dist = X-Y 
+            val dist = x-y 
           in
-            AccumDist+Dist*Dist
+            accumDist+dist*dist
           end )
         0.0
-        ( ListUtil.combine( Instance, Array.sub( Means, MeanIdx ) ) )
+        ( ListUtil.combine( instance, Array.sub( means, meanIndex ) ) )
 
-    fun assign( I : int, Instances' : real list list, Changed : bool ) : bool =
-      case Instances' of
-        [] => Changed
-      | Instance::RInstances' => 
+    fun assign( i : int, instances' : real list list, changed : bool ) : bool =
+      case instances' of
+        [] => changed
+      | instance::instances'' => 
         let
-          val ( Distance, MeanIdx ) = 
+          val ( dist, meanIndex ) = 
             Util.accumLoop
-              ( fn( J, ( MinDist, ClosestMean ) ) =>
+              ( fn( j, ( minDist, minIndex ) ) =>
                 let
-                  val Dist = distance( Instance, J ) 
+                  val dist = distance( instance, j ) 
                 in
-                  if Dist<MinDist then
-                    ( Dist, J )
+                  if dist<minDist then
+                    ( dist, j )
                   else
-                    ( MinDist, ClosestMean )
+                    ( minDist, minIndex )
                 end )
               ( Real.posInf, ~1 )
-              K
+              k
           
-          val PrevMean = Array.sub( Assignment, I )
+          val prevMean = Array.sub( assignment, i )
         in
-          if not( PrevMean=MeanIdx ) then (
-            Array.update( Assignment, I, MeanIdx );
-            assign( I+1, RInstances', true ) )
+          if not( prevMean=meanIndex ) then (
+            Array.update( assignment, i, meanIndex );
+            assign( i+1, instances'', true ) )
           else
-            assign( I+1, RInstances', Changed )
+            assign( i+1, instances'', changed )
         end
 
     fun updateMeans() : unit = 
     let
-      val Sets = Array.array( K, [] )
+      val sets = Array.array( k, [] )
       val _ =
         ListUtil.appi
-          ( fn( I, Instance ) =>
+          ( fn( i, instance ) =>
             let
-              val MeanIdx = Array.sub( Assignment, I )
+              val meanIndex = Array.sub( assignment, i )
             in
-              Array.update( Sets, MeanIdx, 
-                Instance::( Array.sub( Sets, MeanIdx ) ) )
+              Array.update( sets, meanIndex, 
+                instance::( Array.sub( sets, meanIndex ) ) )
             end ) 
-          Instances
+          instances
 
-      fun update( I : int ) : unit =
-        case I<K of 
+      fun update( i : int ) : unit =
+        case i<k of 
           false => ()
         | true => ( 
-            Array.update( Means, I,
+            Array.update( means, i,
               Util.avg 
                 ( ListUtil.binaryOp ( Real.+ ), 
-                  fn( Xs, N ) => List.map ( fn X => X/real N ) Xs,
-                  fn _ => ( List.tabulate( Dimensions, fn _ => 0.0 ) ) )
-                ( Array.sub( Sets, I ) ) );
-            update( I+1 ) )
+                  fn( xs, n ) => List.map ( fn x => x/real n ) xs,
+                  fn _ => ( List.tabulate( numDimensions, fn _ => 0.0 ) ) )
+                ( Array.sub( sets, i ) ) );
+            update( i+1 ) )
     in
       update 0 
     end
 
-    fun iterate( I : int ) : unit =
-      case I<MaxIterations of 
+    fun iterate( i : int ) : unit =
+      case i<maxIterations of 
         false => ()
       | true => 
-          case assign( 0, Instances, false ) of
+          case assign( 0, instances, false ) of
             false => ()
-          | true => ( updateMeans(); iterate( I+1 ) )
+          | true => ( updateMeans(); iterate( i+1 ) )
 
     val _ = iterate 0
 
   in
-    ( Array.foldr ( fn( X, Xs ) => X::Xs ) [] Assignment, 
-      Array.foldr ( fn( Xs, Xss ) => Xs::Xss ) [] Means )
+    ( Array.foldr ( fn( x, xs ) => x::xs ) [] assignment, 
+      Array.foldr ( fn( xs, xss ) => xs::xss ) [] means )
   end
 
 end (* structure KMeans *)

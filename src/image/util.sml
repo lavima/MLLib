@@ -12,28 +12,28 @@ fun countCooccur( lessSeg1 : 'a * 'a -> bool,
                   lessSeg2 : 'b * 'b -> bool, 
                   seg1ToInt : 'a -> int,
                   seg2ToInt : 'b -> int,
-                  Seg1 : 'a list,
-                  Seg2 : 'b list )
+                  seg1 : 'a list,
+                  seg2 : 'b list )
     : int Array.array * int * int =
 let
-  val NumSegs1 = seg1ToInt( Util.max lessSeg1 Seg1 )+1
-  val NumSegs2 = seg2ToInt( Util.max lessSeg2 Seg2 )+1
+  val numSegs1 = seg1ToInt( Util.max lessSeg1 seg1 )+1
+  val numSegs2 = seg2ToInt( Util.max lessSeg2 seg2 )+1
 
-  val Cooccur = Array.array( NumSegs1*NumSegs2, 0 )
+  val cooccur = Array.array( numSegs1*numSegs2, 0 )
 
-  fun count( Ss1 : 'a list, Ss2 : 'b list ) : unit =
-    case ( Ss1, Ss2 ) of
+  fun count( ss1 : 'a list, ss2 : 'b list ) : unit =
+    case ( ss1, ss2 ) of
       ( [], [] ) => ()
-    | ( S1::RSs1, S2::RSs2 ) => 
-        case seg2ToInt S2*NumSegs1+seg1ToInt S1 of Index => (
+    | ( s1::ss1', s2::ss2' ) => 
+        case seg2ToInt s2*numSegs1+seg1ToInt s1 of index => (
           Array.update( 
-            Cooccur, 
-            Index, 
-            Array.sub( Cooccur, Index )+1 );
-          count( RSs1, RSs2 ) )
+            cooccur, 
+            index, 
+            Array.sub( cooccur, index )+1 );
+          count( ss1', ss2' ) )
 
-  val _ = count( Seg1, Seg2 )
+  val _ = count( seg1, seg2 )
 in
-  ( Cooccur, NumSegs1, NumSegs2 )
+  ( cooccur, numSegs1, numSegs2 )
 end
 

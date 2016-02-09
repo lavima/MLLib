@@ -11,6 +11,6 @@ struct
 
   val elementCompare = Word8.compare
 
-  fun elementFromReal X = Word8.fromInt( Real.trunc( X*255.0 ) )
+  fun elementFromReal x = Word8.fromInt( Real.trunc( x*255.0 ) )
 
 end (* structure ImageWord8 *)

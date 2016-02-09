@@ -14,15 +14,15 @@ sig
 
   type element
   type pixel
-  type image = { Width : int, Height : int, Values : pixel Array.array }
+  type image = { width : int, height : int, values : pixel Array.array }
 
   val createImage : int * int * pixel list -> image
 
   val pixelFromWords : Word.word list * word * bool -> pixel
   val pixelToWords : pixel * word * bool -> Word.word list
 
-  val Format : PNMCommon.format
-  val Depth : int
+  val format : PNMCommon.format
+  val depth : int
 
 end
 
@@ -57,81 +57,81 @@ struct
   structure Image = Image
 
 
-  fun load( Filename : string ) : Image.image = 
+  fun load( filename : string ) : Image.image = 
   let
-    val Input = BinIO.openIn( Filename )
+    val input = BinIO.openIn( filename )
 
-    val ( Format, Width, Height, MaxVal, TupleTypes ) = 
-      PNMText.parseHeader Input
+    val ( format, width, height, maxVal, tupleTypes ) = 
+      PNMText.parseHeader input
 
-    val Depth = PNMCommon.getDepth Format
+    val depth = PNMCommon.getDepth format
 
-    val Image = 
-      if Format=plainPGM orelse Format=plainPPM then
-        Image.createImage( Width, Height, 
+    val im = 
+      if format=plainPGM orelse format=plainPPM then
+        Image.createImage( width, height, 
           List.map 
-            ( fn Ws => Image.pixelFromWords( Ws, MaxVal, false ) ) 
-            ( PNMText.parsePixels( Input, Depth, false ) ) )
+            ( fn ws => Image.pixelFromWords( ws, maxVal, false ) ) 
+            ( PNMText.parsePixels( input, depth, false ) ) )
         handle 
-          ImageCommon.formatException Msg => raise pnmException Msg
-        | ImageCommon.createException Msg => raise pnmException Msg
-        | pnmException Msg => raise pnmException Msg
+          ImageCommon.formatException msg => raise pnmException msg
+        | ImageCommon.createException msg => raise pnmException msg
+        | pnmException msg => raise pnmException msg
         | _ => raise pnmException"Unknown"
-      else if Format=plainPBM then
-        Image.createImage( Width, Height, 
+      else if format=plainPBM then
+        Image.createImage( width, height, 
           List.map 
-            ( fn Ws => Image.pixelFromWords( Ws, MaxVal, true ) )
-            ( PNMText.parsePixels( Input, Depth, true ) ) )
+            ( fn ws => Image.pixelFromWords( ws, maxVal, true ) )
+            ( PNMText.parsePixels( input, depth, true ) ) )
         handle 
-          pnmException Msg => raise pnmException Msg
+          pnmException msg => raise pnmException msg
         | _ => raise pnmException"Unknown"
-      else if Format=rawPBM then
-        Image.createImage( Width, Height, 
+      else if format=rawPBM then
+        Image.createImage( width, height, 
           List.map 
-            ( fn Ws => Image.pixelFromWords( Ws, MaxVal, true ) )
-            ( PNMBinary.readPixelsAsBits( Input, Width, Height ) ) )
+            ( fn ws => Image.pixelFromWords( ws, maxVal, true ) )
+            ( PNMBinary.readPixelsAsBits( input, width, height ) ) )
         handle 
-          pnmException Msg => raise pnmException Msg
+          pnmException msg => raise pnmException msg
         | _ => raise pnmException"Unknown"
       else
-        Image.createImage( Width, Height, 
+        Image.createImage( width, height, 
           List.map 
-            ( fn Ws => Image.pixelFromWords( Ws, MaxVal, false ) )
-            ( PNMBinary.readPixelsAsBytes( Input, Depth, MaxVal, Width*Height ) ) )
+            ( fn ws => Image.pixelFromWords( ws, maxVal, false ) )
+            ( PNMBinary.readPixelsAsBytes( input, depth, maxVal, width*height ) ) )
         handle 
-          pnmException Msg => raise pnmException Msg
+          pnmException msg => raise pnmException msg
         | _ => raise pnmException"Unknown"
 
-    val _ = BinIO.closeIn Input 
+    val _ = BinIO.closeIn input 
   in
-    Image
+    im
   end
        
 
-  fun save( Image as { Width, Height, Values } : Image.image, 
-            Filename : string, Format : PNMCommon.format, MaxVal : word ) 
+  fun save( im as { width, height, values } : Image.image, 
+            filename : string, format : PNMCommon.format, maxVal : word ) 
       : unit = 
   let
-    val Output = BinIO.openOut Filename 
-    val PixelWords = 
+    val output = BinIO.openOut filename 
+    val pixelWords = 
       Array.foldr 
-        ( fn( P, Ps ) => 
-            if Format=PNMCommon.plainPBM orelse Format=PNMCommon.rawPBM then
-              Image.pixelToWords( P, MaxVal, true )::Ps
+        ( fn( p, ps ) => 
+            if format=PNMCommon.plainPBM orelse format=PNMCommon.rawPBM then
+              Image.pixelToWords( p, maxVal, true )::ps
             else
-              Image.pixelToWords( P, MaxVal, false )::Ps )
+              Image.pixelToWords( p, maxVal, false )::ps )
         []
-        Values
+        values
   in (
-    PNMText.writeHeader( Output, 
-      ( Format, Width, Height, Image.Depth, MaxVal, [] ) );
-    if ( Format=plainPBM orelse Format=plainPGM orelse Format=plainPPM ) then
-      PNMText.writePixels( Output, PixelWords )
-    else if Format=rawPBM then
-      PNMBinary.writePixelsAsBits( Output, Width, PixelWords )
+    PNMText.writeHeader( output, 
+      ( format, width, height, Image.depth, maxVal, [] ) );
+    if ( format=plainPBM orelse format=plainPGM orelse format=plainPPM ) then
+      PNMText.writePixels( output, pixelWords )
+    else if format=rawPBM then
+      PNMBinary.writePixelsAsBits( output, width, pixelWords )
     else
-      PNMBinary.writePixelsAsBytes( Output, MaxVal, PixelWords ) ;
-    BinIO.closeOut Output )
+      PNMBinary.writePixelsAsBytes( output, maxVal, pixelWords ) ;
+    BinIO.closeOut output )
   end
 
 end (* structure PNM *)

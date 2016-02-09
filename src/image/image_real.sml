@@ -11,6 +11,6 @@ struct
 
   val elementCompare = Real.compare
 
-  fun elementFromReal X = X
+  fun elementFromReal x = x
 
 end (* structure ImageReal *)

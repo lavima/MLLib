@@ -14,172 +14,179 @@ struct
 
   local 
 
-    fun readWord( Input : BinIO.instream, MaxVal : word ) : word =
+    fun readWord( input : BinIO.instream, maxVal : word ) : word =
     let
       val wfw8 = Word.fromInt o Word8.toInt
     in
-      case BinIO.input1 Input of
+      case BinIO.input1 input of
         NONE => raise pnmException"Couldn't read first byte of word"
-      | SOME W1 =>
-          if MaxVal<0w256 then
-            wfw8 W1
+      | SOME w1 =>
+          if maxVal<0w256 then
+            wfw8 w1
           else 
-            case BinIO.input1 Input of
+            case BinIO.input1 input of
               NONE => raise pnmException"Couldn't read second byte of word"
-            | SOME W2 =>
-                Word.orb( Word.<<( wfw8 W1, 0w8 ), wfw8 W2 )
+            | SOME w2 =>
+                Word.orb( Word.<<( wfw8 w1, 0w8 ), wfw8 w2 )
     end
 
-    fun writeWord( Output : BinIO.outstream, MaxVal : word, W : word ) : unit =
+    fun writeWord( output : BinIO.outstream, maxVal : word, w : word ) : unit =
     let
       val w8fw = Word8.fromInt o Word.toInt
     in
-      if MaxVal<0w256 then
-        BinIO.output1( Output, w8fw W )
+      if maxVal<0w256 then
+        BinIO.output1( output, w8fw w )
       else (
-        BinIO.output1( Output, w8fw( Word.>>( W, 0w8 ) ) );
-        BinIO.output1( Output, w8fw( W mod 0w256 ) ) )
+        BinIO.output1( output, w8fw( Word.>>( w, 0w8 ) ) );
+        BinIO.output1( output, w8fw( w mod 0w256 ) ) )
     end
 
-    fun readPixel( Input : BinIO.instream, Depth : int, MaxVal : word ) 
+    fun readPixel( input : BinIO.instream, depth : int, maxVal : word ) 
         : word list = 
     let 
-      fun buildPixel( Index : int ) : word list = 
-        case Index<Depth of 
+      fun buildPixel( index : int ) : word list = 
+        case index<depth of 
           false => []
-        | true => readWord( Input, MaxVal )::buildPixel( Index+1 ) 
+        | true => readWord( input, maxVal )::buildPixel( index+1 ) 
     in
       buildPixel 0
     end
 
-    fun writePixel( Output : BinIO.outstream, MaxVal : word, Words : word list )
+    fun writePixel( output : BinIO.outstream, maxVal : word, words : word list )
         : unit =
-      case Words of 
+      case words of 
         [] => ()
-      | W::RWords => ( 
-          writeWord( Output, MaxVal, W ); 
-          writePixel( Output, MaxVal, RWords ) )
+      | w::words' => ( 
+          writeWord( output, maxVal, w ); 
+          writePixel( output, maxVal, words' ) )
 
   in
 
-    fun readPixelsAsBytes( Input : BinIO.instream, 
-                           Depth : int, MaxVal : word, NumPixels : int ) 
+    fun readPixelsAsBytes( input : BinIO.instream, 
+                           depth : int, maxVal : word, numPixels : int ) 
         : word list list =
     let
-      fun read( Index : int ) : word list list =
-        case Index<NumPixels of 
+      fun read( index : int ) : word list list =
+        case index<numPixels of 
           false => []
-        | true => readPixel( Input, Depth, MaxVal )::read( Index+1 )
+        | true => readPixel( input, depth, maxVal )::read( index+1 )
     in
       read 0
     end
 
 
-    fun writePixelsAsBytes( Output : BinIO.outstream, 
-                            MaxVal : word, 
-                            Pixels : word list list ) 
+    fun writePixelsAsBytes( output : BinIO.outstream, 
+                            maxVal : word, 
+                            pixels : word list list ) 
         : unit =
-      case Pixels of
-        [] => ()
-      | Pixel::RPixels => writePixel( Output, MaxVal, Pixel )
+    let
+      fun write( pixels : word list list ) : unit =
+        case pixels of
+          [] => ()
+        | pixel::pixels' => (
+            writePixel( output, maxVal, pixel );
+            write pixels' )
+    in
+      write pixels
+    end
 
   end (* local *)
 
   local 
 
-    val CurrentIn : Word8.word ref = ref 0w0
+    val currentIn : Word8.word ref = ref 0w0
 
-    fun readPixel( Input : BinIO.instream, X : int ) 
+    fun readPixel( input : BinIO.instream, x : int ) 
         : word list = 
     let 
       val wfw8 = Word.fromInt o Word8.toInt
 
-      val I = Word.fromInt( X mod 8 )
+      val i = Word.fromInt( x mod 8 )
       val _ = 
-        if I=0w0 then
-          case BinIO.input1 Input of
+        if i=0w0 then
+          case BinIO.input1 input of
             NONE => raise pnmException"Unable to read new byte from bitstream"
-          | SOME W => 
-              CurrentIn := W
+          | SOME w => 
+              currentIn := w
         else
           ()
     in
-      [ wfw8( Word8.>>( !CurrentIn, 0w8-I-0w1 ) mod 0w2 ) ]
+      [ wfw8( Word8.>>( !currentIn, 0w8-i-0w1 ) mod 0w2 ) ]
     end
 
-    val CurrentOut : Word8.word ref = ref 0w0
+    val currentOut : Word8.word ref = ref 0w0
 
-    fun writePixel( Output : BinIO.outstream, X : int, Ws : word list ) 
+    fun writePixel( output : BinIO.outstream, x : int, ws : word list ) 
         : unit = 
     let 
       val w8fw = Word8.fromInt o Word.toInt
 
-      val I = Word.fromInt( X mod 8 )
+      val i = Word.fromInt( x mod 8 )
 
       val _ = 
-        if I=0w0 andalso X>0 then (
-          BinIO.output1( Output, !CurrentOut );
-          CurrentOut := 0w0 )
-        else if I=0w0 then
-          CurrentOut := 0w0
+        if i=0w0 andalso x>0 then (
+          BinIO.output1( output, !currentOut );
+          currentOut := 0w0 )
+        else if i=0w0 then
+          currentOut := 0w0
         else
           ()
 
-      val [ W1 ] = Ws
-      val W : Word8.word = 
-        if W1>0w0 then
+      val [ w1 ] = ws
+      val w : Word8.word = 
+        if w1>0w0 then
           0w1
         else
           0w0
 
     in
-      CurrentOut := Word8.orb( !CurrentOut, Word8.<<( W, 0w8-I-0w1 ) )
+      currentOut := Word8.orb( !currentOut, Word8.<<( w, 0w8-i-0w1 ) )
     end
 
-    fun flush( Output : BinIO.outstream ) : unit =
-      BinIO.output1( Output, !CurrentOut )
+    fun flush( output : BinIO.outstream ) : unit =
+      BinIO.output1( output, !currentOut )
 
   in
 
-    fun readPixelsAsBits( Input : BinIO.instream,
-                          Width : int, Height : int ) 
+    fun readPixelsAsBits( input : BinIO.instream,
+                          width : int, height : int ) 
         : word list list =
     let
-      val NumPixels = Width*Height
+      val numPixels = width*height
 
-      fun read( Index : int ) : word list list =
+      fun read( index : int ) : word list list =
       let
-        val X = Index mod Width
+        val x = index mod width
       in
-        case Index<NumPixels of 
+        case index<numPixels of 
           false => []
-        | true => readPixel( Input, X )::read( Index+1 )
+        | true => readPixel( input, x )::read( index+1 )
       end
     in
       read 0
     end
 
-    fun writePixelsAsBits( Output : BinIO.outstream, 
-                           Width : int, Pixels : word list list )
+    fun writePixelsAsBits( output : BinIO.outstream, 
+                           width : int, pixels : word list list )
         : unit =
     let
-      fun write( Index : int, Wss : word list list ) : unit =
+      fun write( index : int, wss : word list list ) : unit =
       let
-        val X = Index mod Width
+        val x = index mod width
         val _ = 
-          if X=0 andalso Index>0 then
-            flush Output
+          if x=0 andalso index>0 then
+            flush output
           else
             ()
       in
-        case Wss of
+        case wss of
           [] => ( )
-        | Ws::RWss => (
-            writePixel( Output, X, Ws );
-            write( Index+1, RWss ) )
+        | ws::wss' => (
+            writePixel( output, x, ws );
+            write( index+1, wss' ) )
       end
     in
-      write( 0, Pixels )
+      write( 0, pixels )
     end
 
   end (* local *)

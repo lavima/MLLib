@@ -12,24 +12,23 @@ struct
   (* 
   * Determine whether two reals are approximately equal.
   *)
-  fun approxEqReal( X : real, Y : real, Precision : int ) : bool =
+  fun approxEqReal( x : real, y : real, precision : int ) : bool =
   let
-    val Pow = Math.pow( 10.0, real Precision )
-    val X' = trunc( X*Pow )
-    val Y' = trunc( Y*Pow )
+    val p = Math.pow( 10.0, real precision )
+    val x' = trunc( x*p )
+    val y' = trunc( y*p )
   in
-    X'=Y'
+    x'=y'
   end
 
   (* 
   * Determine whether two reals are approximately equal by 
   * checking the difference. This is tested up to 
-  * authod: Marius Geitle <marius.geitle@hiof.no>
   *)
-  fun approxEqReal'( X : real, Y : real, precision : int ) : bool =
+  fun approxEqReal'( x : real, y : real, precision : int ) : bool =
   let
     val e = Real./(1.0, Math.pow(10.0, real precision));
-    val residual = Real.abs(Real.-(X, Y))
+    val residual = Real.abs(Real.-(x, y))
   in
     Real.<(residual, e)
   end
@@ -38,8 +37,8 @@ struct
   (*
   * Curried function for defining eq functions from a compare function.
   *)
-  fun eq ( compare : 'a * 'a -> order ) ( X : 'a, Y : 'a ) : bool = 
-    case compare( X, Y ) of 
+  fun eq ( compare : 'a * 'a -> order ) ( x : 'a, y : 'a ) : bool = 
+    case compare( x, y ) of 
       EQUAL => true
     | _ => false
 
@@ -51,67 +50,67 @@ struct
 
   fun loopFromTo ( less : 'a * 'a -> bool, add : 'a * 'a -> 'a )
                  ( f : 'a -> unit )
-                 ( From : 'a, To : 'a, Inc : 'a )
+                 ( from : 'a, to : 'a, inc : 'a )
       : unit =
   let
-    fun loop( I : 'a ) : unit =
-      case less( To, I ) of 
-        false => ( f I; loop( add( I, Inc ) ) )
+    fun loop( i : 'a ) : unit =
+      case less( to, i ) of 
+        false => ( f i; loop( add( i, inc ) ) )
   in
-    loop From
+    loop from
   end
 
   val loopFromToReal = loopFromTo ( Real.<, Real.+ )
 
   fun accumLoopFromTo ( less : 'a * 'a -> bool, add : 'a * 'a -> 'a )
                       ( f : 'a * 'b -> 'b )
-                      ( Start : 'b )
-                      ( From : 'a, To : 'a, Inc : 'a )
+                      ( start : 'b )
+                      ( from : 'a, to : 'a, inc : 'a )
       : 'b =
   let
-    fun loop( I : 'a, X : 'b ) : 'b =
-      case less( To, I ) of 
-        false => loop( add( I, Inc ), f( I, X ) )
-      | true => X
+    fun loop( i : 'a, x : 'b ) : 'b =
+      case less( to, i ) of 
+        false => loop( add( i, inc ), f( i, x ) )
+      | true => x
   in
-    loop( From, Start )
+    loop( from, start )
   end
 
   val accumLoopFromToReal = accumLoopFromTo ( Real.<, Real.+ )
 
   (*
   * Function for iterating in a loop with an increasing index variable. The 
-  * index values start at 0 and ends at Count-1.
+  * index values start at 0 and ends at count-1.
   *)
-  fun loop ( f : int -> unit ) ( Count : int ) : unit =
+  fun loop ( f : int -> unit ) ( count : int ) : unit =
   let
-    fun loop'( I : int ) : unit =
-      case I<Count of
+    fun loop'( i : int ) : unit =
+      case i<count of
         false => ()
-      | true => ( f I; loop'( I+1 ) )
+      | true => ( f i; loop'( i+1 ) )
   in
     loop' 0
   end
 
-  fun accumLoop ( f : int * 'a -> 'a ) ( Init : 'a ) ( Count : int ) : 'a =
+  fun accumLoop ( f : int * 'a -> 'a ) ( init : 'a ) ( count : int ) : 'a =
   let
-    fun loop'( I : int, Accum : 'a ) : 'a =
-      case I<Count of
-        false => Accum 
-      | true => loop'( I+1, f( I, Accum ) )
+    fun loop'( i : int, accum : 'a ) : 'a =
+      case i<count of
+        false => accum 
+      | true => loop'( i+1, f( i, accum ) )
   in
-    loop'( 0, Init )
+    loop'( 0, init )
   end
 
   (*
   * Retrieve the largest element of two elements.
   *)
   fun max2 ( less : 'a * 'a -> bool )
-           ( X : 'a, Y : 'a ) : 'a =
-    if less( X, Y ) then 
-      Y 
+           ( x : 'a, y : 'a ) : 'a =
+    if less( x, y ) then 
+      y 
     else 
-      X
+      x
 
   val max2Int = max2 Int.<
   val min2Int = max2 Int.>
@@ -123,26 +122,26 @@ struct
   * match exception will occur.
   *)
   fun max ( less : 'a * 'a -> bool ) 
-          ( Xs : 'a list ) : 'a =
+          ( xs : 'a list ) : 'a =
   let
-    val X::RXs = Xs
+    val x::rxs = xs
 
-    fun max'( Ys : 'a list, Max : 'a ) : 'a =
-      case Ys of 
-        [] => Max
-      | Y::RYs => 
-          max'( RYs, max2 less ( Y, Max ) )
+    fun max'( ys : 'a list, max : 'a ) : 'a =
+      case ys of 
+        [] => max
+      | y::rys => 
+          max'( rys, max2 less ( y, max ) )
   in
-    max'( RXs, X ) 
+    max'( rxs, x ) 
   end
 
   val maxInt = max Int.<
   val minInt = max Int.>
 
   fun avg ( add : 'a * 'a -> 'a, divide : 'a * int -> 'a, zero : unit -> 'a )
-          ( Xs : 'a list ) : 'a =
-    divide( ( List.foldl ( fn( X, Sum ) => add( X, Sum ) ) ( zero() ) Xs ), 
-            List.length Xs )
+          ( xs : 'a list ) : 'a =
+    divide( ( List.foldl ( fn( x, sum ) => add( x, sum ) ) ( zero() ) xs ), 
+            List.length xs )
 
 
 end (* structure Util *)
