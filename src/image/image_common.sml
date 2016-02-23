@@ -9,7 +9,7 @@
 structure ImageCommon =
 struct
 
-  datatype borderExtension = zero | copy | wrap
+  datatype borderExtension = zero | copy | wrap | mirror
   datatype outputSize = original | full
 
   datatype thresholdsMethod =

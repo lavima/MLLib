@@ -409,3 +409,16 @@ val _ =
     fn { height, width, ...} => height = 482 andalso width = 322 )
 
 
+val _ = 
+  test( "Adding border using borderextension.mirror",
+    fn() => 
+      let
+        val image = Option.valOf( GrayscaleImageReal.load("test2.pgm") )
+        val newImage = GrayscaleImageReal.border (ImageCommon.mirror, 100) image
+        val _ = GrayscaleImageReal.save( newImage, "output/outputBorderMirror.pgm" )
+      in
+        Option.valOf( GrayscaleImageReal.load("output1.pgm") )
+      end ,
+    fn { height, width, ...} => height = 482 andalso width = 322 )
+
+

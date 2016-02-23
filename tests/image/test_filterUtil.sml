@@ -31,3 +31,21 @@ val _ = test( "Generating 2D gaussian filter created using the gPb type",
      end 
   )
   ;
+
+val _ = test( "Savgol filtering",
+  fn() => 
+    let
+      val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))
+    in
+      FilterUtil.savgol(img, 3.0, 1.0, 0.6)
+    end,
+  fn x =>
+     let
+         val normalizedImage = ImageUtil.normalizeReal'' x
+         val _ = GrayscaleImageReal.save
+            (normalizedImage, "output/savgolFiltering.pgm")
+     in
+         true
+     end 
+  )
+

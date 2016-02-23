@@ -13,7 +13,8 @@ struct
      * Creates the filter bank used in gPb using the provided number
      * of orientations for edge filters.
      *)
-    fun createTextonFilters(nori : int, sigma : real) : 
+    fun createTextonFilters(nori : int,
+                            sigma : real) : 
            GrayscaleImageReal.image list =
     let
 
@@ -33,6 +34,42 @@ struct
        evenFilters @ oddFilters @ [csFilter]
     end
 
+    fun generateTextons
+       (image : GrayscaleImageReal.image, 
+        nori : int, 
+        sigma : real,
+        k: int,
+        maxIterations: int) : 
+         GrayscaleImageReal.image =
+    let
+       val {width=width, height=height,...} = image
+
+       val filters = createTextonFilters(nori, sigma);
+       val convolveFun = GrayscaleImageReal.convolve
+          (ImageCommon.zero, ImageCommon.original)
+
+       val responses = List.foldl 
+          (fn (x : GrayscaleImageReal.image, a) => 
+              (convolveFun (image, x))::a ) [] filters
+
+       fun buildVector(i : int) : real list =
+             List.tabulate(List.length(filters), 
+               fn(j) => (GrayscaleImageReal.sub'(List.nth (responses, j) , i)))
+          
+
+       val responseVectors = List.tabulate(
+           width * height, buildVector)
+    
+
+       val (assignments, _)  = 
+         KMeans.cluster(k, List.length(filters), responseVectors, maxIterations)
+
+       val responseImage = GrayscaleImageReal.zeroImage(width, height)
+       val _ = GrayscaleImageReal.modifyi (fn (i, x) =>
+                    real (List.nth(assignments, i))) responseImage
+    in
+       responseImage
+    end  
 
 
 end

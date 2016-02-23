@@ -16,6 +16,8 @@ math/test_signalUtil.sml
 
 image/test_filter.sml
 image/test_filterUtil.sml
+image/test_gradient.sml
+image/test_multiscale_cue.sml
 image/test_texton.sml
 
 ml/test_k_means.sml

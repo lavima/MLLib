@@ -20,8 +20,7 @@ sig
 
   type element
   type pixel
-  type image 
-
+  type image
 
   val image : int * int * pixel -> image
   val zeroImage : int * int -> image
@@ -56,7 +55,6 @@ sig
   val modifyxy : ( int * int * pixel -> pixel ) -> image -> unit
   val tabulatexy : (int * int * (int * int -> pixel))  -> image
 
-
   val fill : image * pixel -> unit
 
   val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> 
@@ -77,6 +75,9 @@ sig
 
   val rotate : (image * real) -> image
   val rotateCrop : (image * real * int * int) -> image
+
+  val border : ImageCommon.borderExtension * int -> image -> image
+  val trim : int -> image -> image
 
 end
 
@@ -329,6 +330,7 @@ struct
       ( fn( i, pix ) => f( i mod width, i div width, pix ) ) 
       values
 
+
   fun tabulatexy (width : int, height : int, f : int * int -> pixel) : image =
     let
        val img = zeroImage(width, height);
@@ -552,7 +554,7 @@ struct
        let
           val _ = calculateRotationY(dstX, 0, u, (~(real newHeight - 1.0) / 2.0))
        in
-           if (dstX < newWidth) then 
+           if (dstX < newWidth - 1) then 
               calculateRotationX(dstX + 1, u + 1.0) 
            else ()
        end
@@ -573,6 +575,56 @@ struct
         abs((real width) * Math.sin(by) + (real height) * Math.cos(by))));
   in
      rotateCrop(img, by, newWidth, newHeight)
+  end
+
+  fun border (
+    borderExtension : ImageCommon.borderExtension, 
+    border : int) (img : image) : image =
+  let
+    val { width = width, height = height, ... } = img
+
+    val newImg = zeroImage(width + 2 * border, height + 2 * border)
+
+    fun mirrorBorder(x,y) =
+    if (x < border) then (* TL  *)
+      if (y < border) then 
+        sub(img, border - x, border - y) 
+      else if (y > height + border - 1) then  (* BL *)
+        sub(img, border - x, height - (y - height - border) - 1 )
+      else 
+        sub(img, border - x, y - border)
+    else if (x > width + border - 1) then
+      if (y < border) then (* TR *)
+        sub(img, width - (x - width - border) - 1, border - y)
+      else if (y > height + border - 1) then (* BR *)
+         sub(img, width -(x-width-border)-1, height - (y - height - border) - 1)
+      else sub(img, width - (x - width - border) - 1, y - border)
+    else if (y < border) then
+      sub(img, x - border, border - y)
+    else sub(img, x - border, height - (y - height - border) - 1)
+
+    val borderExt = 
+      case borderExtension of
+        ImageCommon.zero => (fn (x,y) => Spec.zeroPixel)
+      | ImageCommon.mirror => mirrorBorder
+
+    val newImg = tabulatexy(width + 2 * border, height + 2 * border,
+      (fn (x, y) => 
+        if (x < border) orelse (y < border) orelse (x > border + width - 1) 
+          orelse (y > border + height - 1) then borderExt(x,y )
+        else sub(img, x - border, y - border)
+      ))
+  in
+    newImg
+  end
+
+  fun trim (border : int) (img : image) : image =
+  let
+    val { width = width, height = height, ... } = img
+    val newImg = tabulatexy(width - 2 * border, height - 2 * border,
+       fn (x, y) => sub(img, x + border, y + border ))
+  in
+    newImg
   end
 
 end

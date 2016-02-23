@@ -23,4 +23,21 @@ val _ = test( "Generate texton filters",
          17 = List.length x
      end 
   )
+
+val _ = test( "Generate textons",
+  fn() => 
+      let
+          val image = Option.valOf(GrayscaleImageReal.load("test2.pgm"))
+      in
+         Texton.generateTextons(image, 8, 2.0, 32, 10)
+      end,
+  fn x : GrayscaleImageReal.image =>
+     let
+        val normalizedImage = ImageUtil.normalizeReal'' x
+        
+        val _ =GrayscaleImageReal.save(normalizedImage, "output/textons.pgm")
+     in
+         true
+     end 
+  )
   ;

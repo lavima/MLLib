@@ -1,3 +1,11 @@
+2016-02-24	Marius Geitle <marius.geitle@hiof.no>
+	* Added gitignore
+	* Added Multiscale_cue
+	* Added gradients
+	* Added image padding with support for zero and trim
+	* Added 2D Savitzky–Golay
+	* Most additions are without propper tests, generation of output. 
+
 2016-02-10	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Renamed all variables to better follow SML naming conventions.
 	* Moved the repository to GitHub.

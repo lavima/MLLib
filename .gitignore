@@ -1,0 +1,12 @@
+*.o
+*.swp
+tests/output/*
+src/tags
+
+tests/output.dsv
+tests/output1.pbm
+tests/output1.pgm
+tests/output2.pbm
+tests/outputRotate1.pgm
+
+tests/mllib_tests

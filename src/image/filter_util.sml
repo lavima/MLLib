@@ -194,4 +194,79 @@ struct
     mask
   end
 
+  (* Savitzky-Golay implementation that handles borders 
+   * better than using a convolving filter, but the borders
+   * will still be biased.
+   *)
+  fun savgol(image: GrayscaleImageReal.image,
+             radiusMajor : real,
+             radiusMinor : real,
+             theta : real) : GrayscaleImageReal.image =
+  let
+    val { width = width, height = height, ... } = image
+
+    val ira2 = 1.0 / Math.pow(radiusMajor, 2.0)
+    val irb2 = 1.0 / Math.pow(radiusMinor, 2.0)
+    val wr = Real.floor(Real.max(radiusMajor, radiusMinor))
+    
+    val sint = Math.sin theta
+    val cost = Math.cos theta
+    val eps = Math.exp(~300.0)
+
+    fun calculateElement(x : int, y : int) =
+    let
+      fun loopY(u : int, v : int, d0 : real, d1 : real, d2 : real, 
+                d3 : real, d4 : real, v0 : real, v1 : real, v2 : real) =
+      let
+        val yi = y + v
+        val xi = x + u
+        val di = ~(real u) * sint + (real v) * cost
+        val ei = (real u) * cost + (real v) * sint
+      in
+        if v < wr then
+          if not((yi < 0) orelse (yi >= height)) then 
+          let
+            val zi = GrayscaleImageReal.sub(image, xi, yi)
+            val di2 = di * di
+            val d0 = d0 + 1.0
+            val d1 = d1 + di
+            val d2 = d2 + di2
+            val d3 = d3 + di * di2
+            val d4 = d4 + di2 * di2
+            val v0 = v0 + zi
+            val v1 = v1 + zi * di
+            val v2 = v2 + zi * di2
+          in
+            loopY(u, v + 1, d0, d1, d2, d3, d4, v0, v1, v2)
+          end
+          else loopY(u, v + 1, d0, d1, d2, d3, d4, v0, v1, v2)
+        else (d0, d1, d2, d3, d4, v0, v1, v2)
+      end
+
+      fun loopX(u, d0, d1, d2, d3, d4, v0, v1, v2) =
+        if u < wr then
+          if not((x + u < 0) orelse (x + u >= width)) then
+          let
+            val (d0, d1, d2, d3, d4, v0, v1, v2) =
+              loopY(u, ~wr, d0, d1, d2, d3, d4, v0, v1, v2)
+          in
+             loopX(u + 1, d0, d1, d2, d3, d4, v0, v1, v2)
+          end
+          else loopX(u + 1, d0, d1, d2, d3, d4, v0, v1, v2)
+        else (d0, d1, d2, d3, d4, v0, v1, v2)
+
+      val (d0, d1, d2, d3, d4, v0, v1, v2) =
+           loopX(~wr, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+
+      val detA = ~d2*d2*d2 + 2.0 * d1*d2*d3 - d0*d3*d3 + d0*d2*d4
+    in
+      if detA > eps then 
+        ((~d3*d3+d2*d4)*v0 + (d2*d3-d1*d4)*v1 + (~d2*d2+d1*d3)*v2) / detA
+      else GrayscaleImageReal.sub(image, x, y)
+    end
+
+  in
+    GrayscaleImageReal.tabulatexy (width, height, calculateElement)
+  end
+
 end (* structure FilterUtil *)
