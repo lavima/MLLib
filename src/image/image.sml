@@ -40,22 +40,22 @@ sig
   val subtract : image * image -> image
   val subtract' : image * image -> unit
 
-  val app : ( pixel -> unit ) -> image -> unit
-  val appi : ( int * pixel -> unit ) -> image -> unit
-  val appxy : ( int * int * pixel -> unit ) -> image -> unit
-  val foldl : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldli : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldlxy : ( int * int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldr : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldri : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldrxy : ( int * int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val modify : ( pixel -> pixel ) -> image -> unit
-  val modifyi : ( int * pixel -> pixel ) -> image -> unit
-  val modifyxy : ( int * int * pixel -> pixel ) -> image -> unit
-  val tabulatexy : (int * int * (int * int -> pixel))  -> image
+  val app : ( 'a -> unit ) -> image -> unit
+  val appi : ( int * 'a -> unit ) -> image -> unit
+  val appxy : ( int * int * 'a -> unit ) -> image -> unit
+  val foldl : ( 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val foldli : ( int * 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val foldlxy : ( int * int * 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val foldr : ( 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val foldri : ( int * 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val foldrxy : ( int * int * 'a * 'b -> 'b ) -> 'b -> image -> 'b
+  val modify : ( 'a -> 'a ) -> image -> unit
+  val modifyi : ( int * 'a -> 'a ) -> image -> unit
+  val modifyxy : ( int * int * 'a -> 'a ) -> image -> unit
+  val tabulatexy : (int * int * (int * int -> 'a))  -> image
 
 
-  val fill : image * pixel -> unit
+  val fill : image * 'a -> unit
 
   val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> 
                   image * image -> 
