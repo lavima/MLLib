@@ -12,14 +12,12 @@ sig
 
   exception pnmImageException of string
 
-  type element
-  type pixel
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : 'a Array.array }
 
-  val createImage : int * int * pixel list -> image
+  val createImage : int * int * 'a list -> image
 
-  val pixelFromWords : Word.word list * word * bool -> pixel
-  val pixelToWords : pixel * word * bool -> Word.word list
+  val pixelFromWords : Word.word list * word * bool -> 'a
+  val pixelToWords : 'a * word * bool -> Word.word list
 
   val format : PNMCommon.format
   val depth : int

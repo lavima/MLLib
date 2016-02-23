@@ -18,24 +18,22 @@
 signature IMAGE =
 sig
 
-  type element
-  type pixel
   type image 
 
 
-  val image : int * int * pixel -> image
+  val image : int * int * 'a -> image
   val zeroImage : int * int -> image
-  val fromList : int * int * pixel list -> image
+  val fromList : int * int * 'a list -> image
   val transposed : image -> image
 
   val load : string -> image option
   val save': PNMCommon.format * word -> image * string -> unit
   val save : image * string -> unit
 
-  val sub : image * int * int -> pixel
-  val sub' : image * int -> pixel
-  val update : image * int * int * pixel -> unit
-  val update': image * int * pixel -> unit
+  val sub : image * int * int -> 'a
+  val sub' : image * int -> 'a
+  val update : image * int * int * 'a -> unit
+  val update': image * int * 'a -> unit
 
   val add : image * image -> image 
   val add' : image * image -> unit 
@@ -87,30 +85,28 @@ end
 signature IMAGE_SPEC = 
 sig
   
-  type element
-  type pixel 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : 'a Array.array }
   
   val depth : int
-  val zeroPixel : pixel
+  val zeroPixel : 'a
 
   val pnmFormat : PNMCommon.format
   val pnmMaxVal : word
 
-  val pixelAdd : pixel * pixel -> pixel
-  val pixelSub : pixel * pixel -> pixel
-  val pixelMul : pixel * pixel -> pixel
-  val pixelMul' : pixel * real -> pixel
-  val pixelEqual : pixel * pixel -> bool
+  val pixelAdd : 'a * 'a -> 'a
+  val pixelSub : 'a * 'a -> 'a
+  val pixelMul : 'a * 'a -> 'a
+  val pixelMul' : 'a * real -> 'a
+  val pixelEqual : 'a * 'a -> bool
 
-  val getElement : pixel * int -> element
+  val getElement : 'a * int -> element
   val elementFromReal : real -> element
   val elementCompare : element * element -> order
 
-  val pixelFromWords : word list * word * bool -> pixel
-  val pixelToWords : pixel * word * bool -> word list
+  val pixelFromWords : word list * word * bool -> 'a
+  val pixelToWords : 'a * word * bool -> word list
 
-  val pixelToString : pixel -> string
+  val pixelToString : 'a -> string
 
 end
 
@@ -129,8 +125,6 @@ struct
   structure Spec = Spec
 
 
-  type element = Spec.element
-  type pixel = Spec.pixel
   type image = Spec.image
 
   
@@ -146,9 +140,7 @@ struct
 
     exception pnmImageException of string
 
-    type element = Spec.element
     type image = Spec.image 
-    type pixel = Spec.pixel
 
     val pixelFromWords = Spec.pixelFromWords
     val pixelToWords = Spec.pixelToWords
@@ -182,20 +174,20 @@ struct
 
 
   fun sub( im as { width, values, ... } : image, x : int, y : int ) 
-      : pixel =
+      : 'a =
     Array.sub( values, y*width+x )
 
-  fun sub'( im as { values, ... } : image, index : int ) : pixel =
+  fun sub'( im as { values, ... } : image, index : int ) : 'a =
     Array.sub( values, index )
 
 
   fun update( im as { width, values, ... } : image, 
-              x : int, y : int, pix : pixel ) 
+              x : int, y : int, pix : 'a ) 
       : unit =
     Array.update( values, y*width+x, pix )
 
   fun update'( im as { width, values, ... } : image, 
-               index : int, pix : pixel ) 
+               index : int, pix : 'a ) 
       : unit =
     Array.update( values, index, pix )
 
@@ -261,32 +253,32 @@ struct
       raise mismatchException
 
 
-  fun app ( f : pixel -> unit )
+  fun app ( f : 'a -> unit )
           ( im as { values, ... } : image )
       : unit =
     Array.app f values
 
-  fun appi ( f : int * pixel -> unit )
+  fun appi ( f : int * 'a -> unit )
            ( im as { values, ... } : image )
       : unit =
     Array.appi f values
 
-  fun appxy ( f : int * int * pixel -> unit )
+  fun appxy ( f : int * int * 'a -> unit )
             ( im as { width, values, ... } : image )
       : unit =
     Array.appi ( fn( i, pix ) => f( i mod width, i div width, pix ) ) values
 
-  fun foldl ( f : pixel * 'a -> 'a )
+  fun foldl ( f : 'a * 'a -> 'a )
             ( start : 'a )
             ( im as { values, ... } : image ) : 'a =
     Array.foldl f start values
 
-  fun foldli ( f : int * pixel * 'a -> 'a )
+  fun foldli ( f : int * 'a * 'a -> 'a )
              ( start : 'a )
              ( im as { values, ... } : image ) : 'a =
     Array.foldli f start values
 
-  fun foldlxy ( f : int * int * pixel * 'a -> 'a )
+  fun foldlxy ( f : int * int * 'a * 'a -> 'a )
              ( start : 'a )
              ( im as { width, values, ... } : image ) : 'a =
     Array.foldli 
@@ -294,17 +286,17 @@ struct
       start 
       values
 
-  fun foldr ( f : pixel * 'a -> 'a )
+  fun foldr ( f : 'a * 'a -> 'a )
             ( start : 'a )
             ( im as { values, ... } : image ) : 'a =
     Array.foldr f start values
 
-  fun foldri ( f : int * pixel * 'a -> 'a )
+  fun foldri ( f : int * 'a * 'a -> 'a )
              ( start : 'a )
              ( im as { values, ... } : image ) : 'a =
     Array.foldri f start values
 
-  fun foldrxy ( f : int * int * pixel * 'a -> 'a )
+  fun foldrxy ( f : int * int * 'a * 'a -> 'a )
              ( start : 'a )
              ( im as { width, values, ... } : image ) : 'a =
     Array.foldri 
@@ -312,24 +304,24 @@ struct
       start 
       values
 
-  fun modify ( f : pixel -> pixel )
+  fun modify ( f : 'a -> 'a )
              ( im as { values, ... } : image ) 
       : unit =
     Array.modify f values
 
-  fun modifyi ( f : int * pixel -> pixel )
+  fun modifyi ( f : int * 'a -> 'a )
              ( im as { values, ... } : image ) 
       : unit =
     Array.modifyi f values
 
-  fun modifyxy ( f : int * int * pixel -> pixel )
+  fun modifyxy ( f : int * int * 'a -> 'a )
              ( im as { width, values, ... } : image ) 
       : unit =
     Array.modifyi 
       ( fn( i, pix ) => f( i mod width, i div width, pix ) ) 
       values
 
-  fun tabulatexy (width : int, height : int, f : int * int -> pixel) : image =
+  fun tabulatexy (width : int, height : int, f : int * int -> 'a) : image =
     let
        val img = zeroImage(width, height);
        val _ = modifyxy (fn (x,y,_) => f(x,y) ) img
@@ -442,14 +434,13 @@ struct
       false
   end
 
-  fun fill( im : image, pix : pixel ) : unit =
+  fun fill( im : image, pix : 'a ) : unit =
     modify ( fn _ => pix ) im
 
 
   structure FilterImage : FILTER_IMAGE = 
   struct
     
-    type pixel = Spec.pixel
     type image = Spec.image
 
     val zeroPixel = Spec.zeroPixel
@@ -469,7 +460,6 @@ struct
   structure ThresholdsImage : THRESHOLDS_IMAGE =
   struct
 
-    type pixel = Spec.pixel
     type image = Spec.image
 
     val histograms = histograms
