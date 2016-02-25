@@ -9,10 +9,9 @@
 signature THRESHOLDS_IMAGE =
 sig
   
-  type pixel
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : 'a Array.array }
 
-  val histograms : image * int -> int Array.array list
+  val histogram : int -> image -> int Array.array list
 
 end
 
@@ -36,7 +35,7 @@ struct
   let
     val { width, height, ... } = im
 
-    val [ histogram ] = Image.histograms( im, numBins )
+    val [ histogram ] = Image.histogram numBins im, numBins
 
     val numPixels = width*height
 
@@ -66,7 +65,7 @@ struct
   let
     val { width, height, ... } = im
 
-    val [ histogram ] = Image.histograms( im, numBins )
+    val [ histogram ] = Image.histogram numBins im numBins
 
     val numPixels = width*height
 

@@ -64,8 +64,6 @@ sig
                  image * image -> 
                  image
 
-  val histograms : image * int -> int Array.array list
-
   val thresholds' : ImageCommon.thresholdsMethod -> image -> real list
   val thresholds : image -> real list
 
@@ -98,10 +96,6 @@ sig
   val pixelMul : 'a * 'a -> 'a
   val pixelMul' : 'a * real -> 'a
   val pixelEqual : 'a * 'a -> bool
-
-  val getElement : 'a * int -> element
-  val elementFromReal : real -> element
-  val elementCompare : element * element -> order
 
   val pixelFromWords : word list * word * bool -> 'a
   val pixelToWords : 'a * word * bool -> word list
@@ -330,7 +324,6 @@ struct
     end
      
 
-
   fun toString( im as { width, height, ... } : image ) : string =
     String.concat( 
       List.foldr
@@ -344,56 +337,6 @@ struct
                 ( List.tabulate( width, fn x => x ) ) ) )
         []
         ( List.tabulate( height, fn x => x ) ) )
-
-
-  fun histograms( im : image, numBins : int ) 
-      : int Array.array list = 
-  let
-
-    val f = 1.0/( ( real numBins )-1.0 )
-
-    val delims = 
-      List.tabulate( 
-        numBins+1, 
-        fn x => Spec.elementFromReal( ( ( real x )-0.5 )*f ) )
- 
-    (*
-    * Get the index of the histogram bin to place an element. 
-    *)
-    fun getIndex( delims : element list, element : element, index : int )
-        : int =
-      case delims of 
-        low::( delims' as high::_ ) =>
-          if not ( Spec.elementCompare( element, low )=LESS ) andalso
-             Spec.elementCompare( element, high )=LESS then
-            index
-          else
-            getIndex( delims', element, index+1 )
-      | _ => raise Overflow
-          
-    fun collect( channel : int ) : int Array.array list = 
-      case channel<Spec.depth of
-        false => []
-      | true => 
-        let
-          val histogram = Array.array( numBins, 0 )
-          val _ = appxy
-            ( fn( x, y, pix ) => 
-              let
-                val index = 
-                  getIndex( delims, Spec.getElement( pix, channel ), 0 )
-                val count = Array.sub( histogram, index )
-              in
-                Array.update( histogram, index, count+1 ) 
-              end )
-            im
-        in
-          histogram::collect( channel+1 )
-        end
-
-  in
-    collect 0 
-  end
 
 
   fun transposed( im as { width, height, ... } : image ) : image =
@@ -457,30 +400,6 @@ struct
   val convolve = Filter.convolve
 
 
-  structure ThresholdsImage : THRESHOLDS_IMAGE =
-  struct
-
-    type image = Spec.image
-
-    val histograms = histograms
-
-  end (* structure ThresholdsImage *)
-
-  structure Thresholds = ThresholdsFun( ThresholdsImage )
-
-
-  fun thresholds' ( method : thresholdsMethod ) 
-                  ( im : image )
-      : real list =
-    case method of
-      percentage( numBins, percent ) =>
-        Thresholds.percentage( im, numBins, percent )
-    | otsu numBins =>
-        Thresholds.otsu( im, numBins )
-
-  val thresholds : image -> real list = thresholds' ( otsu 256 )
-
-  
   (*
      Rotate the image using bilinear interpolation
   *)
