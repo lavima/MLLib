@@ -23,7 +23,6 @@ structure GrayscaleImageWord8Spec : IMAGE_SPEC =
 struct
 
   open GrayscaleImageSpec
-  open ImageWord8
 
   type element = Word8.word 
   type pixel = element 

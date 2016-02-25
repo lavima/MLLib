@@ -9,7 +9,7 @@
 signature HISTOGRAM =
 sig
   
-  type 'a image
+  type image
 
   val histogram' : 'a image * int -> int Array.array
   val histogram : 'a image -> int Array.array
