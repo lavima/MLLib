@@ -9,9 +9,7 @@
 structure BooleanImageSpec : IMAGE_SPEC =
 struct
 
-  type element = bool
-  type pixel = element
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : bool Array.array }
 
 
   val depth = 1
@@ -37,18 +35,6 @@ struct
 
   fun pixelEqual( x : pixel, y : pixel ) : bool = 
     Util.eq elementCompare ( x, y )
-
-  fun getElement( pixel : pixel, i : int ) : element =
-    if i>0 orelse i<0 then
-      raise ImageCommon.formatException"There is only one element"
-    else
-      pixel
-
-  fun elementFromReal x = 
-    if x>0.0 then 
-      true
-    else
-      false
 
 
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =

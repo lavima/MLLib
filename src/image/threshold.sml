@@ -1,41 +1,43 @@
 (*
-* filename: thresholds.sml
+* filename: threshold.sml
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
 * This file contains signatures and functor structure that provide different 
 * algorithms for automatically determining threshold values in images.
 *)
 
-signature THRESHOLDS_IMAGE =
+signature THRESHOLD =
 sig
   
-  type image = { width : int, height : int, values : 'a Array.array }
+  type 'a image = { width : int, height : int, values : 'a Array.array }
 
-  val histogram : int -> image -> int Array.array list
+  val percentage : 'a image * int * real -> real list
+  val otsu : 'a image * int -> real list
 
 end
 
-signature THRESHOLDS =
+signature THRESHOLD_IMAGE =
 sig
   
-  structure Image : THRESHOLDS_IMAGE
+  type 'a image = { width : int, height : int, values : 'a Array.array }
 
-  val percentage : Image.image * int * real -> real list
-  val otsu : Image.image * int -> real list
+  val histogram : int -> 'a image -> int Array.array list
 
 end
 
-functor ThresholdsFun( Image : THRESHOLDS_IMAGE ) : THRESHOLDS =
+functor ThresholdFun( Image : THRESHOLD_IMAGE ) : THRESHOLD =
 struct
 
   structure Image = Image
 
-  fun percentage( im : Image.image, numBins : int, percentage : real ) 
+  type 'a image = 'a Image.image
+
+  fun percentage( im : 'a Image.image, numBins : int, percentage : real ) 
       : real list =
   let
     val { width, height, ... } = im
 
-    val [ histogram ] = Image.histogram numBins im, numBins
+    val [ histogram ] = Image.histogram numBins im
 
     val numPixels = width*height
 
@@ -61,11 +63,11 @@ struct
     [ threshold ]
   end
 
-  fun otsu ( im : Image.image, numBins : int ) : real list =
+  fun otsu ( im : 'a Image.image, numBins : int ) : real list =
   let
     val { width, height, ... } = im
 
-    val [ histogram ] = Image.histogram numBins im numBins
+    val [ histogram ] = Image.histogram numBins im
 
     val numPixels = width*height
 

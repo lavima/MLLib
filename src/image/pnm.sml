@@ -10,11 +10,9 @@
 signature PNM_IMAGE =
 sig
 
-  exception pnmImageException of string
+  type 'a image = { width : int, height : int, values : 'a Array.array }
 
-  type image = { width : int, height : int, values : 'a Array.array }
-
-  val createImage : int * int * 'a list -> image
+  val createImage : int * int * 'a list -> 'a image
 
   val pixelFromWords : Word.word list * word * bool -> 'a
   val pixelToWords : 'a * word * bool -> Word.word list
@@ -40,8 +38,8 @@ sig
     
   structure Image : PNM_IMAGE
 
-  val load : string -> Image.image
-  val save : Image.image * string * format * word -> unit
+  val load : string -> 'a Image.image
+  val save : 'a Image.image * string * format * word -> unit
 
 end
 
@@ -55,7 +53,7 @@ struct
   structure Image = Image
 
 
-  fun load( filename : string ) : Image.image = 
+  fun load( filename : string ) : 'a Image.image = 
   let
     val input = BinIO.openIn( filename )
 
@@ -106,7 +104,7 @@ struct
   end
        
 
-  fun save( im as { width, height, values } : Image.image, 
+  fun save( im as { width, height, values } : 'a Image.image, 
             filename : string, format : PNMCommon.format, maxVal : word ) 
       : unit = 
   let

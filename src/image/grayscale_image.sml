@@ -24,9 +24,7 @@ struct
 
   open GrayscaleImageSpec
 
-  type element = Word8.word 
-  type pixel = element 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : Word8.word Array.array }
 
   val pixelAdd = Word8.+
   val pixelSub = Word8.-
@@ -38,12 +36,6 @@ struct
 
   fun pixelEqual( x : pixel, y : pixel ) : bool = 
     Util.eq elementCompare ( x, y )
-
-  fun getElement( p : pixel, i : int ) : element =
-    if i>0 orelse i<0 then
-      raise ImageCommon.formatException"There is only one element"
-    else
-      p
 
   
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
@@ -78,13 +70,10 @@ structure GrayscaleImageWord8 = ImageFun( GrayscaleImageWord8Spec )
 structure GrayscaleImageIntSpec : IMAGE_SPEC =
 struct
 
-  open ImageInt
   open GrayscaleImageSpec
 
 
-  type element = int 
-  type pixel = element 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : int Array.array }
 
 
   val zeroPixel = 0
@@ -98,12 +87,6 @@ struct
   fun pixelEqual( x : pixel, y : pixel ) : bool = 
     Util.eq elementCompare ( x, y )
 
-
-  fun getElement( p : pixel, i : int ) : element =
-    if i>0 orelse i<0 then
-      raise ImageCommon.formatException"There is only one element"
-    else
-      p
 
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
     case ws of 
@@ -145,12 +128,9 @@ structure GrayscaleImageRealSpec : IMAGE_SPEC =
 struct
 
   open GrayscaleImageSpec
-  open ImageReal
 
 
-  type element = real
-  type pixel = element 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : real Array.array }
 
 
   val zeroPixel = 0.0
@@ -165,12 +145,6 @@ struct
 
   fun pixelEqual( x : pixel, y : pixel ) : bool = 
     Util.eq elementCompare ( x, y )
-
-  fun getElement( p : pixel, i : int ) : element =
-    if i>0 orelse i<0 then
-      raise ImageCommon.formatException"There is only one element"
-    else
-      p
 
 
   fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 

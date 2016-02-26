@@ -23,12 +23,8 @@ structure ColorImageWord8Spec : IMAGE_SPEC =
 struct
   
   open ColorImageSpec
-  open ImageWord8
 
-
-  type element = Word8.word
-  type pixel = element * element * element 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : Word8.word Array.array }
 
 
   fun pixelAdd( x as ( xr, xg, xb ) : pixel, y as ( yr, yg, yb ) : pixel ) = 
@@ -50,16 +46,6 @@ struct
   in
     ( eq( xr, yr ) andalso eq( xg, yg ) andalso eq( xb, yb ) )
   end
-
-  fun getElement( ( r, g, b ) : pixel, i : int ) : element =
-    if i>2 orelse i<0 then
-      raise ImageCommon.formatException"There is only three elements"
-    else if i=0 then
-      r
-    else if i=1 then
-      g 
-    else 
-      b
 
 
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =
@@ -105,12 +91,9 @@ structure ColorImageRealSpec : IMAGE_SPEC =
 struct
 
   open ColorImageSpec
-  open ImageReal
 
 
-  type element = real
-  type pixel = element * element * element 
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image = { width : int, height : int, values : real Array.array }
 
 
   fun pixelAdd( x as ( xr, xg, xb ) : pixel, y as ( yr, yg, yb ) : pixel ) = 
@@ -134,16 +117,6 @@ struct
   in
     ( eq( xr, yr ) andalso eq( xg, yg ) andalso eq( xb, yb ) )
   end
-
-  fun getElement( ( r, g, b ) : pixel, i : int ) : element =
-    if i>2 orelse i<0 then
-      raise ImageCommon.formatException"There is only three elements"
-    else if i=0 then
-      r
-    else if i=1 then
-      g 
-    else 
-      b
 
 
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =
