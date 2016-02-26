@@ -5,16 +5,6 @@
 * This file contains structures that represents grayscale images.
 *)
 
-structure GrayscaleImageSpec = 
-struct
-
-  val depth = 1
-
-  val pnmFormat = PNMCommon.plainPGM
-  val pnmMaxVal = 0w255 
-
-end (* structure GrayscaleImageSpec *)
-
 (*
 * This structure specify grayscale images with a single 8-bit word representing
 * each pixel.
@@ -38,23 +28,6 @@ struct
     Util.eq elementCompare ( x, y )
 
   
-  fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel = 
-    case ws of 
-      [ w ] => 
-        if not invert then
-          Word8.fromInt( Word.toInt w ) 
-        else
-          Word8.fromInt( Word.toInt( maxVal-w ) ) 
-    | _ => raise ImageCommon.formatException( 
-             "Unexpected number of words: " ^ Int.toString( List.length ws ) )
-
-  fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
-      : word list =
-  if not invert then
-    [ Word.fromInt( Word8.toInt x ) ]
-  else
-    [ maxVal-Word.fromInt( Word8.toInt x ) ]
-
 
   fun pixelToString( x : pixel ) : string = 
     Word8.toString x
