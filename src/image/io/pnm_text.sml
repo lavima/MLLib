@@ -241,6 +241,18 @@ struct
           output( out, "\n" ) )
     end
 
+    fun parseBooleanPixels( input : BinIO.iostream ) : bool list =
+    let
+      fun parse() : bool list =
+        case getToken( input, true ) of 
+          NONE => []
+        | SOME token => 
+            case token of 
+              "1" => false::parse()
+            | "0" => true::parse()
+    in
+      parse()
+    end
 
     fun parsePixels( inp : BinIO.instream, depth : int, parseBits : bool )
         : word list list = 

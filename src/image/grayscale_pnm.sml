@@ -25,7 +25,8 @@ local
 
     val createImage = fromList
 
-    fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =
+    fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) 
+        : Word8.word =
       case ws of 
         [ w ] => 
           if not invert then
@@ -35,7 +36,7 @@ local
       | _ => raise ImageCommon.formatException( 
                "Unexpected number of words: " ^ Int.toString( List.length ws ) )
 
-    fun pixelToWords( x : pixel, maxVal : word, invert : bool ) 
+    fun pixelToWords( x : Word8.word, maxVal : word, invert : bool ) 
         : word list =
     if not invert then
       [ Word.fromInt( Word8.toInt x ) ]

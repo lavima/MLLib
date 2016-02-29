@@ -19,8 +19,6 @@ struct
   val pixelAdd = Word8.+
   val pixelSub = Word8.-
   val pixelMul = Word8.*
-  fun pixelMul' (x : pixel, y : real) = raise ImageCommon.formatException "Not implemented"
-     (* Word8.fromInt(Real.round ((real Word8.toInt(x)) * y))*)
 
   val zeroPixel : pixel = 0w0
 

@@ -9,32 +9,15 @@
 structure BooleanImageSpec : IMAGE_SPEC =
 struct
 
-  type image = { width : int, height : int, values : bool Array.array }
-
-
-  val depth = 1
+  type pixel = bool 
 
   val zeroPixel = false 
 
-  val pnmFormat = PNMCommon.plainPBM
-  val pnmMaxVal = 0w1 
-
-  
   fun pixelAdd( x : bool, y : bool ) : bool = ( x orelse y )
   fun pixelSub( x : bool, y : bool ) : bool = ( x andalso not y ) 
   fun pixelMul( x : bool, y : bool ) : bool = ( x andalso y )
   fun pixelMul'( x : bool, y : real) : bool = x
-  
-  fun elementCompare( x : element, y : element ) : order =
-    if x=y then
-      EQUAL
-    else if x andalso not y then
-      GREATER
-    else 
-      LESS
-
-  fun pixelEqual( x : pixel, y : pixel ) : bool = 
-    Util.eq elementCompare ( x, y )
+  fun pixelEqual( x : pixel, y : pixel ) : bool = x=y
 
 
   fun pixelFromWords( ws : word list, maxVal : word, invert : bool ) : pixel =

@@ -10,12 +10,11 @@
 signature FILTER_IMAGE =
 sig
   
-  type pixel
-  type image = { width : int, height : int, values : pixel Array.array }
+  type 'a image
 
   val zeroPixel : pixel
 
-  val createZero : int * int -> image
+  val createZero : int * int -> 'a image
   
   val pixelAdd : pixel * pixel -> pixel
   val pixelMul : pixel * pixel -> pixel
@@ -26,14 +25,14 @@ end
 signature FILTER =
 sig
 
+  type 'a image
+
   exception filterException of string
 
-  structure Image : FILTER_IMAGE
-
   val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> 
-        Image.image * Image.image -> Image.image
+        'a image * 'a image -> 'a image
   val convolve : ImageCommon.borderExtension * ImageCommon.outputSize -> 
-        Image.image * Image.image -> Image.image
+        'a image * 'a image -> 'a image
 
 end
 
@@ -46,22 +45,19 @@ struct
 
   exception filterException of string
 
-
-  structure Image = Image
-
   local
 
     fun odd( x : int ) : bool = ( x mod 2 )=1
 
-    fun filter( image : Image.image, 
-                mask : Image.image, 
+    fun filter( im : 'a image, 
+                mask : 'a image, 
                 extension : borderExtension,
                 outputShape : outputSize, 
-                loopMask : int * int * int * Image.pixel -> Image.pixel ) 
-        : Image.image =
+                loopMask : int * int * int * 'a -> 'a ) 
+        : 'a image =
     let
 
-      val { width, height, values } = image
+      val { width, height, values } = im
       val { width=maskWidth, height=maskHeight, values=maskPixels, ... } = mask
 
       val output as 
@@ -102,11 +98,11 @@ struct
   in (* local *)
 
     fun correlate ( extension : borderExtension, outputSize : outputSize )
-                  ( image : Image.image, mask : Image.image ) 
-        : Image.image =
+                  ( im : 'a image, mask : 'a image ) 
+        : 'a image =
     let
 
-      val { width, height, values } = image
+      val { width, height, values } = im
       val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
       
       val centerX = 
@@ -139,7 +135,7 @@ struct
                   Array.sub( values, imageIndex ) ) ) )
           end 
     in
-      filter( image, mask, extension, outputSize, loopMask )
+      filter( im, mask, extension, outputSize, loopMask )
     end
 
 
@@ -147,11 +143,11 @@ struct
     * Convolve an image with a two-dimensional mask 
     *)
     fun convolve ( extension : borderExtension, outputSize : outputSize )
-                 ( image : Image.image, mask : Image.image ) 
-        : Image.image =
+                 ( im : 'a image, mask : 'a image ) 
+        : 'a image =
     let
 
-      val { width, height, values } = image
+      val { width, height, values } = im
       val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
 
       val centerX = 
@@ -166,8 +162,8 @@ struct
           ( maskHeight div 2 )-1
       val maskTotal = maskWidth*maskHeight
 
-      fun loopMask( x : int, y : int, index : int, sum : Image.pixel ) 
-          : Image.pixel =
+      fun loopMask( x : int, y : int, index : int, sum : 'a ) 
+          : 'a =
         case index<maskTotal of
           false => sum
         | true => 
@@ -185,7 +181,7 @@ struct
                   Array.sub( values, imageIndex ) ) ) )
           end 
     in
-      filter( image, mask, extension, outputSize, loopMask )
+      filter( im, mask, extension, outputSize, loopMask )
     end
 
   end (* local *)

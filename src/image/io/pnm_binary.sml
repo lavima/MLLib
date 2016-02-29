@@ -96,8 +96,7 @@ struct
 
     val currentIn : Word8.word ref = ref 0w0
 
-    fun readPixel( input : BinIO.instream, x : int ) 
-        : word list = 
+    fun readPixel( input : BinIO.instream, x : int ) : bool = 
     let 
       val wfw8 = Word.fromInt o Word8.toInt
 
@@ -111,7 +110,7 @@ struct
         else
           ()
     in
-      [ wfw8( Word8.>>( !currentIn, 0w8-i-0w1 ) mod 0w2 ) ]
+      Word8.andb( Word8.>>( !currentIn, 0w8-i-0w1 ), 0w1 )=0w0
     end
 
     val currentOut : Word8.word ref = ref 0w0
@@ -148,20 +147,13 @@ struct
 
   in
 
-    fun readPixelsAsBits( input : BinIO.instream,
-                          width : int, height : int ) 
-        : word list list =
+    fun readPixelsAsBits( input : BinIO.instream, numPixels : int ) 
+        : bool list =
     let
-      val numPixels = width*height
-
-      fun read( index : int ) : word list list =
-      let
-        val x = index mod width
-      in
+      fun read( index : int ) : bool list =
         case index<numPixels of 
           false => []
-        | true => readPixel( input, x )::read( index+1 )
-      end
+        | true => readPixel( input, index )::read( index+1 )
     in
       read 0
     end
