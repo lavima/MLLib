@@ -62,8 +62,8 @@ struct
 
   in
 
-    fun readPixelsAsBytes( input : BinIO.instream, 
-                           depth : int, maxVal : word, numPixels : int ) 
+    fun readNPixels( input : BinIO.instream, 
+                     maxVal : word, numPixels : int, depth : int ) 
         : word list list =
     let
       fun read( index : int ) : word list list =
@@ -74,10 +74,25 @@ struct
       read 0
     end
 
+    fun readGrayscalePixels( input : BinIO.instream, 
+                             maxVal : word, 
+                             numPixels : int ) 
+        : word list =
+      List.map 
+        ( fn( [ x ] ) => x ) 
+        ( readNPixels( input, maxVal, numPixels, 1 ) )
 
-    fun writePixelsAsBytes( output : BinIO.outstream, 
-                            maxVal : word, 
-                            pixels : word list list ) 
+    fun readColorPixels( input : BinIO.instream, 
+                         maxVal : word, 
+                         numPixels : int ) 
+        : ( word * word * word ) list =
+      List.map 
+        ( fn( [ r, g, b ] ) => ( r, g, b ) ) 
+        ( readNPixels( input, maxVal, numPixels, 3 ) )
+
+    fun writeNPixels( output : BinIO.outstream, 
+                      maxVal : word, 
+                      pixels : word list list ) 
         : unit =
     let
       fun write( pixels : word list list ) : unit =
@@ -89,6 +104,21 @@ struct
     in
       write pixels
     end
+
+    fun writeGrayscalePixels( output : BinIO.outstream, 
+                              maxVal : word, 
+                              pixels : word list ) 
+        : unit =
+      writeNPixels( output, maxVal, List.map ( fn x => [ x ] ) pixels )
+
+    fun writeColorPixels( output : BinIO.outstream, 
+                          maxVal : word, 
+                          pixels : word list ) 
+        : unit =
+      writeNPixels( 
+        output, 
+        maxVal, 
+        List.map ( fn( r, g, b ) => [ r, g, b ] ) pixels )
 
   end (* local *)
 
@@ -121,6 +151,11 @@ struct
       val w8fw = Word8.fromInt o Word.toInt
 
       val i = Word.fromInt( x mod 8 )
+      val _ = 
+        if i=0 then
+          flush output
+        else
+          ()
 
       val _ = 
         if i=0w0 andalso x>0 then (
@@ -147,7 +182,7 @@ struct
 
   in
 
-    fun readPixelsAsBits( input : BinIO.instream, numPixels : int ) 
+    fun readBooleanPixels( input : BinIO.instream, numPixels : int ) 
         : bool list =
     let
       fun read( index : int ) : bool list =
@@ -158,25 +193,15 @@ struct
       read 0
     end
 
-    fun writePixelsAsBits( output : BinIO.outstream, 
-                           width : int, pixels : word list list )
+    fun writeBooleanPixels( output : BinIO.outstream, pixels : bool list )
         : unit =
     let
-      fun write( index : int, wss : word list list ) : unit =
-      let
-        val x = index mod width
-        val _ = 
-          if x=0 andalso index>0 then
-            flush output
-          else
-            ()
-      in
-        case wss of
+      fun write( index : int, xs : bool list ) : unit =
+        case xs of
           [] => ( )
-        | ws::wss' => (
-            writePixel( output, x, ws );
-            write( index+1, wss' ) )
-      end
+        | x::xs' => (
+            writePixel( output, index, x );
+            write( index+1, xs' ) )
     in
       write( 0, pixels )
     end

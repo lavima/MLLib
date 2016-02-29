@@ -3,27 +3,11 @@
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
 * This file contains an SML implementation of the Portable aNy Map image 
-* formats. The implementation of the standard is not fully compliant e.g. the
-* lack of support for .pam files.
+* formats. 
 *)
 
-signature PNM_IMAGE =
-sig
-
-  type 'a image = { width : int, height : int, values : 'a Array.array }
-
-  val createImage : int * int * 'a list -> 'a image
-
-  val pixelFromWords : Word.word list * word * bool -> 'a
-  val pixelToWords : 'a * word * bool -> Word.word list
-
-  val format : PNMCommon.format
-  val depth : int
-
-end
-
-signature PNM =
-sig
+structure PNM =
+struct
 
   exception pnmException of string
 
@@ -35,22 +19,16 @@ sig
     rawPGM | 
     rawPPM | 
     rawPAM of int
-    
-  structure Image : PNM_IMAGE
 
-  val load : string -> 'a Image.image
-  val save : 'a Image.image * string * format * word -> unit
-
-end
-
-
-functor PNMFun( Image : PNM_IMAGE ) : PNM =
-struct
-
-  open PNMCommon
-
-
-  structure Image = Image
+  fun getDepth( f : format ) : int =
+    case f of
+      plainPBM => 1
+    | plainPGM => 1
+    | plainPPM => 3
+    | rawPBM => 1
+    | rawPGM => 1
+    | rawPPM => 3
+    | rawPAM depth => depth
 
 
   fun load( filename : string ) : 'a Image.image = 

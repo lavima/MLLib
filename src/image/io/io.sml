@@ -5,20 +5,15 @@
 * This file contains the signatures for image readers and writers.
 *)
 
-signature IMAGE_READER =
+signature IMAGE_IO =
 sig
 
-  type 'a image
+  type image
 
-  val read : string -> ( 'a image ) option
+  type writeOptions
 
-end 
-
-signature IMAGE_WRITER =
-sig
-
-  type 'a image
-
-  val write : 'a image, string -> unit
+  val read : string -> image option
+  val write : image * string -> unit
+  val write' : writeOptions -> image * string -> unit 
 
 end 

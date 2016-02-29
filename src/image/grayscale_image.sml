@@ -25,8 +25,6 @@ struct
   fun pixelEqual( x : pixel, y : pixel ) : bool = 
     Util.eq elementCompare ( x, y )
 
-  
-
   fun pixelToString( x : pixel ) : string = 
     Word8.toString x
 
