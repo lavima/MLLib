@@ -1,11 +1,9 @@
 $(SML_LIB)/basis/basis.mlb
+
 ../mllib_general.mlb
 ../math/mllib_math.mlb
+
 image_common.sml
-pnm_common.sml
-pnm_text.sml
-pnm_binary.sml
-pnm.sml
 util.sml
 filter.sml
 threshold.sml

@@ -77,14 +77,12 @@ sig
   val pixelAdd : pixel * pixel -> pixel
   val pixelSub : pixel * pixel -> pixel
   val pixelMul : pixel * pixel -> pixel
-  val pixelMul' : pixel * real -> pixel
+  val pixelScale : pixel * real -> pixel
   val pixelEqual : pixel * pixel -> bool
 
   val pixelToString : pixel -> string
 
 end
-
-
 
 (*
 * This functor is used to create all the image types. The functor takes a 
@@ -281,14 +279,14 @@ struct
              val m11 = sub (img, x1, y1)
              
              val t0 = if (not(x0 = x1)) then 
-                         Spec.pixelAdd(Spec.pixelMul'(m00, (real x1) - x),
-                         Spec.pixelMul'(m10, x-(real x0))) else m00
+                         Spec.pixelAdd(Spec.pixelScale(m00, (real x1) - x),
+                         Spec.pixelScale(m10, x-(real x0))) else m00
              val t1 = if (not(x0 = x1)) then 
-                         Spec.pixelAdd( Spec.pixelMul'(m01, (real x1 - x)),
-                         Spec.pixelMul'(m11, x- (real x0))) else m01
+                         Spec.pixelAdd( Spec.pixelScale(m01, (real x1 - x)),
+                         Spec.pixelScale(m11, x- (real x0))) else m01
              val ty = if (not(y0 = y1)) then 
-                         Spec.pixelAdd( Spec.pixelMul'(t0, (real y1) - y),
-                         Spec.pixelMul'(t1,  y - (real y0)))
+                         Spec.pixelAdd( Spec.pixelScale(t0, (real y1) - y),
+                         Spec.pixelScale(t1,  y - (real y0)))
                       else t0
             
              val _ = update (newImage, dstX, dstY, ty)

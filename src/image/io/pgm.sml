@@ -101,5 +101,6 @@ local
     end
   end
 in
-  structure PGMWord8 = PGMFun( Word8Image )
+  structure PGMWord8 = PGMFun( RealWord8 )
+  structure PGMReal = PGMFun( RealImage )
 end
