@@ -11,7 +11,7 @@ local
   * This structure specify grayscale images with a 8-bit word representing
   * each pixel.
   *)
-  structure GrayscaleImageWord8Spec : IMAGE_SPEC =
+  structure Word8GrayscaleImageSpec : IMAGE_SPEC =
   struct
 
     type pixel = Word8.word 
@@ -37,7 +37,7 @@ local
   * This structure specify grayscale images with a 64-bit real representing
   * each pixel.
   *)
-  structure GrayscaleImageRealSpec : IMAGE_SPEC =
+  structure RealGrayscaleImageSpec : IMAGE_SPEC =
   struct
 
     type pixel = real
@@ -61,7 +61,7 @@ local
   * This structure specify grayscale images with a integer representing
   * each pixel.
   *)
-  structure GrayscaleImageIntSpec : IMAGE_SPEC =
+  structure IntGrayscaleImageSpec : IMAGE_SPEC =
   struct
 
     type pixel = int
@@ -84,8 +84,8 @@ local
   end
 
 in
-  structure GrayscaleImageWord8 = ImageFun( GrayscaleImageWord8Spec )
-  structure GrayscaleImageReal = ImageFun( GrayscaleImageRealSpec )
-  structure GrayscaleImageInt = ImageFun( GrayscaleImageIntSpec )
+  structure Word8GrayscaleImage = ImageFun( Word8GrayscaleImageSpec )
+  structure RealGrayscaleImage = ImageFun( RealGrayscaleImageSpec )
+  structure IntGrayscaleImage = ImageFun( IntGrayscaleImageSpec )
 end
 

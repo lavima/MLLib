@@ -1,28 +1,26 @@
 (*
-* file: pgm.sml
+* file: ppm.sml
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
-* This file contains structures for loading images from PGM image files.
+* This file contains structures for loading images from PPM image files.
 *)
 
-signature PGM_IMAGE =
+signature PPM_IMAGE =
 sig
 
   type image
 
-  val fromList : int * int * word * word list -> image  
-  val toList : image * word -> word list 
+  val fromList : int * int * word * ( word * word * word ) list -> image  
+  val toList : image * word -> ( word * word * word ) list 
 
   val dimensions : image -> int * int
 
-end (* signature PGM_IMAGE *)
+end (* signature PPM_IMAGE *)
 
-functor PGMFun( Image : PGM_IMAGE ) : IMAGE_IO =
+functor PPMFun( Image : PPM_IMAGE ) : IMAGE_IO =
 struct
 
   open Image
-
-  type writeOptions = PNM.format * word
 
   fun read( filename : string ) : image option =
   let
@@ -32,9 +30,9 @@ struct
       PNMText.parseHeader input
   in
     case format of
-      plainPGM => 
+      plainPPM => 
         SOME( fromList( width, height, maxVal, PNMText.parsePixels input ) )
-    | rawPGM => 
+    | rawPPM => 
         SOME( 
           fromList( 
             width, 
@@ -49,38 +47,40 @@ struct
   let
     val format = 
       case options of
-        plainPGM => format
-      | rawPGM => format
+        plainPPM => format
+      | rawPPM => format
       | _ => raise pnmException"Wrong format specified."
 
     val out = BinIO.openOut filename 
     val ( height, width ) = dimensions im
   in
-    ( PNMText.writeHeader( out, ( format, width, height, 1, maxVal, [] ) );
+    ( PNMText.writeHeader( out, ( format, width, height, 3, maxVal, [] ) );
       if format=plainPGM then
-        PNMText.writeGrayscalePixels( out, toList im ) 
+        PNMText.writeColorPixels( out, toList im ) 
       else 
-        PNMBinary.writeGrayscalePixels( out, toList im ) )
+        PNMBinary.writeColorPixels( out, toList im ) )
   end
 
-  val write = write' ( plainPGM, 0w255 )
+  val write = write' ( plainPPM, 0w255 )
 
-end (* functor PBMReaderFun *)
+end (* functor PPMFun *)
 
-local 
-  structure Word8Image : PGM_IMAGE =
+local
+  structure Word8Image : PPM_IMAGE =
   struct
-    type image = GrayscaleImageWord8.image
+    type image = Word8RGBImage.image
 
     fun toList( im : image, maxVal : word ) : word list = 
     let
       val rfw = Real.fromInt o Word.toInt  
       val rfw8 = Real.fromInt o Word8.toInt  
       val wfr = Word.fromInt o Real.toInt IEEEReal.TO_NEAREST
+      fun wfw( x : Word8.word ) : word =
+        wfr( ( rfw8 x/255.0 )*rfw maxVal )  
     in
       GrayscaleImageWord8.foldr 
-        ( fn( x, xs ) => 
-            ( wfr( rfw8 x/255.0 )*rfw maxVal )::xs ) 
+        ( fn( ( r, g, b ), xs ) => 
+            ( wfw r, wfw g, wfw b )::xs ) 
         []
         image
     end
@@ -90,26 +90,28 @@ local
     let
       val rfw = Real.fromInt o Word.toInt  
       val w8fr = Word8.fromInt o Real.toInt IEEEReal.TO_NEAREST
+      fun wfw( x : word ) : Word8.word =
+        w8fr( ( rfw x/rfw maxVal )*255.0 )
     in
       GrayscaleImageWord8.fromList'( 
         width, 
         height, 
-        List.map ( fn x => w8fr( ( rfw x/rfw maxVal )*255.0 ) ) pixels )
+        List.map ( fn( r, g, b ) => ( wfw r, wfw g, wfw b ) ) pixels )
     end
   end
 
-  structure RealImage : PGM_IMAGE =
+  structure RealImage : PPM_IMAGE =
   struct
-    type image = GrayscaleImageReal.image
-
+    type image = RealRGBImage.image
 
     fun toList( im : image, maxVal : word ) : word list = 
     let
       val rfw = Real.fromInt o Word.toInt
-      val wfr = Word.fromInt o Real.toInt IEEEReal.TO_NEAREST
+      fun wfr( x : real ) : word = 
+        Word.fromInt( Real.toInt IEEEReal.TO_NEAREST ( x*rfw maxVal ) )
     in
       GrayscaleImageReal.foldr 
-        ( fn( x, xs ) => wfr( x*rfw maxVal )::xs ) 
+        ( fn( ( r, g, b ), xs ) => ( wfr r, wfr g, wfr b )::xs ) 
         [] 
         im
     end
@@ -117,15 +119,17 @@ local
     fun fromList( width : int, height : int, maxVal : word, pixels : word list )
         : image = 
     let
-      val rfw = Real.fromInt o Word.toInt
+      val rfw( x : word ) : real = 
+        Real.fromInt( Word.toInt x )/Real.fromInt( Word.toInt maxVal ) 
     in
       GrayscaleImageReal.fromList'( 
         width, 
         height, 
-        List.map ( fn x => rfw x/rfw maxVal ) pixels )
+        List.map ( fn( r, g, b ) => ( rfw r, rfw g, rfw b ) ) pixels )
     end
   end
 in
-  structure Word8PGM = PGMFun( Word8Image )
-  structure RealPGM = PGMFun( RealImage )
+  structure Word8PPM = PPMFun( Word8Image )
+  structure RealPPM = PPMFun( RealImage )
 end
+

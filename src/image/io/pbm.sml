@@ -21,6 +21,7 @@ functor PBMFun( Image : PBM_IMAGE ) : IMAGE_IO =
 struct
 
   open Image
+
   type writeOptions = PNM.format
 
   fun read( filename : string ) : image option =
@@ -50,7 +51,7 @@ struct
       | _ => raise pnmException"Wrong format specified."
 
     val out = BinIO.openOut filename 
-    val ( width, height ) = dimensions im
+    val ( height, width ) = dimensions im
   in
     ( PNMText.writeHeader( out, ( format, width, height, 1, 0w1, [] ) );
       if format=plainPBM then
