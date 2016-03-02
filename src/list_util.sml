@@ -172,6 +172,6 @@ struct
   fun flatMap ( f : 'a -> 'b ) ( xss : 'a list list ) : 'b list =
     case xss of
       [] => []
-    | xs::xss' => ( List.map f xs ) @ ( flat_map f xss' )
+    | xs::xss' => ( List.map f xs ) @ ( flatMap f xss' )
 
 end (* structure ListUtil *)

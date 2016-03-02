@@ -3,17 +3,12 @@ $(SML_LIB)/basis/basis.mlb
 ../mllib_general.mlb
 ../math/mllib_math.mlb
 
-image_common.sml
 util.sml
-filter.sml
 threshold.sml
 image.sml
 boolean_image.sml
-image_word.sml
-image_real.sml
-image_int.sml
 grayscale_image.sml
-color_image.sml
+rgb_image.sml
 image_util.sml
 filter_util.sml
 morphology.sml

@@ -9,35 +9,34 @@
 signature THRESHOLD =
 sig
   
-  type 'a image = { width : int, height : int, values : 'a Array.array }
+  type image
 
-  val percentage : 'a image * int * real -> real list
-  val otsu : 'a image * int -> real list
+  val percentage : image * int * real -> real list
+  val otsu : image * int -> real list
 
 end
 
 signature THRESHOLD_IMAGE =
 sig
   
-  type 'a image = { width : int, height : int, values : 'a Array.array }
+  type image
 
-  val histogram : int -> 'a image -> int Array.array list
+  val histogram : int -> image -> int Array.array list
+  val dimensions : image -> int * int
 
 end
 
 functor ThresholdFun( Image : THRESHOLD_IMAGE ) : THRESHOLD =
 struct
 
-  structure Image = Image
+  open Image
 
-  type 'a image = 'a Image.image
-
-  fun percentage( im : 'a Image.image, numBins : int, percentage : real ) 
+  fun percentage( im : image, numBins : int, percentage : real ) 
       : real list =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = dimensions im
 
-    val [ histogram ] = Image.histogram numBins im
+    val [ histogram ] = histogram numBins im
 
     val numPixels = width*height
 
@@ -63,11 +62,11 @@ struct
     [ threshold ]
   end
 
-  fun otsu ( im : 'a Image.image, numBins : int ) : real list =
+  fun otsu ( im : image, numBins : int ) : real list =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = dimensions im
 
-    val [ histogram ] = Image.histogram numBins im
+    val [ histogram ] = histogram numBins im
 
     val numPixels = width*height
 
@@ -120,4 +119,4 @@ struct
     [ ( MathUtil.avg thresholds )/real( numBins-1 ) ]
   end
 
-end (* structure Threshold *)
+end (* structure ThresholdFun *)

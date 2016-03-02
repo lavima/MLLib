@@ -13,8 +13,23 @@
 signature IMAGE =
 sig
 
+  datatype traversal = 
+    RowMajor | 
+    ColMajor
+
+  datatype borderExtension = 
+    ZeroExtension | 
+    CopyExtension | 
+    WrapExtension
+
+  datatype outputSize = 
+    OriginalSize | 
+    FullSize
+
   type pixel
   type image 
+
+  exception mismatchException
 
   val image : int * int * pixel -> image
   val zeroImage : int * int -> image
@@ -36,23 +51,16 @@ sig
 
   val app : ( pixel -> unit ) -> image -> unit
   val appi : ( int * pixel -> unit ) -> image -> unit
-  val foldl : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldli : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldr : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldri : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
+  val fold : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
+  val foldi : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
   val modify : ( pixel -> pixel ) -> image -> unit
   val modifyi : ( int * pixel -> pixel ) -> image -> unit
   val tabulate : (int * int * (int * int -> pixel))  -> image
 
-
   val fill : image * pixel -> unit
 
-  val correlate : ImageCommon.borderExtension * ImageCommon.outputSize -> 
-                  image * image -> 
-                  image
-  val convolve : ImageCommon.borderExtension * ImageCommon.outputSize -> 
-                 image * image -> 
-                 image
+  val correlate : borderExtension * outputSize -> image * image -> image
+  val convolve : borderExtension * outputSize -> image * image -> image
 
   val equal : image * image -> bool
 
@@ -92,86 +100,109 @@ functor ImageFun( Spec : IMAGE_SPEC ) : IMAGE =
 struct
 
   open Array2
-  open ImageCommon
   open Spec
 
-  type image = pixel Array2.array
+  datatype borderExtension = 
+    ZeroExtension | 
+    CopyExtension | 
+    WrapExtension
+
+  datatype outputSize = 
+    OriginalSize | 
+    FullSize
+
+  type image = pixel array
   
-  val image = Array2.array
+  exception mismatchException
+
+  fun full( im : image ) : pixel region =
+    { base=im, row=0, col=0, nrows=NONE, ncols=NONE }
+
+  fun image( width : int, height : int, x : pixel ) : image = 
+    Array2.array( width, height, x )
 
   fun fromList'( width : int, height : int, pixels : pixel list ) : image =
   let
     fun build( xs : pixel list ) : pixel list list =
       List.take( xs, width )::build( List.drop( xs, width ) )
   in
-    fromList( width, height, build pixels )
+    fromList( build pixels )
   end
 
   fun zeroImage( width : int, height : int ) : image = 
-    image( width, height, Spec.zeroPixel )
+    image( width, height, zeroPixel )
 
-  fun add( { width=width1, height=height1, values=values1 } : image, 
-           { width=width2, height=height2, values=values2 } : image ) 
-      : image = 
+  fun add( im1 : image, im2 : image ) : image = 
+  let
+    val ( height1, width1 ) = dimensions im1
+    val ( height2, width2 ) = dimensions im2
+  in
     if width1=width2 andalso height1=height2 then
     let
-      val output as { values=outputValues, ... } = zeroImage( width1, height1 )
+      val output = zeroImage( width1, height1 )
       val _ = 
-        Array.modifyi 
-          ( fn( i, _ ) => 
-              Spec.pixelAdd( 
-                Array.sub( values1, i ), 
-                Array.sub( values2, i ) ) )
-          outputValues
+        modifyi RowMajor
+          ( fn( i, j, _ ) => pixelAdd( sub( im1, i, j ), sub( im2, i, j ) ) )
+          ( full output )
     in
       output
     end
     else
       raise mismatchException
+  end
 
-  fun add'( { width=width1, height=height1, values=values1 } : image, 
-            { width=width2, height=height2, values=values2 } : image )
-      : unit = 
+  fun add'( im1 : image, im2 : image ) : image = 
+  let
+    val ( height1, width1 ) = dimensions im1
+    val ( height2, width2 ) = dimensions im2
+  in
     if width1=width2 andalso height1=height2 then
-      Array.modifyi 
-        ( fn( i, x ) => 
-            Spec.pixelAdd( x, Array.sub( values2, i ) ) )
-        values1
+      ( modifyi RowMajor 
+          ( fn( i, j, p1 ) => pixelAdd( p1, sub( im2, i, j ) ) )
+          ( full im1 ) ;
+        im1 )
     else
       raise mismatchException
+  end
 
-  fun subtract( { width=width1, height=height1, values=values1 } : image, 
-                { width=width2, height=height2, values=values2 } : image ) 
-      : image = 
+  fun subtract( im1 : image, im2 : image ) : image = 
+  let
+    val ( height1, width1 ) = dimensions im1
+    val ( height2, width2 ) = dimensions im2
+  in
     if width1=width2 andalso height1=height2 then
     let
-      val output as { values=outputValues, ... } = zeroImage( width1, height1 )
+      val output = zeroImage( width1, height1 )
       val _ = 
-        Array.modifyi 
-          ( fn( i, _ ) => 
-              Spec.pixelSub( 
-                Array.sub( values1, i ), 
-                Array.sub( values2, i ) ) )
-          outputValues
+        modifyi RowMajor
+          ( fn( i, j, _ ) => pixelSub( sub( im1, i, j ), sub( im2, i, j ) ) )
+          ( full output )
     in
       output
     end
     else
       raise mismatchException
+  end
 
-  fun subtract'( { width=width1, height=height1, values=values1 } : image, 
-                 { width=width2, height=height2, values=values2 } : image ) 
-      : unit = 
+  fun subtract'( im1 : image, im2 : image ) : image = 
+  let
+    val ( height1, width1 ) = dimensions im1
+    val ( height2, width2 ) = dimensions im2
+  in
     if width1=width2 andalso height1=height2 then
-      Array.modifyi 
-        ( fn( i, x ) => 
-            Spec.pixelSub( x, Array.sub( values2, i ) ) )
-        values1
+      ( modifyi RowMajor
+          ( fn( i, j, p1 ) => pixelSub( p1, sub( im2, i, j ) ) )
+          ( full im1 ) ;
+        im1 )
     else
       raise mismatchException
+  end
 
 
-  fun toString( im as { width, height, ... } : image ) : string =
+  fun toString( im : image ) : string =
+  let
+    val ( height, width ) = dimensions im
+  in
     String.concat( 
       List.foldr
         ( fn( y, strings ) => 
@@ -184,67 +215,180 @@ struct
                 ( List.tabulate( width, fn x => x ) ) ) )
         []
         ( List.tabulate( height, fn x => x ) ) )
+  end
 
 
-  fun transposed( im as { width, height, ... } : image ) : image =
+  fun transposed( im : image ) : image =
   let
+    val ( height, width ) = dimensions im
     val out = zeroImage( height, width )
     val _ =
-      appxy
-        ( fn( x, y, pix ) => update( out, y, x, pix ) )
-        im
+      appi
+        ( fn( y, x, pix ) => update( out, x, y, pix ) )
+        ( full im )
   in
     out
   end
 
   fun equal( im1 : image, im2 : image ) : bool = 
   let
-    val { width=width1, height=height1, ... } = im1
-    val { width=width2, height=height2, ... } = im2
-
-    val num = width1*height1
-
-    fun check( index : int ) : bool =
-    case index<num of
-      false => true
-    | true =>
-      let
-        val pix1 = sub'( im1, index )
-        val pix2 = sub'( im2, index )
-      in
-        if Spec.pixelEqual( pix1, pix2 ) then
-          check( index+1 )
-        else
-          false
-      end
+    val ( height1, width1 ) = dimensions im1
+    val ( height2, width2 ) = dimensions im2
   in
     if width1=width2 andalso height1=height2 then
-      check 0
+      foldi RowMajor
+        ( fn( y, x, pixel, eq ) => 
+            eq andalso pixelEqual( pixel, sub( im2, y, x ) ) ) 
+        true 
+        ( full im1 )
     else
       false
   end
 
   fun fill( im : image, pix : pixel ) : unit =
-    modify ( fn _ => pix ) im
+    modify RowMajor ( fn _ => pix ) im
 
 
-  structure FilterImage : FILTER_IMAGE = 
-  struct
-    
-    type image = Spec.image
+  local
 
-    val zeroPixel = Spec.zeroPixel
-    val createZero = zeroImage
+    fun odd( x : int ) : bool = ( x mod 2 )=1
 
-    val pixelAdd = Spec.pixelAdd
-    val pixelMul = Spec.pixelMul
+    fun filter( im : image, 
+                mask : image, 
+                extension : borderExtension,
+                outputShape : outputSize, 
+                loopMask : int * int * int * pixel -> pixel ) 
+        : image =
+    let
 
-  end (* structure FilterImage *)
+      val ( height, width ) = dimensions im
+      val ( maskHeight, maskWidth ) = dimensions mask
 
-  structure Filter = FilterFun( FilterImage )
+      val output = createZero( width, height )
+      val ( outputHeight, outputWidth ) = dimensions output
 
-  val correlate = Filter.correlate
-  val convolve = Filter.convolve
+      val totalSize = width*height
+      
+      fun loop( index : int ) =
+        case index<totalSize of 
+          false => ()
+        | true => ( 
+          let
+            val x = index mod width
+            val y = index div width
+            val sum = loopMask( x, y, 0, zeroPixel )
+            val _ = update( output, y, x, sum )
+          in 
+            loop( index+1 )
+          end )
+
+      val _ = loop 0
+    in
+      output
+    end
+
+    (*
+    * Truncate an integer x to the interval [0,max) 
+    *)
+    fun trunc( x : int, max : int ) : int = 
+      case x>=0 andalso x<max of 
+        true => x
+      | false =>
+          case x<0 of 
+            true => 0
+          | false => max-1
+
+  in (* local *)
+
+    fun correlate ( extension : borderExtension, outputSize : outputSize )
+                  ( im : image, mask : image ) 
+        : image =
+    let
+
+      val { width, height, values } = im
+      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
+      
+      val centerX = 
+        if odd maskWidth then 
+          maskWidth div 2 
+        else 
+          ( maskWidth div 2 )-1
+      val centerY =  
+        if odd maskHeight then 
+          maskHeight div 2 
+        else 
+          ( maskHeight div 2 )-1
+      val maskTotal = maskWidth*maskHeight
+
+      fun loopMask( x : int, y : int, index : int, sum : pixel ) 
+          : pixel =
+        case index<maskTotal of
+          false => sum
+        | true => 
+          let
+            val xx = x+(index mod maskWidth-centerX)
+            val yy = y+(index div maskWidth-centerY)
+            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
+          in
+            loopMask( 
+              x, 
+              y, 
+              index+1, 
+              pixelAdd( 
+                sum, 
+                pixelMul( sub( maskPixels, index ), sub( values, imageIndex ) ) ) )
+          end 
+    in
+      filter( im, mask, extension, outputSize, loopMask )
+    end
+
+
+    (* 
+    * Convolve an image with a two-dimensional mask 
+    *)
+    fun convolve ( extension : borderExtension, outputSize : outputSize )
+                 ( im : image, mask : image ) 
+        : image =
+    let
+
+      val { width, height, values } = im
+      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
+
+      val centerX = 
+        if odd maskWidth then 
+          maskWidth div 2 
+        else 
+          ( maskWidth div 2 )-1
+      val centerY =  
+        if odd maskHeight then 
+          maskHeight div 2 
+        else 
+          ( maskHeight div 2 )-1
+      val maskTotal = maskWidth*maskHeight
+
+      fun loopMask( x : int, y : int, index : int, sum : pixel ) 
+          : pixel =
+        case index<maskTotal of
+          false => sum
+        | true => 
+          let
+            val rindex = maskTotal-1-index
+            val xx = x+( index mod maskWidth-centerX )
+            val yy = y+( index div maskWidth-centerY )
+            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
+          in
+            loopMask( x, y, index+1, 
+              Image.pixelAdd( 
+                sum, 
+                Image.pixelMul( 
+                  Array.sub( maskPixels, rindex ), 
+                  Array.sub( values, imageIndex ) ) ) )
+          end 
+    in
+      filter( im, mask, extension, outputSize, loopMask )
+    end
+
+  end (* local *)
 
 
   (*
