@@ -20,7 +20,8 @@ sig
   datatype borderExtension = 
     ZeroExtension | 
     CopyExtension | 
-    WrapExtension
+    WrapExtension |
+    MirrorExtension
 
   datatype outputSize = 
     OriginalSize | 
@@ -28,6 +29,7 @@ sig
 
   type pixel
   type image 
+  type region
 
   exception mismatchException
 
@@ -36,7 +38,7 @@ sig
 
   val dimensions : image -> int * int
 
-  val fromList : int * int * pixel list list -> image
+  val fromList : pixel list list -> image
   val fromList' : int * int * pixel list -> image
 
   val transposed : image -> image
@@ -49,13 +51,14 @@ sig
   val subtract : image * image -> image
   val subtract' : image * image -> unit
 
-  val app : ( pixel -> unit ) -> image -> unit
-  val appi : ( int * pixel -> unit ) -> image -> unit
-  val fold : ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val foldi : ( int * pixel * 'a -> 'a ) -> 'a -> image -> 'a
-  val modify : ( pixel -> pixel ) -> image -> unit
-  val modifyi : ( int * pixel -> pixel ) -> image -> unit
-  val tabulate : (int * int * (int * int -> pixel))  -> image
+  val app : traversal -> ( pixel -> unit ) -> image -> unit
+  val appi : traversal -> ( int * int * pixel -> unit ) -> region -> unit
+  val fold : traversal -> ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
+  val foldi : 
+    traversal -> ( int * int * pixel * 'a -> 'a ) -> 'a -> region -> 'a
+  val modify : traversal -> ( pixel -> pixel ) -> image -> unit
+  val modifyi : traversal -> ( int * int * pixel -> pixel ) -> region -> unit
+  val tabulate : traversal -> ( int * int * ( int * int -> pixel ) )  -> image
 
   val fill : image * pixel -> unit
 
@@ -105,17 +108,25 @@ struct
   datatype borderExtension = 
     ZeroExtension | 
     CopyExtension | 
-    WrapExtension
+    WrapExtension |
+    MirrorExtension
 
   datatype outputSize = 
     OriginalSize | 
     FullSize
 
   type image = pixel array
+  type region = pixel region
   
   exception mismatchException
 
-  fun full( im : image ) : pixel region =
+  fun region( im : image, 
+              row : int, col : int, 
+              nrows : int option, ncols : int option ) 
+      : region =
+    { base=im, row=row, col=col, nrows=nrows, ncols=ncols }
+
+  fun full( im : image ) : region =
     { base=im, row=0, col=0, nrows=NONE, ncols=NONE }
 
   fun image( width : int, height : int, x : pixel ) : image = 
@@ -151,7 +162,7 @@ struct
       raise mismatchException
   end
 
-  fun add'( im1 : image, im2 : image ) : image = 
+  fun add'( im1 : image, im2 : image ) : unit = 
   let
     val ( height1, width1 ) = dimensions im1
     val ( height2, width2 ) = dimensions im2
@@ -159,8 +170,7 @@ struct
     if width1=width2 andalso height1=height2 then
       ( modifyi RowMajor 
           ( fn( i, j, p1 ) => pixelAdd( p1, sub( im2, i, j ) ) )
-          ( full im1 ) ;
-        im1 )
+          ( full im1 ) )
     else
       raise mismatchException
   end
@@ -184,7 +194,7 @@ struct
       raise mismatchException
   end
 
-  fun subtract'( im1 : image, im2 : image ) : image = 
+  fun subtract'( im1 : image, im2 : image ) : unit = 
   let
     val ( height1, width1 ) = dimensions im1
     val ( height2, width2 ) = dimensions im2
@@ -192,8 +202,7 @@ struct
     if width1=width2 andalso height1=height2 then
       ( modifyi RowMajor
           ( fn( i, j, p1 ) => pixelSub( p1, sub( im2, i, j ) ) )
-          ( full im1 ) ;
-        im1 )
+          ( full im1 ) )
     else
       raise mismatchException
   end
@@ -223,7 +232,7 @@ struct
     val ( height, width ) = dimensions im
     val out = zeroImage( height, width )
     val _ =
-      appi
+      appi RowMajor
         ( fn( y, x, pix ) => update( out, x, y, pix ) )
         ( full im )
   in
@@ -253,50 +262,54 @@ struct
 
     fun odd( x : int ) : bool = ( x mod 2 )=1
 
-    fun filter( im : image, 
-                mask : image, 
-                extension : borderExtension,
-                outputShape : outputSize, 
-                loopMask : int * int * int * pixel -> pixel ) 
-        : image =
+    fun getValue( im : image, extension : borderExtension ) 
+                ( x : int, y : int ) 
+        : pixel =
     let
-
       val ( height, width ) = dimensions im
-      val ( maskHeight, maskWidth ) = dimensions mask
 
-      val output = createZero( width, height )
-      val ( outputHeight, outputWidth ) = dimensions output
+      fun zero( v : int, max : int ) : int = 
+        if v>=0 andalso v<max then 
+          v
+        else if v<0 then 
+          0
+        else
+          max-1
 
-      val totalSize = width*height
-      
-      fun loop( index : int ) =
-        case index<totalSize of 
-          false => ()
-        | true => ( 
-          let
-            val x = index mod width
-            val y = index div width
-            val sum = loopMask( x, y, 0, zeroPixel )
-            val _ = update( output, y, x, sum )
-          in 
-            loop( index+1 )
-          end )
+      fun copy( v : int, max : int ) : int = 
+        if v>=0 andalso v<max then 
+          v
+        else if v<0 then 
+          0
+        else
+          max-1
 
-      val _ = loop 0
+      fun wrap( v : int, max : int ) : int =
+        if v>=0 andalso v<max then 
+          v
+        else if v<0 then 
+          max+( v mod ~max )
+        else
+          v mod max
+
+      fun mirror( v : int, max : int ) : int =
+        if v>=0 andalso v<max then 
+          v
+        else if v<0 then 
+          ~( v mod ~max )
+        else
+          max-( ( v mod max )+1 )
     in
-      output
+      case extension of 
+        ZeroExtension => 
+          if x>=0 andalso x<width andalso y>=0 andalso y<height then 
+            sub( im, y, x )
+          else
+            zeroPixel
+      | CopyExtension => sub( im, copy( y, height ), copy( x, width ) )
+      | WrapExtension => sub( im, wrap( y, height ), wrap( x, width ) ) 
+      | MirrorExtension => sub( im, mirror( y, height ), mirror( x, width ) )
     end
-
-    (*
-    * Truncate an integer x to the interval [0,max) 
-    *)
-    fun trunc( x : int, max : int ) : int = 
-      case x>=0 andalso x<max of 
-        true => x
-      | false =>
-          case x<0 of 
-            true => 0
-          | false => max-1
 
   in (* local *)
 
@@ -305,8 +318,11 @@ struct
         : image =
     let
 
-      val { width, height, values } = im
-      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
+      val ( width, height ) = dimensions im
+      val ( maskWidth, maskHeight ) = dimensions mask
+
+      val out = zeroImage( width, height )
+      val ( outHeight, outWidth ) = dimensions out
       
       val centerX = 
         if odd maskWidth then 
@@ -318,28 +334,53 @@ struct
           maskHeight div 2 
         else 
           ( maskHeight div 2 )-1
-      val maskTotal = maskWidth*maskHeight
 
-      fun loopMask( x : int, y : int, index : int, sum : pixel ) 
-          : pixel =
-        case index<maskTotal of
-          false => sum
-        | true => 
-          let
-            val xx = x+(index mod maskWidth-centerX)
-            val yy = y+(index div maskWidth-centerY)
-            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
-          in
-            loopMask( 
-              x, 
-              y, 
-              index+1, 
-              pixelAdd( 
-                sum, 
-                pixelMul( sub( maskPixels, index ), sub( values, imageIndex ) ) ) )
-          end 
+      val ( left, right, top, bottom ) = 
+        case outputSize of
+          OriginalSize => ( 0, width-1, 0, height-1 )
+        | FullSize => 
+            ( centerX, outWidth-( maskWidth-centerX ), 
+              centerY, outHeight-( maskHeight-centerY ) )
+
+      val getValue = getValue ( im, extension )
+
+      val _ = 
+        modifyi RowMajor
+          ( fn( oy, ox, _ ) =>
+              foldi RowMajor
+                ( fn( my, mx, mv, sum ) =>
+                    pixelAdd( 
+                      sum,
+                      pixelMul( 
+                        mv, 
+                        getValue( 
+                          ( ox+( mx-centerX ) )-left, 
+                          ( oy+( my-centerY ) )-top ) ) ) )
+                zeroPixel
+                ( if ox<left andalso oy<top then
+                    region( mask, oy, ox, NONE, NONE ) 
+                  else if ox>right andalso oy<top then
+                    region(
+                      mask,
+                      oy, 0,
+                      NONE, SOME( maskWidth-( ox-right ) ) ) 
+                  else if ox>right andalso oy>bottom then
+                    region( 
+                      mask, 
+                      0, 0, 
+                      SOME( maskHeight-( oy-bottom ) ), 
+                      SOME( maskWidth-( ox-right ) ) ) 
+                  else if ox<left andalso oy>bottom then
+                    region(
+                      mask,
+                      0, ox,
+                      SOME( maskHeight-( oy-bottom ) ), NONE )
+                  else
+                    full mask ) )
+          ( full out )
+
     in
-      filter( im, mask, extension, outputSize, loopMask )
+      out
     end
 
 
@@ -351,9 +392,12 @@ struct
         : image =
     let
 
-      val { width, height, values } = im
-      val { width=maskWidth, height=maskHeight, values=maskPixels } = mask
+      val ( width, height ) = dimensions im
+      val ( maskWidth, maskHeight ) = dimensions mask
 
+      val out = zeroImage( width, height )
+      val ( outHeight, outWidth ) = dimensions out
+      
       val centerX = 
         if odd maskWidth then 
           maskWidth div 2 
@@ -364,28 +408,53 @@ struct
           maskHeight div 2 
         else 
           ( maskHeight div 2 )-1
-      val maskTotal = maskWidth*maskHeight
 
-      fun loopMask( x : int, y : int, index : int, sum : pixel ) 
-          : pixel =
-        case index<maskTotal of
-          false => sum
-        | true => 
-          let
-            val rindex = maskTotal-1-index
-            val xx = x+( index mod maskWidth-centerX )
-            val yy = y+( index div maskWidth-centerY )
-            val imageIndex = trunc( yy, height )*width+trunc( xx, width )
-          in
-            loopMask( x, y, index+1, 
-              Image.pixelAdd( 
-                sum, 
-                Image.pixelMul( 
-                  Array.sub( maskPixels, rindex ), 
-                  Array.sub( values, imageIndex ) ) ) )
-          end 
+      val ( left, right, top, bottom ) = 
+        case outputSize of
+          OriginalSize => ( 0, width-1, 0, height-1 )
+        | FullSize => 
+            ( centerX, outWidth-( maskWidth-centerX ), 
+              centerY, outHeight-( maskHeight-centerY ) )
+
+      val getValue = getValue ( im, extension )
+
+      val _ = 
+        modifyi RowMajor
+          ( fn( oy, ox, _ ) =>
+              foldi RowMajor
+                ( fn( my, mx, mv, sum ) =>
+                    pixelAdd( 
+                      sum,
+                      pixelMul( 
+                        mv, 
+                        getValue( 
+                          ( ox+( mx-centerX ) )-left, 
+                          ( oy+( my-centerY ) )-top ) ) ) )
+                zeroPixel
+                ( if ox<left andalso oy<top then
+                    region( mask, oy, ox, NONE, NONE ) 
+                  else if ox>right andalso oy<top then
+                    region(
+                      mask,
+                      oy, 0,
+                      NONE, SOME( maskWidth-( ox-right ) ) ) 
+                  else if ox>right andalso oy>bottom then
+                    region( 
+                      mask, 
+                      0, 0, 
+                      SOME( maskHeight-( oy-bottom ) ), 
+                      SOME( maskWidth-( ox-right ) ) ) 
+                  else if ox<left andalso oy>bottom then
+                    region(
+                      mask,
+                      0, ox,
+                      SOME( maskHeight-( oy-bottom ) ), NONE )
+                  else
+                    full mask ) )
+          ( full out )
+
     in
-      filter( im, mask, extension, outputSize, loopMask )
+      out
     end
 
   end (* local *)
@@ -397,9 +466,9 @@ struct
   fun rotateCrop( img : image, by : real, newWidth : int, newHeight : int) 
              : image =
   let
-    val { width = width, height=height, ... } = img
+    val ( height, width ) = dimensions img
 
-    val newImage = zeroImage(newWidth, newHeight);
+    val newImage = zeroImage( newWidth, newHeight )
     
     
     fun calculateRotationY(dstX : int, dstY : int, u : real, v : real) : unit = 
@@ -464,7 +533,7 @@ struct
 
   fun rotate (img : image, by : real ) : image =
   let
-    val { width = width, height=height, ... } = img
+    val ( height, width ) = dimensions img
     val newWidth = Real.ceil(Real.max(
         abs((real width) * Math.cos(by) - (real height) * Math.sin(by)),
         abs((real width) * Math.cos(by) + (real height) * Math.sin(by))));

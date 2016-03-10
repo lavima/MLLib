@@ -24,10 +24,13 @@ local
     fun pixelMul( x as ( xr, xg, xb ) : pixel, y as ( yr, yg, yb ) : pixel ) = 
       ( xr*yr, xg*yg, xb*yb )
 
-    fun pixelScale( x as ( r, g, b ) : pixel, y : real ) : pixel =
+    fun pixelScale( x as ( r, g, b ) : pixel, s : real ) : pixel =
     let
-      fun scale( x : word, y : word ) : word =  
-        fromInt( Real.toInt IEEEReal.TO_NEAREST( real( toInt x )*s ) )
+      fun scale( x : word ) : word =  
+        fromInt( 
+          Real.toInt 
+            IEEEReal.TO_NEAREST
+            ( Real.*( real( toInt x ), s ) ) )
     in
       ( scale r, scale g, scale b ) 
     end
@@ -35,9 +38,8 @@ local
     fun pixelEqual( x as ( xr, xg, xb ) : pixel, y as ( yr, yg, yb ) : pixel ) 
         : bool = 
     let
-      val eq = Util.eq elementCompare
     in
-      ( eq( xr, yr ) andalso eq( xg, yg ) andalso eq( xb, yb ) )
+      xr=yr andalso xg=yg andalso xb=yb
     end
 
     fun pixelToString( ( xr, xg, xb ) : pixel ) : string =
@@ -66,11 +68,7 @@ local
 
     fun pixelEqual( x as ( xr, xg, xb ) : pixel, y as ( yr, yg, yb ) : pixel ) 
         : bool = 
-    let
-      val eq = Util.eq elementCompare
-    in
-      ( eq( xr, yr ) andalso eq( xg, yg ) andalso eq( xb, yb ) )
-    end
+      ( Real.==( xr, yr ) andalso Real.==( xg, yg ) andalso Real.==( xb, yb ) )
 
     fun pixelToString( ( xr, xg, xb ) : pixel ) : string =
       "( " ^ Real.toString xr ^ ", " ^ 

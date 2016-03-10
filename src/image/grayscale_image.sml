@@ -50,7 +50,7 @@ local
     val pixelScale = Real.*
 
     fun pixelEqual( x : pixel, y : pixel ) : bool = 
-      Util.eq elementCompare ( x, y )
+      Real.==( x, y )
 
     fun pixelToString( x : pixel ) : string =
       Real.fmt StringCvt.EXACT x
@@ -72,11 +72,10 @@ local
     val pixelAdd = Int.+
     val pixelSub = Int.-
     val pixelMul = Int.*
-    fun pixelScale( x : pixel, y : real) = Real.round(real x * y)
+    fun pixelScale( x : pixel, y : real ) = Real.round( real x * y )
 
     fun pixelEqual( x : pixel, y : pixel ) : bool = 
-      Util.eq elementCompare ( x, y )
-
+      x=y
 
     fun pixelToString( x : pixel ) : string = 
       Int.toString x
