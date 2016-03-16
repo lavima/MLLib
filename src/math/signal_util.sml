@@ -20,8 +20,7 @@ struct
     *)
    fun dft( vector : real Vector.vector ) : Complex.number Vector.vector =
      let
-        val expFactor = 
-          Real.*(~2.0, Real./(Math.pi, Real.fromInt(Array.length(vector))));
+        val expFactor = ( ~2.0*( Math.pi/real( Array.length vector ) ) )
 
         fun calcElmt( n : int, k : int ) : Complex.number =
           Complex.exp( 
@@ -36,7 +35,8 @@ struct
             ( Complex.complex( 0.0, 0.0 ) ) 
             vector
      in
-       Array.tabulate(Array.length(vector), fn k => calculateDft(k))
+       Array.vector( 
+        Array.tabulate( Vector.length vector, fn k => calculateDft k ) )
      end;
 
    (*
