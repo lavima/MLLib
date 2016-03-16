@@ -33,6 +33,9 @@ sig
 
   exception mismatchException
 
+  val region : image * int * int * int option * int option -> region
+  val full : image -> region
+
   val image : int * int * pixel -> image
   val zeroImage : int * int -> image
 

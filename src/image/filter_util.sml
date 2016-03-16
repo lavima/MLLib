@@ -12,13 +12,13 @@ struct
   (*
   * Create the vertical and horizontal sobel masks.
   *)
-  fun createSobelMasks() : GrayscaleImageReal.image * GrayscaleImageReal.image =
+  fun createSobelMasks() : RealGrayscaleImage.image * RealGrayscaleImage.image =
   let
     val xMask = [ 1.0, 0.0, ~1.0, 2.0, 0.0, ~2.0, 1.0, 0.0, ~1.0 ]
     val yMask = [ 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, ~1.0, ~2.0, ~1.0 ]
   in
-    ( GrayscaleImageReal.fromList( 3, 3, xMask ), 
-      GrayscaleImageReal.fromList( 3, 3, yMask ) ) 
+    ( RealGrayscaleImage.fromList'( 3, 3, xMask ), 
+      RealGrayscaleImage.fromList'( 3, 3, yMask ) ) 
   end
 
   (* 
@@ -31,13 +31,13 @@ struct
   * Note that the mask is one-dimensional in that the height of the mask is 1 
   * i.e. the mask must be applied in each direction.
   *)
-  fun createGaussianMask( sigma : real ) : GrayscaleImageReal.image =
+  fun createGaussianMask( sigma : real ) : RealGrayscaleImage.image =
   let
     val l = 8.0*Real.realCeil sigma 
     val n = ( l-1.0 )/2.0
     val xs = ListUtil.fromToReal( ~n, n )
 
-    val mask = GrayscaleImageReal.zeroImage( List.length xs, 1 )
+    val mask = RealGrayscaleImage.zeroImage( List.length xs, 1 )
 
     val c = 1.0/( Math.sqrt( 2.0*Math.pi )*sigma )
 
@@ -48,15 +48,22 @@ struct
       List.foldl
         ( fn( x, i ) =>
           let
-            val _ = GrayscaleImageReal.update'( mask, i, gaussian x ) 
+            val _ = RealGrayscaleImage.update( mask, 0, i, gaussian x ) 
           in
             i+1
           end )
         0
         xs
 
-    val sum = GrayscaleImageReal.foldl ( fn( x, s ) => s+x ) 0.0 mask
-    val _ = GrayscaleImageReal.modify ( fn( x ) => x/sum ) mask
+    val sum = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        ( fn( x, s ) => s+x ) 
+        0.0 
+        mask
+    val _ = 
+      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+        ( fn( x ) => x/sum ) 
+        mask
 
   in
     mask
@@ -71,24 +78,25 @@ struct
    *)
 
   fun createGaussianMaskgPb (derivitive : int) ( sigma : real, support : int ) 
-    : GrayscaleImageReal.image =
+    : RealGrayscaleImage.image =
   let
-    val size = 2 * support + 1;
+    val size = 2*support+1;
 
-    val sigma2_inv = 1.0 / (sigma * sigma);
-    val neg_two_sigma2_inv = sigma2_inv * ~0.5;
+    val sigma2_inv = 1.0/(sigma*sigma);
+    val neg_two_sigma2_inv = sigma2_inv* ~0.5;
     
     val elemFunction = case derivitive of
-       0 => (fn(x : real) => Math.exp(x * x * neg_two_sigma2_inv))
-     | 1 => (fn(x : real) => Math.exp(x * x * neg_two_sigma2_inv) * ~x)
-     | 2 => (fn(x : real) => 
-          Math.exp(x * x * neg_two_sigma2_inv) * (x * x * sigma2_inv - 1.0));
+       0 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv ) )
+     | 1 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv )* ~x )
+     | 2 => ( fn( x : real ) => 
+          Math.exp( x*x*neg_two_sigma2_inv )*(x*x*sigma2_inv-1.0 ) )
     
-    val mask = GrayscaleImageReal.zeroImage(size, 1);
+    val mask = RealGrayscaleImage.zeroImage(size, 1);
     
-    val _ = GrayscaleImageReal.modifyxy( 
-              fn(x, y, z) => elemFunction(Real.fromInt(x - support))
-              ) mask;
+    val _ = 
+      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor 
+        ( fn( x, y, z ) => elemFunction( Real.fromInt( x-support ) ) ) 
+        mask
   in
      mask
   end
@@ -99,7 +107,7 @@ struct
        supportY : real, 
        elongation : real, 
        hilbert : bool, 
-       ori : real) : GrayscaleImageReal.image =
+       ori : real) : RealGrayscaleImage.image =
  let
    val sigmaY = sigma 
    val sigmaX = sigma / elongation
@@ -118,17 +126,17 @@ struct
     let
        val hilbert = SignalUtil.hilbert(#values(gausX))
     in
-       GrayscaleImageReal.modifyi 
+       RealGrayscaleImage.modifyi 
           (fn (i, _) => Array.sub (hilbert, i)) gausX
     end
     else ()
 
-   val filter = GrayscaleImageReal.tabulatexy 
+   val filter = RealGrayscaleImage.tabulatexy 
        (#width(gausX), #width(gausY), 
-        fn (x, y) => GrayscaleImageReal.sub(gausX, x, 0) * 
-                   GrayscaleImageReal.sub(gausY, y, 0));
+        fn (x, y) => RealGrayscaleImage.sub(gausX, x, 0) * 
+                   RealGrayscaleImage.sub(gausY, y, 0));
   
-   val rotated = GrayscaleImageReal.rotateCrop
+   val rotated = RealGrayscaleImage.rotateCrop
       (filter, ori, 
       Real.ceil(2.0 * supportX + 1.0), 
       Real.ceil(2.0 * supportY + 1.0));
@@ -153,7 +161,7 @@ struct
      val inner =  createGaussianMaskGPB2D 0 (sigmaInner,
        sigma * 3.0, sigma * 3.0, 1.0, false, 0.0);
 
-     val image = GrayscaleImageReal.subtract(outer, inner)
+     val image = RealGrayscaleImage.subtract(outer, inner)
 
      val _ = ImageUtil.makeRealZeroMean' image
      val _ = ImageUtil.makeRealL1Norm' image
@@ -170,11 +178,11 @@ struct
   * TODO Figure out if the Matlab approach taken in the one-dimensional 
   * implementation above should be replicated here.
   *)
-  fun createGaussianMask2( sigma : real ) : GrayscaleImageReal.image =
+  fun createGaussianMask2( sigma : real ) : RealGrayscaleImage.image =
   let
     val maskSize = Real.ceil( sigma*8.0 )+( Real.ceil( sigma*8.0 )+1 ) mod 2
     val maskCenter = maskSize div 2
-    val mask = GrayscaleImageReal.zeroImage( maskSize, maskSize )
+    val mask = RealGrayscaleImage.zeroImage( maskSize, maskSize )
 
     fun gaussian( x : int, y : int ) : real = 
       Math.exp( ~0.5*( ( 
@@ -182,13 +190,13 @@ struct
         Math.pow( sigma, 2.0 ) ) ) 
 
     val _ = 
-      GrayscaleImageReal.modifyi
+      RealGrayscaleImage.modifyi
         ( fn( i, _ ) =>
             gaussian( i mod maskSize-maskCenter, i div maskSize-maskCenter ) )
         mask
 
-    val sum = GrayscaleImageReal.foldl ( fn( x, s ) => s+x ) 0.0 mask
-    val _ = GrayscaleImageReal.modify ( fn( x ) => x/sum ) mask
+    val sum = RealGrayscaleImage.foldl ( fn( x, s ) => s+x ) 0.0 mask
+    val _ = RealGrayscaleImage.modify ( fn( x ) => x/sum ) mask
 
   in
     mask
