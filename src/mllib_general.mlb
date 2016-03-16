@@ -2,7 +2,6 @@ $(SML_LIB)/basis/basis.mlb
 util.sml
 list_util.sml
 text_file_util.sml
-array2d.sml
 tictactimer.sml
 optimize.sml
 print_util.sml

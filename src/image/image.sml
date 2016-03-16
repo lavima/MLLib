@@ -40,9 +40,16 @@ sig
   val zeroImage : int * int -> image
 
   val dimensions : image -> int * int
+  val nRows : image -> int
+  val nCols : image -> int
+
+  val row : image * int -> pixel Vector.vector
+  val column : image * int -> pixel Vector.vector
 
   val fromList : pixel list list -> image
   val fromList' : int * int * pixel list -> image
+
+  val copy : { src : region, dst : image, dst_row : int, dst_col : int } -> unit
 
   val transposed : image -> image
 
@@ -132,19 +139,19 @@ struct
   fun full( im : image ) : region =
     { base=im, row=0, col=0, nrows=NONE, ncols=NONE }
 
-  fun image( width : int, height : int, x : pixel ) : image = 
-    Array2.array( width, height, x )
+  fun image( rows : int, cols : int, x : pixel ) : image = 
+    Array2.array( rows, cols, x )
 
-  fun fromList'( width : int, height : int, pixels : pixel list ) : image =
+  fun fromList'( rows : int, cols : int, pixels : pixel list ) : image =
   let
     fun build( xs : pixel list ) : pixel list list =
-      List.take( xs, width )::build( List.drop( xs, width ) )
+      List.take( xs, cols )::build( List.drop( xs, cols ) )
   in
     fromList( build pixels )
   end
 
-  fun zeroImage( width : int, height : int ) : image = 
-    image( width, height, zeroPixel )
+  fun zeroImage( rows : int, cols : int ) : image = 
+    image( rows, cols, zeroPixel )
 
   fun add( im1 : image, im2 : image ) : image = 
   let
@@ -153,7 +160,7 @@ struct
   in
     if width1=width2 andalso height1=height2 then
     let
-      val output = zeroImage( width1, height1 )
+      val output = zeroImage( height1, width1 )
       val _ = 
         modifyi RowMajor
           ( fn( i, j, _ ) => pixelAdd( sub( im1, i, j ), sub( im2, i, j ) ) )
@@ -185,7 +192,7 @@ struct
   in
     if width1=width2 andalso height1=height2 then
     let
-      val output = zeroImage( width1, height1 )
+      val output = zeroImage( height1, width1 )
       val _ = 
         modifyi RowMajor
           ( fn( i, j, _ ) => pixelSub( sub( im1, i, j ), sub( im2, i, j ) ) )
@@ -324,7 +331,7 @@ struct
       val ( width, height ) = dimensions im
       val ( maskWidth, maskHeight ) = dimensions mask
 
-      val out = zeroImage( width, height )
+      val out = zeroImage( height, width )
       val ( outHeight, outWidth ) = dimensions out
       
       val centerX = 
@@ -398,7 +405,7 @@ struct
       val ( width, height ) = dimensions im
       val ( maskWidth, maskHeight ) = dimensions mask
 
-      val out = zeroImage( width, height )
+      val out = zeroImage( height, width )
       val ( outHeight, outWidth ) = dimensions out
       
       val centerX = 
@@ -471,7 +478,7 @@ struct
   let
     val ( height, width ) = dimensions img
 
-    val newImage = zeroImage( newWidth, newHeight )
+    val newImage = zeroImage( newHeight, newWidth )
     
     
     fun calculateRotationY(dstX : int, dstY : int, u : real, v : real) : unit = 
