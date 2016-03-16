@@ -24,14 +24,14 @@ struct
 
   local
 
-    val foldl = GrayscaleImageReal.foldl
-    val modify = GrayscaleImageReal.modify
+    val fold = RealGrayscaleImage.fold
+    val modify = RealGrayscaleImage.modify
     val convolve = 
-      GrayscaleImageReal.convolve ( ImageCommon.copy, ImageCommon.original ) 
-    val transposed = GrayscaleImageReal.transposed
+      RealGrayscaleImage.convolve 
+        ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize ) 
+    val transposed = RealGrayscaleImage.transposed
 
-    val sub = GrayscaleImageReal.sub
-    val sub' = GrayscaleImageReal.sub'
+    val sub = RealGrayscaleImage.sub
 
     fun cap ( max : int ) 
             ( x : int ) 
@@ -46,20 +46,19 @@ struct
   in
 
     fun findEdges'( sigma : real, options : thresholdOptions )
-                  ( image : GrayscaleImageReal.image ) 
+                  ( image : RealGrayscaleImage.image ) 
         : BooleanImage.image = 
     let
-      val { width, height, ... } = image
+      val ( height, width ) = RealGrayscaleImage.dimensions image
 
       val capX = cap width
       val capY = cap height
 
-
-      val gaussian = FilterUtil.createGaussianMask( sigma )
+      val gaussian = FilterUtil.createGaussianMask sigma 
       val gaussianDerived = ImageUtil.gradientXReal gaussian
 
       val ( sumPos, sumNeg ) = 
-        foldl 
+        fold RealGrayscaleImage.RowMajor
           ( fn( x, ( sumPos, sumNeg ) ) => 
               if x > 0.0 then 
                 ( sumPos+x, sumNeg ) 
@@ -70,7 +69,7 @@ struct
           ( 0.0, 0.0 )
           gaussianDerived
       val _ =
-        modify
+        modify RealGrayscaleImage.RowMajor
           ( fn x =>
               if x > 0.0 then 
                 x/sumPos 
@@ -86,25 +85,25 @@ struct
       val smoothY = convolve( image, gaussian )
       val gradY = convolve( smoothY, transposed gaussianDerived )
 
-      val magnitude = GrayscaleImageReal.zeroImage( width, height )
+      val magnitude = RealGrayscaleImage.zeroImage( height, width )
       val _ =
-        GrayscaleImageReal.modifyi
-          ( fn( i, _ ) => 
+        RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
+          ( fn( i, j, _ ) => 
               Math.sqrt( 
-                Math.pow( sub'( gradX, i ), 2.0 ) +
-                Math.pow( sub'( gradY, i ), 2.0 ) ) )
-          magnitude
+                Math.pow( sub( gradX, i, j ), 2.0 ) +
+                Math.pow( sub( gradY, i, j ), 2.0 ) ) )
+          ( RealGrayscaleImage.full magnitude )
 
       val normalizedMagnitude = ImageUtil.normalizeReal magnitude
 
-      val max = GrayscaleImageReal.zeroImage( width, height )
+      val max = RealGrayscaleImage.zeroImage( height, width )
       val _ = 
-        GrayscaleImageReal.modifyxy
-          ( fn( x, y, _ ) => 
+        RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
+          ( fn( y, x, _ ) => 
             let
-              val dx = sub( gradX, x, y )
-              val dy = sub( gradY, x, y )
-              val m = sub( normalizedMagnitude, x, y )
+              val dx = sub( gradX, y, x )
+              val dy = sub( gradY, y, x )
+              val m = sub( normalizedMagnitude, y, x )
             in
               if ( dy<=0.0 andalso dx>( ~dy ) ) orelse 
                  ( dy>=0.0 andalso dx<( ~dy ) ) then
@@ -112,13 +111,13 @@ struct
                 val t = Real.abs( dy/dx )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capX( x+1 ), y ),
-                    sub( normalizedMagnitude, capX( x+1 ), capY( y-1 ) ),
+                    sub( normalizedMagnitude, y, capX( x+1 ) ),
+                    sub( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capX( x-1 ), y ),
-                    sub( normalizedMagnitude, capX( x-1 ), capY( y+1 ) ), 
+                    sub( normalizedMagnitude, y, capX( x-1 ) ),
+                    sub( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ), 
                     t )
               in
                 if m>=m1 andalso m>=m2 then
@@ -132,13 +131,13 @@ struct
                 val t = Real.abs( dx/dy )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, x, capY( y-1 ) ),
-                    sub( normalizedMagnitude, capX( x+1 ), capY( y-1 ) ),
+                    sub( normalizedMagnitude, capY( y-1 ), x ),
+                    sub( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, x, capY( y+1 ) ),
-                    sub( normalizedMagnitude, capX( x-1 ), capY( y+1 ) ),
+                    sub( normalizedMagnitude, capY( y+1 ), x ),
+                    sub( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
@@ -152,13 +151,13 @@ struct
                 val t = Real.abs( dx/dy )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, x, capY( y-1 ) ),
-                    sub( normalizedMagnitude, capX( x-1 ), capY( y-1 ) ),
+                    sub( normalizedMagnitude, capY( y-1 ), x ),
+                    sub( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, x, capY( y+1 ) ),
-                    sub( normalizedMagnitude, capX( x+1 ), capY( y+1 ) ),
+                    sub( normalizedMagnitude, capY( y+1 ), x ),
+                    sub( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
@@ -171,13 +170,13 @@ struct
                 val t = Real.abs( dy/dx )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capX( x-1 ), y ),
-                    sub( normalizedMagnitude, capX( x-1 ), capY( y-1 ) ),
+                    sub( normalizedMagnitude, y, capX( x-1 ) ),
+                    sub( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capX( x+1 ), y ),
-                    sub( normalizedMagnitude, capX( x+1 ), capY( y+1 ) ),
+                    sub( normalizedMagnitude, y, capX( x+1 ) ),
+                    sub( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
@@ -186,7 +185,7 @@ struct
                   0.0
               end 
             end )
-          max
+          ( RealGrayscaleImage.full max )
 
       val ( high, low ) = 
         case options of 
@@ -194,90 +193,91 @@ struct
         | highPercentageLowRatio( highPercentage, lowRatio ) => (
           let
             val [ high ] = 
-              GrayscaleImageReal.thresholds'
-                ( ImageCommon.percentage( 256, highPercentage ) )
-                normalizedMagnitude
+              RealGrayscaleThreshold.percentage( 
+                normalizedMagnitude, 
+                256, 
+                highPercentage )
+                
           in
             ( high, high*lowRatio )
           end )
         | otsuHighLowRatio lowRatio => 
           let
             val [ high ] =
-              GrayscaleImageReal.thresholds'
-                ( ImageCommon.otsu( 256 ) )
-                normalizedMagnitude
+              RealGrayscaleThreshold.otsu( normalizedMagnitude, 256 )
           in
             ( high, high*lowRatio )
           end
 
-      val edge = BooleanImage.zeroImage( width, height )
-      val _ = GrayscaleImageReal.appxy
-        ( fn( x, y, m ) =>
-          let
+      val edge = BooleanImage.zeroImage( height, width )
+      val _ = 
+        RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
+          ( fn( y, x, m ) =>
+            let
 
-            fun check( x : int, y : int ) : bool =
-              if x=( capX x ) andalso y=( capY y ) then 
-                let
-                  val m' = sub( max, x, y )
-                  val e = BooleanImage.sub( edge, x, y )
-                in
-                  ( not e andalso m'>low )
-                end 
+              fun check( x : int, y : int ) : bool =
+                if x=( capX x ) andalso y=( capY y ) then 
+                  let
+                    val m' = sub( max, y, x )
+                    val e = BooleanImage.sub( edge, y, x )
+                  in
+                    ( not e andalso m'>low )
+                  end 
+                else
+                  false
+
+              fun follow( x : int, y : int ) : unit = 
+                ( if check( x+1, y ) then
+                    ( BooleanImage.update( edge, y, x+1, true );
+                      follow( x+1, y ) )
+                  else
+                    () ;
+                  if check( x+1, y+1 ) then
+                    ( BooleanImage.update( edge, y+1, x+1, true );
+                      follow( x+1, y+1 ) )
+                  else 
+                    () ;
+                  if check( x, y+1 ) then
+                    ( BooleanImage.update( edge, y+1, x, true );
+                      follow( x, y+1 ) )
+                  else
+                    () ;
+                  if check( x-1, y+1 ) then
+                    ( BooleanImage.update( edge, y+1, x-1, true );
+                      follow( x-1, y+1 ) )
+                  else
+                    () ;
+                  if check( x-1, y ) then
+                    ( BooleanImage.update( edge, y, x-1, true );
+                      follow( x-1, y ) )
+                  else
+                    () ;
+                  if check( x-1, y-1 ) then
+                    ( BooleanImage.update( edge, y-1, x-1, true );
+                      follow( x-1, y-1 ) )
+                  else
+                    () ;
+                  if check( x, y-1 ) then
+                    ( BooleanImage.update( edge, y-1, x, true );
+                      follow( x, y-1 ) )
+                  else
+                    () ;
+                  if check( x+1, y-1 ) then
+                    ( BooleanImage.update( edge, y-1, x+1, true );
+                      follow( x+1, y-1 ) )
+                  else
+                    () )
+              
+              val e = BooleanImage.sub( edge, y, x )
+
+            in
+              if not e andalso m>high then
+                ( BooleanImage.update( edge, y, x, true ); 
+                  follow( x, y ) )
               else
-                false
-
-            fun follow( x : int, y : int ) : unit = 
-              ( if check( x+1, y ) then
-                  ( BooleanImage.update( edge, x+1, y, true );
-                    follow( x+1, y ) )
-                else
-                  () ;
-                if check( x+1, y+1 ) then
-                  ( BooleanImage.update( edge, x+1, y+1, true );
-                    follow( x+1, y+1 ) )
-                else 
-                  () ;
-                if check( x, y+1 ) then
-                  ( BooleanImage.update( edge, x, y+1, true );
-                    follow( x, y+1 ) )
-                else
-                  () ;
-                if check( x-1, y+1 ) then
-                  ( BooleanImage.update( edge, x-1, y+1, true );
-                    follow( x-1, y+1 ) )
-                else
-                  () ;
-                if check( x-1, y ) then
-                  ( BooleanImage.update( edge, x-1, y, true );
-                    follow( x-1, y ) )
-                else
-                  () ;
-                if check( x-1, y-1 ) then
-                  ( BooleanImage.update( edge, x-1, y-1, true );
-                    follow( x-1, y-1 ) )
-                else
-                  () ;
-                if check( x, y-1 ) then
-                  ( BooleanImage.update( edge, x, y-1, true );
-                    follow( x, y-1 ) )
-                else
-                  () ;
-                if check( x+1, y-1 ) then
-                  ( BooleanImage.update( edge, x+1, y-1, true );
-                    follow( x+1, y-1 ) )
-                else
-                  () )
-            
-            val e = BooleanImage.sub( edge, x, y )
-
-          in
-            if not e andalso m>high then
-              ( BooleanImage.update( edge, x, y, true ); 
-                follow( x, y ) )
-            else
-              ()
-          end )
-        max
+                ()
+            end )
+        ( RealGrayscaleImage.full max )
 
     in
       edge 

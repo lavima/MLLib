@@ -10,9 +10,10 @@ local
   structure Word8Image : HISTOGRAM_IMAGE =
   struct
 
-    type image = GrayscaleImageWord8.image
+    type image = Word8GrayscaleImage.image
+    type pixel = Word8GrayscaleImage.pixel
     
-    val app = GrayscaleImageWord8.app
+    val app = Word8GrayscaleImage.app Word8GrayscaleImage.RowMajor
     val less = Word8.<
 
     fun fromReal x = Word8.fromInt( Real.trunc( x*255.0 ) )
@@ -22,9 +23,10 @@ local
   structure RealImage : HISTOGRAM_IMAGE =
   struct
 
-    type image = GrayscaleImageReal.image
+    type image = RealGrayscaleImage.image
+    type pixel = RealGrayscaleImage.pixel
     
-    val app = GrayscaleImageReal.app
+    val app = RealGrayscaleImage.app RealGrayscaleImage.RowMajor
     val less = Real.<
 
     fun fromReal x = x
@@ -34,9 +36,10 @@ local
   structure IntImage : HISTOGRAM_IMAGE =
   struct
 
-    type image = GrayscaleImageInt.image
+    type image = IntGrayscaleImage.image
+    type pixel = IntGrayscaleImage.pixel
     
-    val app = GrayscaleImageInt.app
+    val app = IntGrayscaleImage.app IntGrayscaleImage.RowMajor
     val less = Int.<
 
     fun fromReal x = Real.trunc( x*255.0 )
@@ -44,7 +47,7 @@ local
   end
 
 in
-  structure GrayscaleHistogramWord8 = HistogramFun( Word8Image ) 
-  structure GrayscaleHistogramInt = HistogramFun( IntImage ) 
-  structure GrayscaleHistogramReal = HistogramFun( RealImage ) 
+  structure Word8GrayscaleHistogram = HistogramFun( Word8Image ) 
+  structure IntGrayscaleHistogram = HistogramFun( IntImage ) 
+  structure RealGrayscaleHistogram = HistogramFun( RealImage ) 
 end

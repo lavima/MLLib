@@ -4,11 +4,15 @@ $(SML_LIB)/basis/basis.mlb
 ../math/mllib_math.mlb
 
 util.sml
-threshold.sml
+
 image.sml
 boolean_image.sml
 grayscale_image.sml
 rgb_image.sml
+histogram.sml
+grayscale_histogram.sml
+threshold.sml
+grayscale_threshold.sml
 image_util.sml
 filter_util.sml
 morphology.sml

@@ -14,7 +14,7 @@ struct
      * of orientations for edge filters.
      *)
     fun createTextonFilters(nori : int, sigma : real) : 
-           GrayscaleImageReal.image list =
+           RealGrayscaleImage.image list =
     let
 
        val evenFilters = List.tabulate(nori, 

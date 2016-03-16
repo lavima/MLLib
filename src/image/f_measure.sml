@@ -54,46 +54,60 @@ struct
     int * int * real * real * 
     real Array.array * real Array.array -> real;
 
-  fun evaluate( image as { width, height, values } : image, 
+  fun evaluate( image : image, 
                 truths : truth list ) 
       : score =
   let
+    
+    val ( height, width ) = BooleanImage.dimensions image
     
     val diagonal = Math.sqrt( real( width*width + height*height ) )
 
     val maxDist = defaultMaxDist
     val outlierCost = defaultOutlierCost
 
-    val imageReal = ImageUtil.convertBooleanToTransposedReal image
+    val imageReal = Array.array( width*height, 0.0 )
+    val _ = 
+      BooleanImage.appi BooleanImage.ColMajor
+        ( fn( i, j, x ) => 
+            Array.update( imageReal, j*height+i, if x then 1.0 else 0.0 ) )
+        ( BooleanImage.full image )
+      
+    val truthReal = Array.array( width*height, 0.0 )
 
-    val truthReal = GrayscaleImageReal.image( height, width, 0.0 )
-    val match1 = GrayscaleImageReal.image( height, width, 0.0 )
-    val match2 = GrayscaleImageReal.image( height, width, 0.0 )
-
+    val match1 = Array.array( width*height, 0.0 )
+    val match2 = Array.array( width*height, 0.0 )
 
     val ( sumR, countR, accumMatch ) =
       List.foldl 
         ( fn( truth, ( sumR, countR, accumMatch ) ) =>
           let
-            val _ = ImageUtil.copyBooleanToTransposedReal( truth, truthReal )
+            val _ = 
+              BooleanImage.appi BooleanImage.ColMajor
+                ( fn( i, j, x ) => 
+                    Array.update( 
+                      truthReal, 
+                      j*height+i, 
+                      if x then 1.0 else 0.0 ) )
+              ( BooleanImage.full truth )
 
             val cost = 
-              matchEdges( #values imageReal, #values truthReal, 
+              matchEdges( imageReal, truthReal, 
                           width, height, 
                           maxDist*diagonal, outlierCost*maxDist*diagonal,
-                          #values match1, #values match2 )
+                          match1, match2 )
 
             val _ = 
-              GrayscaleImageReal.appxy
-                ( fn( x, y, m ) => 
-                    if m>0.0 then
-                      BooleanImage.update( accumMatch, x, y, true )
+              Array.appi
+                ( fn( i, x ) => 
+                    if x>0.0 then
+                      Array.update( accumMatch, i, true )
                     else
                       () )
                 match1
 
             val countR = 
-              GrayscaleImageReal.foldl
+              Array.foldl
                 ( fn( m, count ) => 
                     if m>0.0 then
                       count+1
@@ -103,8 +117,8 @@ struct
                 match2
 
             val sumR = 
-              BooleanImage.foldlxy
-                ( fn( x, y, m, sum ) => 
+              BooleanImage.fold BooleanImage.RowMajor
+                ( fn( m, sum ) => 
                     if m then
                       sum+1
                     else
@@ -112,17 +126,17 @@ struct
                 sumR
                 truth
 
-            val _ = GrayscaleImageReal.fill( match1, 0.0 )
-            val _ = GrayscaleImageReal.fill( match2, 0.0 )
+            val _ = ArrayUtil.fill( match1, 0.0 )
+            val _ = ArrayUtil.fill( match2, 0.0 )
 
           in
             ( sumR, countR, accumMatch ) 
           end )
-        ( 0, 0, BooleanImage.image( height, width, false ) )
+        ( 0, 0, Array.array( width*height, false ) )
         truths
     
     val sumP = 
-      BooleanImage.foldl
+      BooleanImage.fold BooleanImage.RowMajor
         ( fn( v, sum ) => 
             if v then
               sum+1 
@@ -132,7 +146,7 @@ struct
         image
 
     val countP = 
-      BooleanImage.foldl
+      Array.foldl
         ( fn( v, count ) => 
             if v then
               count+1 

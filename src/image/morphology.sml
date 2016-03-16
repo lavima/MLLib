@@ -20,7 +20,7 @@ struct
 
     val m1 = Array2.fromList( [ [ f, f, f ], [ tf, t, tf ], [ t, t, t ] ] )
     val m2 = Array2.fromList( [ [ tf, f, f ], [ t, t, f ], [ t, t, tf ] ] )
-    val m3 = Array2.fromList( [ [ t, tf, f ], [ t, t, f ], [ t, tf, f ] ] )
+    val m3 = Array2.fromList( [ [ t, tf, f ], [ t, t, f ], [ t, tf, f ] ] )
     val m4 = Array2.fromList( [ [ t, t, tf ], [ t, t, f ], [ tf, f, f ] ] )
     val m5 = Array2.fromList( [ [ t, t, t ], [ tf, t, tf ], [ f, f, f ] ] )
     val m6 = Array2.fromList( [ [ tf, t, t ], [ f, t, t ], [ f, f, tf ] ] )
@@ -41,10 +41,11 @@ struct
     fun iter( current : BooleanImage.image ) : BooleanImage.image =
     let
       val thinned = BooleanImage.zeroImage( height, width )
-      val _ = BooleanImage.appi BooleanImage.RowMajor
-        ( fn( i, j, x ) =>
-            BooleanImage.update( thinned, i, j, x ) )
-        current
+      val _ = 
+        BooleanImage.appi BooleanImage.RowMajor
+          ( fn( i, j, x ) =>
+              BooleanImage.update( thinned, i, j, x ) )
+          ( BooleanImage.full current )
 
       fun sub( im : BooleanImage.image, y : int, x : int ) : bool =
         if x<width andalso x>=0 andalso y<height andalso y>=0 then
@@ -64,7 +65,7 @@ struct
                 ( fn( y, x, _ ) => 
                   let
                     val valid = 
-                      Array2.fold Array2.RowMajor
+                      Array2.foldi Array2.RowMajor
                         ( fn( i, j, m, v ) => 
                           let 
                             val e = sub( thinned, y+i-1, x+j-1 )
@@ -102,17 +103,20 @@ struct
     iter im
   end
 
-  fun thicken( im as { width, height, ... } : BooleanImage.image ) 
+  fun thicken( im : BooleanImage.image ) 
       : BooleanImage.image =
   let 
-    val complement = BooleanImage.image( width, height, false )
-    val _ = BooleanImage.modifyi
-      ( fn( i, _ ) =>
-          if BooleanImage.sub'( im, i ) then
-            false
-          else 
-            true )
-      complement
+    val ( height, width ) = BooleanImage.dimensions im
+    val complement = BooleanImage.zeroImage( height, width )
+
+    val _ = 
+      BooleanImage.modifyi BooleanImage.RowMajor
+        ( fn( i, j, _ ) =>
+            if BooleanImage.sub( im, i, j ) then
+              false
+            else 
+              true )
+        ( BooleanImage.full complement )
   in
     thin complement
   end

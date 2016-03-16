@@ -11,8 +11,8 @@ sig
   
   type image
 
-  val histogram' : 'a image * int -> int Array.array
-  val histogram : 'a image -> int Array.array
+  val histogram' : int -> image -> int Array.array
+  val histogram : image -> int Array.array
 
 end (* signature HISTOGRAM *)
 
@@ -20,10 +20,11 @@ signature HISTOGRAM_IMAGE =
 sig
 
   type image 
+  type pixel
 
-  val app : ( 'a -> unit ) -> image -> unit
-  val fromReal : real -> 'a
-  val less : 'a * 'a -> bool
+  val app : ( pixel -> unit ) -> image -> unit
+  val fromReal : real -> pixel
+  val less : pixel * pixel -> bool
 
 end (* signature HISTOGRAM_IMAGE *)
 
@@ -31,9 +32,10 @@ functor HistogramFun( ImageSpec : HISTOGRAM_IMAGE ) : HISTOGRAM =
 struct
 
   type image = ImageSpec.image 
+  type pixel = ImageSpec.pixel
 
   fun histogram' ( numBins : int ) ( im : image ) 
-      : int Array.array list = 
+      : int Array.array = 
   let
 
     val f = 1.0/( ( real numBins )-1.0 )
@@ -46,7 +48,7 @@ struct
     (*
     * Get the index of the histogram bin to place an element. 
     *)
-    fun getIndex( delims : 'a list, element : 'a, index : int )
+    fun getIndex( delims : pixel list, element : pixel, index : int )
         : int =
       case delims of 
         low::( delims' as high::_ ) =>

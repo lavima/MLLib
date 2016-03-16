@@ -21,7 +21,7 @@ sig
   
   type image
 
-  val histogram : int -> image -> int Array.array list
+  val histogram : int -> image -> int Array.array
   val dimensions : image -> int * int
 
 end
@@ -36,7 +36,7 @@ struct
   let
     val ( height, width ) = dimensions im
 
-    val [ histogram ] = histogram numBins im
+    val hist = histogram numBins im
 
     val numPixels = width*height
 
@@ -45,7 +45,7 @@ struct
       ( fn( i, x ) =>
           Array.update( normalizedHistogram, i, 
                         real x/real numPixels ) )
-      histogram
+      hist
 
     val inc = 1.0/( real numBins )
 
@@ -66,7 +66,7 @@ struct
   let
     val ( height, width ) = dimensions im
 
-    val [ histogram ] = histogram numBins im
+    val hist = histogram numBins im
 
     val numPixels = width*height
 
@@ -75,7 +75,7 @@ struct
       ( fn( i, x ) =>
           Array.update( normalizedHistogram, i, 
                         real x/real numPixels ) )
-      histogram
+      hist
 
     val mean =
       Array.foldli
