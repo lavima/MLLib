@@ -85,32 +85,35 @@ struct
     val sigma2_inv = 1.0/(sigma*sigma);
     val neg_two_sigma2_inv = sigma2_inv* ~0.5;
     
-    val elemFunction = case derivitive of
-       0 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv ) )
-     | 1 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv )* ~x )
-     | 2 => ( fn( x : real ) => 
-          Math.exp( x*x*neg_two_sigma2_inv )*(x*x*sigma2_inv-1.0 ) )
+    val elemFunction = 
+      case derivitive of
+        0 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv ) )
+      | 1 => ( fn( x : real ) => Math.exp( x*x*neg_two_sigma2_inv )* ~x )
+      | 2 => 
+          ( fn( x : real ) => 
+              Math.exp( x*x*neg_two_sigma2_inv )*(x*x*sigma2_inv-1.0 ) )
     
     val mask = RealGrayscaleImage.zeroImage(size, 1);
     
     val _ = 
       RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor 
         ( fn( x, y, z ) => elemFunction( Real.fromInt( x-support ) ) ) 
-        mask
+        ( RealGrayscaleImage.full mask )
   in
      mask
   end
 
- fun createGaussianMaskGPB2D (deri : int)
-      (sigma : real,
-       supportX : real, 
-       supportY : real, 
-       elongation : real, 
-       hilbert : bool, 
-       ori : real) : RealGrayscaleImage.image =
+ fun createGaussianMaskGPB2D  ( deri : int )
+                              ( sigma : real,
+                                supportX : real,
+                                supportY : real, 
+                                elongation : real,
+                                hilbert : bool,
+                                ori : real ) 
+    : RealGrayscaleImage.image =
  let
    val sigmaY = sigma 
-   val sigmaX = sigma / elongation
+   val sigmaX = sigma/elongation
 
    val corSupportX = Real.ceil(Real.max(
     abs(supportX * Math.cos(ori) - supportY * Math.sin(ori)),
@@ -119,19 +122,22 @@ struct
     abs(supportX * Math.sin(ori) - supportY * Math.cos(ori)),
     abs(supportX * Math.sin(ori) + supportY * Math.cos(ori))));
 
-   val gausX = createGaussianMaskgPb deri (sigmaX, corSupportX)
+   val gausX = createGaussianMaskgPb deri ( sigmaX, corSupportX )
    val gausY = createGaussianMaskgPb 0 (sigmaY, corSupportY)
 
    val _ = if (hilbert) then
-    let
-       val hilbert = SignalUtil.hilbert(#values(gausX))
-    in
-       RealGrayscaleImage.modifyi 
-          (fn (i, _) => Array.sub (hilbert, i)) gausX
-    end
-    else ()
+      let
+         val hilbert = SignalUtil.hilbert(#values(gausX))
+      in
+         RealGrayscaleImage.modifyi 
+            ( fn ( i, j, _) => Array.sub( hilbert, i, j ) ) 
+            ( RealGrayscaleImage.full gausX )
+      end
+      else ()
 
-   val filter = RealGrayscaleImage.tabulatexy 
+
+
+   val filter = RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
        (#width(gausX), #width(gausY), 
         fn (x, y) => RealGrayscaleImage.sub(gausX, x, 0) * 
                    RealGrayscaleImage.sub(gausY, y, 0));

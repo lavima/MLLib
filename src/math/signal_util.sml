@@ -1,12 +1,13 @@
 (*
-* file: signalUtil.sml
+* file: signal_util.sml
 * author: Marius Geitle <marius.geitle@hiof.no
 * 
 * This file contains utilities for transforming signals.
 *)
 
 
-structure SignalUtil = struct
+structure SignalUtil = 
+struct
 
    (*
     * For an input vector x of length N, the discrete Fourier transform is 
@@ -17,20 +18,23 @@ structure SignalUtil = struct
     *                 n=0
     *
     *)
-   fun dft(vector : real Array.array) : Complex.number Array.array =
+   fun dft( vector : real Vector.vector ) : Complex.number Vector.vector =
      let
         val expFactor = 
           Real.*(~2.0, Real./(Math.pi, Real.fromInt(Array.length(vector))));
-        fun calcElmt(n : int, k : int) : Complex.number =
-          Complex.exp(Complex.complex(
-             0.0, Real.*(Real.*(expFactor, Real.fromInt(k)), Real.fromInt(n))));
 
-        fun calculateDft(k : int) : Complex.number =
-          Array.foldli 
-            (fn (n, x, a) => 
+        fun calcElmt( n : int, k : int ) : Complex.number =
+          Complex.exp( 
+            Complex.complex(
+             0.0, Real.*(Real.*(expFactor, Real.fromInt(k)), Real.fromInt(n))))
+
+        fun calculateDft( k : int ) : Complex.number =
+          Vector.foldli 
+            ( fn ( n, x, a ) => 
               Complex.plus a (
                  Complex.times (Complex.complex(x, 0.0)) (calcElmt(n, k)))) 
-            (Complex.complex(0.0, 0.0)) vector;
+            ( Complex.complex( 0.0, 0.0 ) ) 
+            vector
      in
        Array.tabulate(Array.length(vector), fn k => calculateDft(k))
      end;
