@@ -13,14 +13,14 @@ fun rgbeq ( eq : 'a * 'a -> bool )
   ( eq( R1, R2 ) andalso eq( G1, G2 ) andalso eq( B1, B2 ) )
 
 val rgbreq = rgbeq Real.==
-val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) = x=y ) 
+val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y ) 
 
 
 
 val _ = print"\n\n********** im Tests **********\n"
 
 val _ = test( "Loading PGM image as Word8GrayscaleImage.image",
-  fn() => Option.valOf( Word8GrayscaleImage.load("simple.plain.pgm") ),
+  fn() => Option.valOf( Word8.load("simple.plain.pgm") ),
   fn im => 
     if Word8GrayscaleImage.sub( im, 0, 0 )=0w0 andalso
        Word8GrayscaleImage.sub( im, 0, 1 )=0w64 andalso

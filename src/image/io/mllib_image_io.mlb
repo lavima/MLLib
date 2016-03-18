@@ -1,11 +1,7 @@
 $(SML_LIB)/basis/basis.mlb
 
-../mllib_image.mlb
-../../mllib_general.mlb
-../../math/mllib_math.mlb
-
+pnm.sml
 pnm_text.sml
 pnm_binary.sml
-pnm.sml
 pbm.sml
 pgm.sml

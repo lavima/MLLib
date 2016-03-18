@@ -13,8 +13,8 @@
 
 structure PNMText =
 struct
-
-  open PNMCommon
+  
+  exception pnmException of string
 
   local
     
@@ -85,29 +85,29 @@ struct
       | SOME cs => SOME( String.concat cs )
     end
 
-    fun parseFormat( inp : BinIO.instream ) : format =
+    fun parseFormat( inp : BinIO.instream ) : PNM.format =
       case getToken( inp, false ) of
         NONE => raise pnmException"Could not read format token."
       | SOME token =>
           case token of 
-            "P1" => plainPBM
-          | "P2" => plainPGM
-          | "P3" => plainPPM
-          | "P4" => rawPBM
-          | "P5" => rawPGM
-          | "P6" => rawPPM
-          | "P7" => rawPAM 0
+            "P1" => PNM.plainPBM
+          | "P2" => PNM.plainPGM
+          | "P3" => PNM.plainPPM
+          | "P4" => PNM.rawPBM
+          | "P5" => PNM.rawPGM
+          | "P6" => PNM.rawPPM
+          | "P7" => PNM.rawPAM 0
           | _ => raise pnmException( "Wrong magic number: " ^ token )
 
-    fun writeFormat( out : BinIO.outstream, fmt : format ) : unit =
+    fun writeFormat( out : BinIO.outstream, fmt : PNM.format ) : unit =
       case fmt of
-        plainPBM => output( out, "P1" )
-      | plainPGM => output( out, "P2" )
-      | plainPPM => output( out, "P3" )
-      | rawPBM => output( out, "P4" )
-      | rawPGM => output( out, "P5" )
-      | rawPPM => output( out, "P6" )
-      | rawPAM _ => output( out, "P7" )
+        PNM.plainPBM => output( out, "P1" )
+      | PNM.plainPGM => output( out, "P2" )
+      | PNM.plainPPM => output( out, "P3" )
+      | PNM.rawPBM => output( out, "P4" )
+      | PNM.rawPGM => output( out, "P5" )
+      | PNM.rawPPM => output( out, "P6" )
+      | PNM.rawPAM _ => output( out, "P7" )
 
     fun parseInt( inp : BinIO.instream ) : int =
       case getToken( inp, false ) of 
@@ -131,24 +131,24 @@ struct
   in
 
     fun parseHeader( inp : BinIO.instream ) 
-        : format * int * int * word * string list =
+        : PNM.format * int * int * word * string list =
     let
       fun parse( inp : BinIO.instream,
                  s : state, 
                  im as 
-                  ( fmt : format, 
+                  ( fmt : PNM.format, 
                     width : int, 
                     height : int, 
                     maxVal : word,
                     tupleTypes : string list ) )
-          : format * int * int * word * string list =
+          : PNM.format * int * int * word * string list =
       case s of 
         getFormat => ( 
         let
           val fmt' = parseFormat inp
         in
           case fmt of
-            rawPAM _ =>
+            PNM.rawPAM _ =>
               parse( inp, getIdentifier, 
                 ( fmt', width, height, maxVal, tupleTypes ) )
           | _ =>
@@ -170,25 +170,25 @@ struct
                       List.rev tupleTypes ) )
       | getWidth => ( 
           parse( inp, 
-            case fmt of rawPAM _ => getIdentifier | _ => getHeight, 
+            case fmt of PNM.rawPAM _ => getIdentifier | _ => getHeight, 
             ( fmt, parseInt inp, height, maxVal, tupleTypes ) ) )
       | getHeight => (
-          if fmt=rawPBM orelse fmt=plainPBM then
+          if fmt=PNM.rawPBM orelse fmt=PNM.plainPBM then
             ( fmt, width, parseInt inp, maxVal, tupleTypes )
           else
             parse( inp, 
-              case fmt of rawPAM _ => getIdentifier | _ => getMaxVal, 
+              case fmt of PNM.rawPAM _ => getIdentifier | _ => getMaxVal, 
               ( fmt, width, parseInt inp, maxVal, tupleTypes ) ) )
       | getDepth => 
         let
           val depth = parseInt inp
         in 
           parse( inp, getIdentifier,
-            ( rawPAM depth, width, height, maxVal, tupleTypes ) )
+            ( PNM.rawPAM depth, width, height, maxVal, tupleTypes ) )
         end
       | getMaxVal => (
           case fmt of
-            rawPAM _ =>
+            PNM.rawPAM _ =>
               parse( inp, getIdentifier,  
                 ( fmt, width, height, parseWord inp, tupleTypes ) )
           | _ =>
@@ -200,11 +200,11 @@ struct
               parse( inp, getIdentifier, 
                 ( fmt, width, height, maxVal, token::tupleTypes ) ) )
     in
-      parse( inp, getFormat, ( plainPBM, 0, 0, 0w0, [] ) ) 
+      parse( inp, getFormat, ( PNM.plainPBM, 0, 0, 0w0, [] ) ) 
     end
 
     fun writeHeader( out : BinIO.outstream, 
-                     im as ( fmt : format, width : int, height : int, 
+                     im as ( fmt : PNM.format, width : int, height : int, 
                        depth : int, maxVal : word, tupleTypes : string list ) )
         : unit = 
     let
@@ -216,7 +216,7 @@ struct
           ()
     in
       case fmt of
-        rawPAM depth => (
+        PNM.rawPAM depth => (
           writeFormat( out, fmt );
           output( out, "\nWIDTH ");
           writeInt( out, width );

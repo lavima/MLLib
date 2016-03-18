@@ -25,4 +25,4 @@ val _ = test( "Testing ListUtil.fromToInt",
 val _ = test( "Testing ListUtil.fromToReal",
   fn() => ListUtil.fromToReal( ~1.5, 2.5 ),
   fn Xs =>
-    ListUtil.equal Util.eqReal ( Xs, [ ~1.5, ~0.5, 0.5, 1.5, 2.5 ] ) )
+    ListUtil.equal Real.== ( Xs, [ ~1.5, ~0.5, 0.5, 1.5, 2.5 ] ) )
