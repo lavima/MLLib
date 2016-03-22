@@ -15,8 +15,9 @@ val _ = test( "Generate texton filters",
           let 
             val normalizedImage = ImageUtil.normalizeReal'' (List.nth (x, i) )
           in
-            GrayscaleImageReal.save(
-                    normalizedImage, "output/filter" ^ Int.toString(i))
+            RealPGM.write(
+              normalizedImage, 
+              "output/filter" ^ Int.toString(i) ^ ".pgm" )
           end
           ) (List.length x )
      in

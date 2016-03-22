@@ -1,5 +1,5 @@
 (* 
-* file: test_filterUtil.sml
+* file: test_filter_util.sml
 * author: Marius Geitle <marius.geitle@hiof.no>
 *
 * This file contains tests that validate the filter utilities
@@ -11,12 +11,11 @@ val _ = test( "Generating 1D gaussian filter created using the gPb type",
   fn() => FilterUtil.createGaussianMaskgPb 0 (3.0, 9),
   fn X =>
      let
-         val _ = GrayscaleImageReal.save(X, "output/filterThingy.pbm");
+         val _ = RealPGM.write(X, "output/filterThingy.pgm");
      in
          true
      end 
   )
-  ;
 
 
 val _ = test( "Generating 2D gaussian filter created using the gPb type",
@@ -25,9 +24,8 @@ val _ = test( "Generating 2D gaussian filter created using the gPb type",
   fn X =>
      let
         val norm = ImageUtil.normalizeReal'' X 
-        val _ = GrayscaleImageReal.save(norm, "output/output3dFilter.pbm");
+        val _ = RealPGM.write(norm, "output/output3dFilter.pgm");
      in
          true
      end 
   )
-  ;

@@ -128,6 +128,55 @@ struct
     fun writeWord( out : BinIO.outstream, x : word ) : unit =
       output( out, Word.fmt StringCvt.DEC x )
 
+    fun parseNPixels( inp : BinIO.instream, depth : int )
+        : word list list = 
+    let
+      fun parse( tokens : string list )
+          : word list list =
+        case tokens of 
+          [] => (
+            case getToken( inp, false ) of 
+              NONE => []
+            | SOME token => parse [ token ] )
+        | _ => (
+            case List.length tokens<depth of
+              false => 
+                ( List.map ( fn x => wordFromString x ) ( List.rev tokens ) ) 
+                  :: parse []
+            | true => ( 
+                case getToken( inp, false ) of 
+                  NONE => 
+                    raise pnmException"Not enough input tokens for pixel." 
+                | SOME token =>
+                    parse( token::tokens ) ) )
+    in
+      parse []
+    end
+
+    fun writeNPixels( out : BinIO.outstream, pixels : word list list ) 
+        : unit =
+    let
+      fun write( pixels : word list list ) : unit =
+        case pixels of 
+          [] => ()
+        | ws::pixels' => 
+          let
+            fun writeWords( ws : word list ) : unit =
+              case ws of 
+                [] => ()
+              | w::ws' => (
+                  writeWord( out, w );
+                  output( out, " " );
+                  writeWords ws' )
+          in (
+            writeWords ws;
+            output( out, "\n" );
+            write pixels' )
+          end
+    in
+      write pixels
+    end
+
   in
 
     fun parseHeader( inp : BinIO.instream ) 
@@ -209,7 +258,7 @@ struct
         : unit = 
     let
       val _ = 
-        if not( ( PNMCommon.getDepth fmt )=depth ) then
+        if not( ( PNM.getDepth fmt )=depth ) then
           raise pnmException
             "The depth of the image does not match the depth of the format"
         else
@@ -233,7 +282,7 @@ struct
           writeInt( out, width );
           output( out, " ");
           writeInt( out, height );
-          if not( fmt=rawPBM orelse fmt=plainPBM ) then (
+          if not( fmt=PNM.rawPBM orelse fmt=PNM.plainPBM ) then (
             output( out, " ");
             writeWord( out, maxVal ) )
           else
@@ -241,7 +290,7 @@ struct
           output( out, "\n" ) )
     end
 
-    fun parseBooleanPixels( input : BinIO.iostream ) : bool list =
+    fun parseBooleanPixels( input : BinIO.instream ) : bool list =
     let
       fun parse() : bool list =
         case getToken( input, true ) of 
@@ -254,31 +303,6 @@ struct
       parse()
     end
     
-    fun parseNPixels( inp : BinIO.instream, depth : int )
-        : word list list = 
-    let
-      fun parse( tokens : string list )
-          : word list list =
-        case tokens of 
-          [] => (
-            case getToken( inp, false ) of 
-              NONE => []
-            | SOME token => parse [ token ] )
-        | _ => (
-            case List.length tokens<depth of
-              false => 
-                ( List.map ( fn x => wordFromString x ) ( List.rev tokens ) ) 
-                  :: parse []
-            | true => ( 
-                case getToken( inp, false ) of 
-                  NONE => 
-                    raise pnmException"Not enough input tokens for pixel." 
-                | SOME token =>
-                    parse( token::tokens ) ) )
-    in
-      parse []
-    end
-
     fun parseGrayscalePixels( input : BinIO.instream ) : word list =
       List.map 
         ( fn( [ X ] ) => X ) 
@@ -304,35 +328,13 @@ struct
       write pixels
     end
 
-    fun writeNPixels( out : BinIO.outstream, pixels : word list list ) 
-        : unit =
-    let
-      fun write( pixels : word list list ) : unit =
-        case pixels of 
-          [] => ()
-        | ws::pixels' => 
-          let
-            fun writeWords( ws : word list ) : unit =
-              case ws of 
-                [] => ()
-              | w::ws' => (
-                  writeWord( out, w );
-                  output( out, " " );
-                  writeWords ws' )
-          in (
-            writeWords ws;
-            output( out, "\n" );
-            writePixels( out, pixels' ) )
-          end
-    in
-      write pixels
-    end
-
     fun writeGrayscalePixels( out : BinIO.outstream, pixels : word list ) 
         : unit =
       writeNPixels( out, List.map ( fn x => [ x ] ) pixels )
 
-    fun writeColorPixels( out : BinIO.outstream, pixels : word list ) : unit =
+    fun writeColorPixels( out : BinIO.outstream, 
+                          pixels : ( word * word * word ) list ) 
+        : unit =
       writeNPixels( out, List.map ( fn( r, g, b ) => [ r, g, b ] ) pixels )
 
   end (* local *)

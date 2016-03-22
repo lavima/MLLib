@@ -3,8 +3,6 @@ $(SML_LIB)/basis/basis.mlb
 ../mllib_general.mlb
 ../math/mllib_math.mlb
 
-io/mllib_image_io.mlb
-
 util.sml
 image.sml
 boolean_image.sml

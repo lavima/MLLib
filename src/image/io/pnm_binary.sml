@@ -9,8 +9,7 @@
 structure PNMBinary =
 struct
 
-  open PNMCommon
-
+  open PNM
 
   local 
 
@@ -60,8 +59,6 @@ struct
           writeWord( output, maxVal, w ); 
           writePixel( output, maxVal, words' ) )
 
-  in
-
     fun readNPixels( input : BinIO.instream, 
                      maxVal : word, numPixels : int, depth : int ) 
         : word list list =
@@ -73,6 +70,23 @@ struct
     in
       read 0
     end
+
+    fun writeNPixels( output : BinIO.outstream, 
+                      maxVal : word, 
+                      pixels : word list list ) 
+        : unit =
+    let
+      fun write( pixels : word list list ) : unit =
+        case pixels of
+          [] => ()
+        | pixel::pixels' => (
+            writePixel( output, maxVal, pixel );
+            write pixels' )
+    in
+      write pixels
+    end
+
+  in
 
     fun readGrayscalePixels( input : BinIO.instream, 
                              maxVal : word, 
@@ -90,21 +104,6 @@ struct
         ( fn( [ r, g, b ] ) => ( r, g, b ) ) 
         ( readNPixels( input, maxVal, numPixels, 3 ) )
 
-    fun writeNPixels( output : BinIO.outstream, 
-                      maxVal : word, 
-                      pixels : word list list ) 
-        : unit =
-    let
-      fun write( pixels : word list list ) : unit =
-        case pixels of
-          [] => ()
-        | pixel::pixels' => (
-            writePixel( output, maxVal, pixel );
-            write pixels' )
-    in
-      write pixels
-    end
-
     fun writeGrayscalePixels( output : BinIO.outstream, 
                               maxVal : word, 
                               pixels : word list ) 
@@ -113,7 +112,7 @@ struct
 
     fun writeColorPixels( output : BinIO.outstream, 
                           maxVal : word, 
-                          pixels : word list ) 
+                          pixels : ( word * word * word ) list ) 
         : unit =
       writeNPixels( 
         output, 
@@ -145,14 +144,17 @@ struct
 
     val currentOut : Word8.word ref = ref 0w0
 
-    fun writePixel( output : BinIO.outstream, x : int, ws : word list ) 
+    fun flush( output : BinIO.outstream ) : unit =
+      BinIO.output1( output, !currentOut )
+
+    fun writePixel( output : BinIO.outstream, x : int, w : bool ) 
         : unit = 
     let 
       val w8fw = Word8.fromInt o Word.toInt
 
       val i = Word.fromInt( x mod 8 )
       val _ = 
-        if i=0 then
+        if i=0w0 then
           flush output
         else
           ()
@@ -166,19 +168,15 @@ struct
         else
           ()
 
-      val [ w1 ] = ws
-      val w : Word8.word = 
-        if w1>0w0 then
+      val w' : Word8.word = 
+        if w then
           0w1
         else
           0w0
 
     in
-      currentOut := Word8.orb( !currentOut, Word8.<<( w, 0w8-i-0w1 ) )
+      currentOut := Word8.orb( !currentOut, Word8.<<( w', 0w8-i-0w1 ) )
     end
-
-    fun flush( output : BinIO.outstream ) : unit =
-      BinIO.output1( output, !currentOut )
 
   in
 

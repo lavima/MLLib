@@ -11,8 +11,8 @@ sig
   
   type image
 
-  val percentage : image * int * real -> real list
-  val otsu : image * int -> real list
+  val percentage : image * int * real -> real
+  val otsu : image * int -> real
 
 end
 
@@ -32,7 +32,7 @@ struct
   open Image
 
   fun percentage( im : image, numBins : int, percentage : real ) 
-      : real list =
+      : real =
   let
     val ( height, width ) = dimensions im
 
@@ -59,10 +59,10 @@ struct
         ( 0.0, 0.0, 0.0 )
         normalizedHistogram
   in
-    [ threshold ]
+    threshold
   end
 
-  fun otsu ( im : image, numBins : int ) : real list =
+  fun otsu ( im : image, numBins : int ) : real =
   let
     val ( height, width ) = dimensions im
 
@@ -116,7 +116,7 @@ struct
         ( 0.0, [ 0.0 ] )
         normalizedHistogram
   in
-    [ ( MathUtil.avg thresholds )/real( numBins-1 ) ]
+    ( MathUtil.avg thresholds )/real( numBins-1 )
   end
 
 end (* structure ThresholdFun *)

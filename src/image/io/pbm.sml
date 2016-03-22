@@ -21,6 +21,7 @@ functor PBMFun( Image : PBM_IMAGE ) : IMAGE_IO =
 struct
 
   open Image
+  open PNM
 
   type writeOptions = PNM.format
 
@@ -33,13 +34,16 @@ struct
   in
     case format of
       plainPBM => 
-        fromList( width, height, PNMText.parseBooleanPixels input )
+        SOME( fromList( width, height, PNMText.parseBooleanPixels input ) )
     | rawPBM => 
-        fromList( 
-          width, 
-          height, 
-          PNMBinary.readBooleanPixels( input, width*height ) )
+        SOME( 
+          fromList( 
+            width, 
+            height, 
+            PNMBinary.readBooleanPixels( input, width*height ) ) )
+    | _ => NONE 
   end
+  
 
   fun write' ( options : writeOptions ) 
              ( im : image, filename : string ) : unit =
@@ -69,8 +73,13 @@ local
   struct
     type image = BooleanImage.image
     val fromList = BooleanImage.fromList'
-    val toList = BooleanImage.foldr ( fn( x, xs ) => x::xs ) []
+    val toList = 
+      List.rev o
+      BooleanImage.fold BooleanImage.RowMajor 
+        ( fn( x, xs ) => x::xs ) 
+        []
+    val dimensions = BooleanImage.dimensions
   end
 in
-  structure PBM = PBMFun( PBMImage )
+  structure BooleanPBM = PBMFun( PBMImage )
 end

@@ -12,7 +12,7 @@ val _ =
   test( "Testing Canny on a simple generated grayscale image",
     fn() => 
       let
-        val List = 
+        val list = 
           [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0,
@@ -21,26 +21,26 @@ val _ =
             0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
-        val Image = GrayscaleImageReal.fromList( 8, 8, List )
-        val Edges = Canny.findEdges Image
+        val im = RealGrayscaleImage.fromList'( 8, 8, list )
+        val edges = Canny.findEdges im
       in
-        Edges
+        edges
       end ,
-    fn X => 
+    fn edges => 
       true )
 
 val _ = 
   test( "Testing Canny on proper grayscale image",
     fn() => 
       let
-        val Image = Option.valOf( GrayscaleImageReal.load("proper2.raw.pgm") )
-        val Edges = 
-          Canny.findEdges' ( Math.sqrt 2.0, Canny.highLow( 0.5, 0.3 ) ) Image
-        val _ = BooleanImage.save( Edges, "canny.pbm" )
+        val im = Option.valOf( RealPGM.read("proper2.raw.pgm") )
+        val edges = 
+          Canny.findEdges' ( Math.sqrt 2.0, Canny.highLow( 0.5, 0.3 ) ) im
+        val _ = BooleanPBM.write( edges, "canny.pbm" )
       in
-        Option.valOf( BooleanImage.load("canny.pbm") )
+        Option.valOf( BooleanPBM.read("canny.pbm") )
       end ,
-    fn X => 
+    fn edges => 
     let
     in
       true

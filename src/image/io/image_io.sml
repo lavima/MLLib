@@ -1,5 +1,5 @@
 (* 
-* filename: io.sml
+* filename: image_io.sml
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
 * This file contains the signatures for image readers and writers.

@@ -1,6 +1,7 @@
 ../mllib.mlb
 ../mllib_image.mlb
 ../mllib_ml.mlb
+../mllib_image_io.mlb
 test.sml
 test_util.sml
 test_list_util.sml
@@ -12,10 +13,10 @@ test_image_canny.sml
 
 math/test_math_util.sml
 math/test_complex.sml
-math/test_signalUtil.sml
+math/test_signal_util.sml
 
 image/test_filter.sml
-image/test_filterUtil.sml
+image/test_filter_util.sml
 image/test_texton.sml
 
 ml/test_k_means.sml

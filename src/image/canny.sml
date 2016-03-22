@@ -192,7 +192,7 @@ struct
           highLow( high, low ) => ( high, low )
         | highPercentageLowRatio( highPercentage, lowRatio ) => (
           let
-            val [ high ] = 
+            val high = 
               RealGrayscaleThreshold.percentage( 
                 normalizedMagnitude, 
                 256, 
@@ -203,7 +203,7 @@ struct
           end )
         | otsuHighLowRatio lowRatio => 
           let
-            val [ high ] =
+            val high =
               RealGrayscaleThreshold.otsu( normalizedMagnitude, 256 )
           in
             ( high, high*lowRatio )

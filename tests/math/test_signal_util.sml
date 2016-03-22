@@ -13,7 +13,7 @@ val _ = test( "dft",
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
     in
-       SignalUtil.dft(input)
+       SignalUtil.dft( Array.vector input )
     end,
   fn x =>
     let
@@ -26,7 +26,7 @@ val _ = test( "dft",
               Complex.complex(~3.0, ~5.1962)
           ];
        val result = List.tabulate(
-               Array.length(x), fn i => Array.sub(x, i))
+               Vector.length(x), fn i => Vector.sub(x, i))
     in
        ListPair.allEq (fn (f1,f2) => 
            Util.approxEqReal' (Complex.re(f1), Complex.re(f2), 4) andalso
@@ -40,7 +40,7 @@ val _ = test( "idft",
   fn() =>
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
-        val transformed = SignalUtil.dft(input);
+        val transformed = SignalUtil.dft( Array.vector input )
     in
        SignalUtil.idft(transformed)
     end,
@@ -48,7 +48,7 @@ val _ = test( "idft",
     let
        val correct = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
        val result = List.tabulate(
-               Array.length(x), fn i => Array.sub(x, i))
+               Vector.length(x), fn i => Vector.sub(x, i))
     in
        ListPair.allEq 
           (fn (f1, f2) => Util.approxEqReal' (f1, Complex.re(f2), 14) andalso
@@ -56,7 +56,6 @@ val _ = test( "idft",
           (correct, result)
     end
   )
-  ;
 
 
 val _ = test( "hilbert",
@@ -64,7 +63,7 @@ val _ = test( "hilbert",
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
     in
-       SignalUtil.hilbert(input)
+       SignalUtil.hilbert( Array.vector input )
     end,
   fn x =>
     let
@@ -79,7 +78,7 @@ val _ = test( "hilbert",
           ];
 
        val result = List.tabulate(
-               Array.length(x), fn i => Array.sub(x, i))
+               Vector.length(x), fn i => Vector.sub(x, i))
 
     in
        ListPair.allEq 
@@ -87,6 +86,5 @@ val _ = test( "hilbert",
           (correct, result)
     end
   )
-  ;
 
 
