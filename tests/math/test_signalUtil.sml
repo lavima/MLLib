@@ -8,7 +8,7 @@
 
 val _ = print"\n\n********** signal utilities tests **********\n"
 
-val _ = test( "dft",
+val _ = UnitTest.test( "dft",
   fn() =>
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
@@ -36,7 +36,7 @@ val _ = test( "dft",
   )
   ;
 
-val _ = test( "idft",
+val _ = UnitTest.test( "idft",
   fn() =>
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
@@ -59,7 +59,7 @@ val _ = test( "idft",
   ;
 
 
-val _ = test( "hilbert",
+val _ = UnitTest.test( "hilbert",
   fn() =>
     let
         val input = Array.fromList([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])

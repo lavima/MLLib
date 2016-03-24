@@ -8,7 +8,7 @@
 
 val _ = print"\n\n********** Complex number tests **********\n"
 
-val _ = test( "negative",
+val _ = UnitTest.test( "negative",
   fn() => Complex.negative(Complex.complex(2.0, 3.0)),
   fn x =>
       Util.eqReal(Complex.re(x), ~2.0) andalso
@@ -16,7 +16,7 @@ val _ = test( "negative",
   )
   ;
 
-val _ = test( "plus",
+val _ = UnitTest.test( "plus",
   fn() => 
      let
          val a = Complex.complex(2.0, 3.0);
@@ -30,7 +30,7 @@ val _ = test( "plus",
   )
   ;
 
-val _ = test( "minus",
+val _ = UnitTest.test( "minus",
   fn() => 
      let
          val a = Complex.complex(2.0, 3.0);
@@ -44,7 +44,7 @@ val _ = test( "minus",
   )
   ;
 
-val _ = test( "times",
+val _ = UnitTest.test( "times",
   fn() => 
      let
          val a = Complex.complex(2.0, 3.0);
@@ -58,7 +58,7 @@ val _ = test( "times",
   )
   ;
 
-val _ = test( "divide",
+val _ = UnitTest.test( "divide",
   fn() => 
      let
          val a = Complex.complex(2.0, 3.0);
@@ -73,7 +73,7 @@ val _ = test( "divide",
   ;
 
 
-val _ = test( "invert",
+val _ = UnitTest.test( "invert",
   fn() => Complex.invert(Complex.complex(2.0, 3.0)),
   fn x =>
      Util.approxEqReal'(Complex.re(x), 0.15384615384615384615, 18) andalso
@@ -81,7 +81,7 @@ val _ = test( "invert",
   )
   ;
 
-val _ = test( "exp",
+val _ = UnitTest.test( "exp",
   fn() => Complex.exp(Complex.complex(2.0, 3.0)),
   fn x =>
      Util.approxEqReal'(Complex.re(x), ~7.3151100949011025174, 18) andalso
@@ -89,21 +89,21 @@ val _ = test( "exp",
   )
   ;
 
-val _ = test( "re",
+val _ = UnitTest.test( "re",
   fn() => Complex.complex(2.0, 3.0),
   fn x =>
      Util.approxEqReal'(Complex.re(x), 2.0, 18)
   )
   ;
 
-val _ = test( "im",
+val _ = UnitTest.test( "im",
   fn() => Complex.complex(2.0, 3.0),
   fn x =>
      Util.approxEqReal'(Complex.im(x), 3.0, 18)
   )
   ;
 
-val _ = test( "toString",
+val _ = UnitTest.test( "toString",
   fn() => Complex.complex(2.0, 3.0),
   fn x =>
      String.compare(Complex.toString(x), "2 + 3i") = EQUAL

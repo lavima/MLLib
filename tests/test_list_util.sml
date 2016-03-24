@@ -8,7 +8,7 @@
 
 val _ = print"\n\n************** ListUtil Tests **************\n"
 
-val _ = test( "Testing ListUtil.equal",
+val _ = UnitTest.test( "Testing ListUtil.equal",
   fn() => 
     ( ListUtil.equal Util.eqInt ( [], [] ),
       ListUtil.equal Util.eqInt ( [ 1, 2 ], [ 1, 2 ] ),
@@ -16,13 +16,13 @@ val _ = test( "Testing ListUtil.equal",
       ListUtil.equal Util.eqInt ( [ 3, 2 ], [ 3 ] ) ),
   fn( X, Y, Z, W ) => X andalso Y andalso not Z andalso not W )
 
-val _ = test( "Testing ListUtil.fromToInt",
+val _ = UnitTest.test( "Testing ListUtil.fromToInt",
   fn() => ListUtil.fromToInt( ~5, 5 ),
   fn Xs =>
     ListUtil.equal Util.eqInt 
       ( Xs, [ ~5, ~4, ~3, ~2, ~1, 0, 1, 2, 3, 4, 5 ] ) )
 
-val _ = test( "Testing ListUtil.fromToReal",
+val _ = UnitTest.test( "Testing ListUtil.fromToReal",
   fn() => ListUtil.fromToReal( ~1.5, 2.5 ),
   fn Xs =>
     ListUtil.equal Util.eqReal ( Xs, [ ~1.5, ~0.5, 0.5, 1.5, 2.5 ] ) )

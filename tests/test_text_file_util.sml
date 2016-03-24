@@ -7,10 +7,10 @@
 
 val _ = print"\n\n********** TextFileUtil Tests **********\n"
 
-val _ = test( "Testing TextFileUtil.writeDSV",
+val _ = UnitTest.test( "Testing TextFileUtil.writeDSV",
   fn() =>
     TextFileUtil.writeDSV 
       ( "", 1 )
       ( fn( X, Y ) => Int.toString X ^ " " ^ Int.toString Y )
-      ( [ ( 1, 2 ), ( 3, 4 ) ], "output.dsv" ) ,
+      ( [ ( 1, 2 ), ( 3, 4 ) ], "output/output.dsv" ) ,
   fn _ => true )

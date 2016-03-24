@@ -1,19 +1,20 @@
 ../mllib.mlb
+../mllib_test.mlb
 ../mllib_image.mlb
 ../mllib_ml.mlb
-test.sml
 test_util.sml
 test_list_util.sml
 test_optimize.sml
 test_text_file_util.sml
-test_image.sml
-test_image_threshold.sml
-test_image_canny.sml
 
 math/test_math_util.sml
 math/test_complex.sml
 math/test_signalUtil.sml
+math/test_basic_transformations.sml
 
+image/test_image.sml
+image/test_image_threshold.sml
+image/test_image_canny.sml
 image/test_filter.sml
 image/test_filterUtil.sml
 image/test_gradient.sml
@@ -21,3 +22,7 @@ image/test_multiscale_cue.sml
 image/test_texton.sml
 
 ml/test_k_means.sml
+
+test/test_randomTest.sml
+test/test_random_argument_utilities.sml
+

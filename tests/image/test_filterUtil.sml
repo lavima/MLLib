@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** Filter utility tests **********\n"
 
-val _ = test( "Generating 1D gaussian filter created using the gPb type",
+val _ = UnitTest.test( "Generating 1D gaussian filter created using the gPb type",
   fn() => FilterUtil.createGaussianMaskgPb 0 (3.0, 9),
   fn X =>
      let
@@ -19,7 +19,7 @@ val _ = test( "Generating 1D gaussian filter created using the gPb type",
   ;
 
 
-val _ = test( "Generating 2D gaussian filter created using the gPb type",
+val _ = UnitTest.test( "Generating 2D gaussian filter created using the gPb type",
   fn() => FilterUtil.createGaussianMaskGPB2D 
                   2 (3.0, 3.0, 3.0, 1.0, false, 0.3),
   fn X =>
@@ -32,7 +32,7 @@ val _ = test( "Generating 2D gaussian filter created using the gPb type",
   )
   ;
 
-val _ = test( "Savgol filtering",
+val _ = UnitTest.test( "Savgol filtering",
   fn() => 
     let
       val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))

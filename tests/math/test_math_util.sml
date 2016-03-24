@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** MathUtil Tests **********\n"
 
-val _ = test( "Testing MathUtil.blerp",
+val _ = UnitTest.test( "Testing MathUtil.blerp",
   fn() => 
     MathUtil.blerp( 1.0, 9.0, 2.0, 4.0, 0.5, 0.5 ) ,
   fn X =>

@@ -1,6 +1,6 @@
 val _ = print"\n\n********** Testing KMeans **********\n"
 
-val _ = test( "Testing KMeans.cluster",
+val _ = UnitTest.test( "Testing KMeans.cluster",
   fn() => 
     [
       KMeans.cluster( 2, 1,

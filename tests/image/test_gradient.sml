@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** gradient tests **********\n"
 
-val _ = test( "Gradient",
+val _ = UnitTest.test( "Gradient",
   fn() => 
      let
         val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))
@@ -25,7 +25,7 @@ val _ = test( "Gradient",
   )
 
 
-val _ = test( "Oriented gradient",
+val _ = UnitTest.test( "Oriented gradient",
   fn() => 
      let
         val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))

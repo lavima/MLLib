@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** Optimize Tests **********\n"
 
-val _ = test( "Testing Optimize.brute",
+val _ = UnitTest.test( "Testing Optimize.brute",
   fn() => 
     Optimize.brute 
       ( 3, [ Optimize.full 5, Optimize.full 10, Optimize.lessEqual 10 ] ) 

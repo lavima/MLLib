@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** Multiscale cue tests **********\n"
 
-val _ = test( "Generate oriented multiscale cue response",
+val _ = UnitTest.test( "Generate oriented multiscale cue response",
   fn() => 
     let
       val savgol_A = [(3.0, 3.0 / 4.0), (5.0, 5.0/4.0), (10.0, 10.0 / 4.0)]
@@ -28,7 +28,7 @@ val _ = test( "Generate oriented multiscale cue response",
      end 
   )
 
-val _ = test( "Generate multiscale cue response",
+val _ = UnitTest.test( "Generate multiscale cue response",
   fn() => 
     let
       val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))

@@ -1,3 +1,12 @@
+2016-03-24	Marius Geitle <marius.geitle@hiof.no>
+	* Added Minmax transformation
+	* Added transformation for converting a number in one range to another.
+	* Added support for random testing.
+	* Moved test functionality to a test framework library.
+	* Moved remaining outputs from tests to output directory.
+	* Added some tests.
+	* Reorganized some tests to folow src folder structure.
+
 2016-02-24	Marius Geitle <marius.geitle@hiof.no>
 	* Added gitignore
 	* Added Multiscale_cue

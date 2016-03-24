@@ -9,7 +9,7 @@
 
 val _ = print"\n\n********** Filter tests **********\n"
 
-val _ = test( "Convolving with zero border extension",
+val _ = UnitTest.test( "Convolving with zero border extension",
   fn() => 
      let
         val mask1 = GrayscaleImageReal.fromList(1, 5, [1.0, 2.0, 3.0, 2.0, 1.0])

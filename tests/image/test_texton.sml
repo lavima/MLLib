@@ -7,7 +7,7 @@
 
 val _ = print"\n\n********** Texton tests **********\n"
 
-val _ = test( "Generate texton filters",
+val _ = UnitTest.test( "Generate texton filters",
   fn() => Texton.createTextonFilters(8, 3.0),
   fn x =>
      let
@@ -24,7 +24,7 @@ val _ = test( "Generate texton filters",
      end 
   )
 
-val _ = test( "Generate textons",
+val _ = UnitTest.test( "Generate textons",
   fn() => 
       let
           val image = Option.valOf(GrayscaleImageReal.load("test2.pgm"))
