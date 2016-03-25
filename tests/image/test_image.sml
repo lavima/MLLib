@@ -421,12 +421,31 @@ val _ =
       end ,
     fn { height, width, ...} => height = 482 andalso width = 322 )
 
+fun convertRowToColMajor(width, height, arr : real Array.array) : real Array.array =
+  Array.tabulate(width * height, 
+    fn i => 
+      let
+        val x = i mod width
+        val y = i div width
+      in
+        Array.sub(arr, x * height + y)
+      end)
+
+fun convertColToRowMajor(width, height, arr : real Array.array) : real Array.array =
+  Array.tabulate(width * height, 
+    fn i => 
+      let
+        val x = i div height
+        val y = i mod height
+      in
+        Array.sub(arr, y * width + x)
+      end)
 
 val _ =
   RandomTest.runTest(
    {group = "Image", 
     what = "Rotate image",
-    numberOfTests = 1,
+    numberOfTests = 10,
     testGenerator = 
       fn () => 
          (RandomArgumentUtilities.randomBSRImage (), 
@@ -436,21 +455,43 @@ val _ =
       let
         val image = Option.valOf( GrayscaleImageReal.load imageFile )
         val rotated = GrayscaleImageReal.rotate (image, rad)
-        val _ = GrayscaleImageReal.save (rotated, "output/testRot.pgm")
       in
         rotated
       end,
       fn (imageFile, rad) =>
       let 
-        val script = 
-         "test_image_rotate('" ^ imageFile ^ "', " ^ Real.toString rad ^ ")"
-        val command = 
-          "-nojvm -nodisplay -nosplash -r \"" ^ script ^ "; quit\" > /dev/null 2>&1"
-        val process = Unix.execute ("/usr/bin/matlab", [command])
-        val status = Unix.reap process
-        val result =  Option.valOf(GrayscaleImageReal.load "output/test_image_rotate.pgm")
+        val fitest_image_rotate  = _import"fitest_image_rotate" : 
+          real Array.array * real Array.array * 
+          Word64.word * Word64.word * Word64.word * Word64.word * real -> unit;
+
+        val image = Option.valOf( GrayscaleImageReal.load imageFile )
+        val { width = width, height = height, values = src } = image
+
+        val newWidth = Real.ceil(Real.max(
+          abs((real width) * Math.cos(rad) - (real height) * Math.sin(rad)),
+          abs((real width) * Math.cos(rad) + (real height) * Math.sin(rad))));
+        val newHeight = Real.ceil(Real.max(
+          abs((real width) * Math.sin(rad) - (real height) * Math.cos(rad)),
+          abs((real width) * Math.sin(rad) + (real height) * Math.cos(rad))));
+
+        val srcArray = convertColToRowMajor(width, height, #values(image)) 
+        val destArray = Array.array(newWidth * newHeight, 0.0)
+         
+        val _ = fitest_image_rotate 
+          (srcArray,
+           destArray, 
+           Word64.fromInt width, 
+           Word64.fromInt height, 
+           Word64.fromInt newWidth, 
+           Word64.fromInt newHeight,
+           rad);
+
+        val destArrayFix = convertRowToColMajor(newWidth, newHeight, destArray)
+
+        val dest = GrayscaleImageReal.tabulate(newWidth, newHeight, 
+             fn i => Array.sub(destArrayFix, i))
       in
-        result
+        dest
       end
     ],
     compareResult = fn (x, y) => GrayscaleImageReal.equal (x, y),

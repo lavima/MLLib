@@ -53,6 +53,7 @@ sig
   val modify : ( pixel -> pixel ) -> image -> unit
   val modifyi : ( int * pixel -> pixel ) -> image -> unit
   val modifyxy : ( int * int * pixel -> pixel ) -> image -> unit
+  val tabulate : (int * int * (int -> pixel))  -> image
   val tabulatexy : (int * int * (int * int -> pixel))  -> image
 
   val fill : image * pixel -> unit
@@ -330,6 +331,14 @@ struct
       ( fn( i, pix ) => f( i mod width, i div width, pix ) ) 
       values
 
+  fun tabulate (width : int, height : int, f : int -> pixel) : image =
+    let
+       val img = zeroImage(width, height);
+       val _ = modifyi (fn (i,_) => f(i) ) img
+    in
+       img
+    end
+
 
   fun tabulatexy (width : int, height : int, f : int * int -> pixel) : image =
     let
@@ -515,8 +524,10 @@ struct
           val x1 = Real.ceil x
           val y0 = Real.floor y
           val y1 = Real.ceil y
-          val _ = if (0 <= x0) andalso (x1 < width) andalso 
-             (0 <= y0) andalso (y1 < height) then
+          val _ = if (0 <= x0) andalso 
+                     (x1 < width) andalso 
+                     (0 <= y0) andalso 
+                     (y1 < height) then
           let
 
              val m00 = sub (img, x0, y0)
@@ -546,18 +557,19 @@ struct
        else ()
 
     in
-     if (dstY < newHeight -1) then calculateRotationY(dstX, dstY + 1, u, v + 1.0) 
+     if (dstY < newHeight -1) then 
+       calculateRotationY(dstX, dstY + 1, u, v + 1.0) 
      else () 
     end
 
     fun calculateRotationX(dstX : int, u : real) : unit =
-       let
-          val _ = calculateRotationY(dstX, 0, u, (~(real newHeight - 1.0) / 2.0))
-       in
-           if (dstX < newWidth - 1) then 
-              calculateRotationX(dstX + 1, u + 1.0) 
-           else ()
-       end
+      let
+        val _ = calculateRotationY(dstX, 0, u, (~(real newHeight - 1.0) / 2.0))
+      in
+        if (dstX < newWidth - 1) then 
+          calculateRotationX(dstX + 1, u + 1.0) 
+        else ()
+      end
 
     val _ = calculateRotationX(0, (~((real newWidth - 1.0) / 2.0)));
   in
@@ -605,7 +617,7 @@ struct
 
     val borderExt = 
       case borderExtension of
-        ImageCommon.zero => (fn (x,y) => Spec.zeroPixel)
+        ImageCommon.zero => (fn (x, y) => Spec.zeroPixel)
       | ImageCommon.mirror => mirrorBorder
 
     val newImg = tabulatexy(width + 2 * border, height + 2 * border,
