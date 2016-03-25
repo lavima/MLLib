@@ -147,20 +147,16 @@ struct
     fun flush( output : BinIO.outstream ) : unit =
       BinIO.output1( output, !currentOut )
 
-    fun writePixel( output : BinIO.outstream, x : int, w : bool ) 
+    fun writePixel( output : BinIO.outstream, x : int, y : int, w : bool ) 
         : unit = 
     let 
-      val w8fw = Word8.fromInt o Word.toInt
-
       val i = Word.fromInt( x mod 8 )
-      val _ = 
-        if i=0w0 then
-          flush output
-        else
-          ()
 
       val _ = 
         if i=0w0 andalso x>0 then (
+          BinIO.output1( output, !currentOut );
+          currentOut := 0w0 )
+        else if i=0w0 andalso y>0 then (
           BinIO.output1( output, !currentOut );
           currentOut := 0w0 )
         else if i=0w0 then
@@ -170,9 +166,9 @@ struct
 
       val w' : Word8.word = 
         if w then
-          0w1
-        else
           0w0
+        else
+          0w1
 
     in
       currentOut := Word8.orb( !currentOut, Word8.<<( w', 0w8-i-0w1 ) )
@@ -180,28 +176,33 @@ struct
 
   in
 
-    fun readBooleanPixels( input : BinIO.instream, numPixels : int ) 
+    fun readBooleanPixels( input : BinIO.instream, width : int, height : int ) 
         : bool list =
     let
+      val numPixels = width*height
+
       fun read( index : int ) : bool list =
         case index<numPixels of 
           false => []
-        | true => readPixel( input, index )::read( index+1 )
+        | true => readPixel( input, index mod width )::read( index+1 )
     in
       read 0
     end
 
-    fun writeBooleanPixels( output : BinIO.outstream, pixels : bool list )
+    fun writeBooleanPixels( output : BinIO.outstream, 
+                            width : int, 
+                            pixels : bool list )
         : unit =
     let
       fun write( index : int, xs : bool list ) : unit =
         case xs of
           [] => ( )
         | x::xs' => (
-            writePixel( output, index, x );
+            writePixel( output, index mod width, index div width, x );
             write( index+1, xs' ) )
+      val _ = write( 0, pixels )
     in
-      write( 0, pixels )
+      flush output
     end
 
   end (* local *)

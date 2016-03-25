@@ -17,7 +17,7 @@ val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y )
 
 
 
-val _ = print"\n\n********** im Tests **********\n"
+val _ = print"\n\n********** Image Tests **********\n"
 
 val _ = test( "Loading PGM image as Word8GrayscaleImage.image",
   fn() => Option.valOf( Word8PGM.read("simple.plain.pgm") ),
@@ -62,7 +62,7 @@ val _ = test( "Loading proper PGM image as RealGrayscaleImage.image",
     RealGrayscaleImage.foldi RealGrayscaleImage.RowMajor
       ( fn( i, j, x, equal ) =>
           if equal andalso 
-             Util.approxEqReal( x, Array.sub( truth, j*height+i ), 3 ) then
+             Util.approxEqReal( x, Array.sub( truth, i*width+j ), 3 ) then
             equal
           else
             false )
@@ -105,10 +105,10 @@ val _ =
     fn () => 
       let
         val im = Option.valOf( Word8PGM.read("simple.plain.pgm") )
-        val _ = Word8PGM.write( im, "output1.pgm" )
-        val Loaded = Option.valOf( Word8PGM.read("output1.pgm") )
+        val _ = Word8PGM.write( im, "output2.pgm" )
+        val loaded = Option.valOf( Word8PGM.read("output2.pgm") )
       in
-        Loaded
+        loaded
       end ,
     fn x => 
       if Word8GrayscaleImage.sub( x, 0, 0 )=0w0 andalso
@@ -161,14 +161,13 @@ val _ =
       let
         val im = BooleanImage.fromList'( 2, 2, [ true, false, true, false ] )
         val _ = BooleanPBM.write' PNM.rawPBM ( im, "output2.pbm" )
-
       in
         Option.valOf( BooleanPBM.read "output2.pbm" )
       end , 
     fn x =>
       if BooleanImage.sub( x, 0, 0 ) andalso
-         not( BooleanImage.sub( x, 1, 0 ) ) andalso
-         BooleanImage.sub( x, 0, 1 ) andalso
+         not( BooleanImage.sub( x, 0, 1 ) ) andalso
+         BooleanImage.sub( x, 1, 0 ) andalso
          not( BooleanImage.sub( x, 1, 1 ) ) then
         true
       else
@@ -240,7 +239,7 @@ val _ =
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
       val Filter =
-        RealGrayscaleImage.fromList'( 2, 1, [ 1.0, 2.0 ] )
+        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
     in
       RealGrayscaleImage.correlate 
         ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
@@ -263,7 +262,7 @@ val _ =
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
       val Filter =
-        RealGrayscaleImage.fromList'( 2, 1, [ 1.0, 2.0 ] )
+        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
     in
       RealGrayscaleImage.convolve 
         ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
@@ -271,6 +270,7 @@ val _ =
     end ,
     fn x => 
     let
+      val _ = print( RealGrayscaleImage.toString x ^ "\n" )
       val truth = 
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 4.0, 7.0, 9.0, 13.0, 16.0, 18.0, 22.0, 25.0, 27.0 ] )
@@ -373,7 +373,7 @@ val _ =
       val t = true
       val f = false
       val im = 
-        BooleanImage.fromList'( 11, 5, 
+        BooleanImage.fromList'( 5, 11, 
           [ t, t, t, t, t, t, t, t, t, t, t, 
             t, t, t, t, t, t, t, t, t, f, f,
             t, t, t, t, t, t, t, t, t, f, f,
@@ -387,7 +387,7 @@ val _ =
       val t = true
       val f = false
       val truth = 
-        BooleanImage.fromList'( 11, 5, 
+        BooleanImage.fromList'( 5, 11, 
           [ t, f, f, f, f, f, f, f, t, t, t, 
             t, t, f, f, f, f, f, t, t, f, f, 
             f, t, t, t, t, t, t, t, f, f, f,

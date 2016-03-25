@@ -24,4 +24,3 @@ val _ = test( "Generate texton filters",
          17 = List.length x
      end 
   )
-  ;

@@ -31,23 +31,29 @@ struct
 
     val ( format, width, height, maxVal, _ ) = 
       PNMText.parseHeader input
+
+    val out = 
+      case format of
+        plainPGM => 
+          SOME( 
+            fromList( 
+              width, 
+              height, 
+              maxVal, 
+              PNMText.parseGrayscalePixels input ) )
+      | rawPGM => 
+          SOME( 
+            fromList( 
+              width, 
+              height, 
+              maxVal, 
+              PNMBinary.readGrayscalePixels( input, maxVal, width*height ) ) )
+      | _ => NONE
+
+    val _ = BinIO.closeIn input
+
   in
-    case format of
-      plainPGM => 
-        SOME( 
-          fromList( 
-            width, 
-            height, 
-            maxVal, 
-            PNMText.parseGrayscalePixels input ) )
-    | rawPGM => 
-        SOME( 
-          fromList( 
-            width, 
-            height, 
-            maxVal, 
-            PNMBinary.readGrayscalePixels( input, maxVal, width*height ) ) )
-    | _ => NONE
+    out
   end
 
   fun write' ( options as ( format, maxVal ) : writeOptions ) 
@@ -61,12 +67,14 @@ struct
 
     val out = BinIO.openOut filename 
     val ( height, width ) = dimensions im
+    val _ = 
+      ( PNMText.writeHeader( out, ( format, width, height, 1, maxVal, [] ) );
+        if format=plainPGM then
+          PNMText.writeGrayscalePixels( out, toList( im, maxVal ) ) 
+        else 
+          PNMBinary.writeGrayscalePixels( out, maxVal, toList( im, maxVal ) ) )
   in
-    ( PNMText.writeHeader( out, ( format, width, height, 1, maxVal, [] ) );
-      if format=plainPGM then
-        PNMText.writeGrayscalePixels( out, toList( im, maxVal ) ) 
-      else 
-        PNMBinary.writeGrayscalePixels( out, maxVal, toList( im, maxVal ) ) )
+    BinIO.closeOut out
   end
 
   val write = write' ( plainPGM, 0w255 )

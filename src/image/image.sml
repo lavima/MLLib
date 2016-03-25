@@ -145,7 +145,15 @@ struct
   fun fromList'( rows : int, cols : int, pixels : pixel list ) : image =
   let
     fun build( xs : pixel list ) : pixel list list =
-      List.take( xs, cols )::build( List.drop( xs, cols ) )
+      case xs of 
+        [] => []
+      | _::_ =>
+          List.take( xs, cols )::build( List.drop( xs, cols ) )
+
+    val _ = 
+      case rows*cols=List.length pixels of 
+        false => raise Size
+      | true => ()
   in
     fromList( build pixels )
   end
@@ -228,7 +236,7 @@ struct
             "\n" :: ( 
               List.foldr
                 ( fn( x, strings' ) => 
-                    ( Spec.pixelToString( sub( im, x, y ) ) ^ ", " ) ::
+                    ( Spec.pixelToString( sub( im, y, x ) ) ^ ", " ) ::
                         strings' )
                 strings
                 ( List.tabulate( width, fn x => x ) ) ) )
@@ -309,16 +317,21 @@ struct
           ~( v mod ~max )
         else
           max-( ( v mod max )+1 )
+
+      val value =
+        case extension of 
+          ZeroExtension => 
+            if x>=0 andalso x<width andalso y>=0 andalso y<height then 
+              sub( im, y, x )
+            else
+              zeroPixel
+        | CopyExtension => sub( im, copy( y, height ), copy( x, width ) )
+        | WrapExtension => sub( im, wrap( y, height ), wrap( x, width ) ) 
+        | MirrorExtension => sub( im, mirror( y, height ), mirror( x, width ) )
+      
+      val _ = print( "Value " ^ pixelToString value ^ "\n" )
     in
-      case extension of 
-        ZeroExtension => 
-          if x>=0 andalso x<width andalso y>=0 andalso y<height then 
-            sub( im, y, x )
-          else
-            zeroPixel
-      | CopyExtension => sub( im, copy( y, height ), copy( x, width ) )
-      | WrapExtension => sub( im, wrap( y, height ), wrap( x, width ) ) 
-      | MirrorExtension => sub( im, mirror( y, height ), mirror( x, width ) )
+      value
     end
 
   in (* local *)
@@ -328,8 +341,8 @@ struct
         : image =
     let
 
-      val ( width, height ) = dimensions im
-      val ( maskWidth, maskHeight ) = dimensions mask
+      val ( height, width ) = dimensions im
+      val ( maskHeight, maskWidth ) = dimensions mask
 
       val out = zeroImage( height, width )
       val ( outHeight, outWidth ) = dimensions out
@@ -402,8 +415,8 @@ struct
         : image =
     let
 
-      val ( width, height ) = dimensions im
-      val ( maskWidth, maskHeight ) = dimensions mask
+      val ( height, width ) = dimensions im
+      val ( maskHeight, maskWidth ) = dimensions mask
 
       val out = zeroImage( height, width )
       val ( outHeight, outWidth ) = dimensions out

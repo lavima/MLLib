@@ -25,7 +25,9 @@ let
   val _ = print( Text ^ ": " )
 
   val Success = evaluate( run() )
-    handle e => ( print( "Unhandled exception:\n" ^ ( exnToString e ) ); false )
+    handle e => ( 
+      print( "Unhandled exception:\n" ^ ( exnToString e ) ); 
+      false )
 in
   if Success then
     ( print"OK\n"; true )

@@ -8,3 +8,4 @@ pnm_text.sml
 pnm_binary.sml
 pbm.sml
 pgm.sml
+ppm.sml

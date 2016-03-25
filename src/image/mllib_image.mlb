@@ -1,6 +1,6 @@
 $(SML_LIB)/basis/basis.mlb
 
-../mllib_general.mlb
+../mllib.mlb
 ../math/mllib_math.mlb
 
 util.sml
