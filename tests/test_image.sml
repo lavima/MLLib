@@ -270,7 +270,6 @@ val _ =
     end ,
     fn x => 
     let
-      val _ = print( RealGrayscaleImage.toString x ^ "\n" )
       val truth = 
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 4.0, 7.0, 9.0, 13.0, 16.0, 18.0, 22.0, 25.0, 27.0 ] )
@@ -293,49 +292,10 @@ val _ =
             [ true, false, false, false, true, false, false, true, false ] )
         val Score1 = FMeasureBerkeleyEdge.evaluate( im, [ truth ] )
 
-
-        (* Test with with proper edge classified image *)
-
-        (* The following code generates an edge classified image by running
-           the Canny detector on the first image in the BSDS. It saves a copy of
-           the result and the corresponding ground truths. *)
-        (*
-        val DataDir = "../../Research/imageanalysis/data/BSDS_PNM/"
-        val ImageDir = DataDir ^ "images/"
-        val TruthDir = DataDir ^ "truth/"
-        val FilenamesFile = "bsds.train.grayscale.filenames"
-        val TruthFilenamesFile = "bsds.train.truth.filenames"
-
-        val FirstFile::_ = TextFileUtil.readFilenames( DataDir ^ FilenamesFile )
-        val FirstTruthFile::_ = TextFileUtil.readFilenames( DataDir ^ TruthFilenamesFile )
-        val FirstFileName = OS.Path.base FirstFile
-        val im = 
-          Option.valOf( RealGrayscaleImage.load( ImageDir ^ FirstFile ) )
-        val Edges = Canny.findEdges' ( Canny.otsuHighLowRatio 0.8 ) im
-
-        val _ = 
-          RealGrayscaleImage.save( 
-            ImageUtil.convertBooleanToReal Edges, 
-            FirstFileName ^ ".pgm" )
-
-        val TruthFilenames = 
-          TextFileUtil.readFilenames( TruthDir ^ FirstTruthFile )
-
-        val TruthImages = 
-          List.map
-            ( fn TruthImageFilename => 
-                Option.valOf( BooleanImage.load( TruthDir ^ TruthImageFilename ) ) )
-            TruthFilenames 
-
-        val _ = 
-          List.app
-            ( fn( truth, Filename ) => 
-                BooleanImage.save( truth, Filename ) )
-            ( ListUtil.combine( TruthImages, TruthFilenames ) ) 
-        *)
+        (* Test with proper edge classified image *)
 
         val Edges = 
-            Option.valOf( BooleanPBM.read( "edge_classified.plain.pgm" ) ) 
+            Option.valOf( BooleanPBM.read( "edge_classified.plain.pbm" ) ) 
 
         val TruthImages =
           List.map
@@ -348,12 +308,10 @@ val _ =
               "edge_truth_5.plain.pbm",
               "edge_truth_6.plain.pbm" ]
 
-        (* Uncomment for a single evaluation *)
         val Score2 = FMeasureBerkeleyEdge.evaluate( Edges, TruthImages )
-        (* Uncomment for a full statistical comparison *)
-        (*val EvalList = List.tabulate( 1000, fn _ => ( Edges, TruthImages ) )
-        val Score2 = FMeasureBerkeleyEdge.evaluateList( EvalList )*)
-        (*val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )*)
+
+        val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )
+        val _ = print( FMeasureBerkeleyEdge.toString Score2 ^ "\n" )
       in
         [ Score1, Score2 ] 
       end ,

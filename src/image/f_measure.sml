@@ -70,7 +70,7 @@ struct
     val _ = 
       BooleanImage.appi BooleanImage.ColMajor
         ( fn( i, j, x ) => 
-            Array.update( imageReal, j*height+i, if x then 1.0 else 0.0 ) )
+            Array.update( imageReal, j+i*width, if x then 1.0 else 0.0 ) )
         ( BooleanImage.full image )
       
     val truthReal = Array.array( width*height, 0.0 )
@@ -87,7 +87,7 @@ struct
                 ( fn( i, j, x ) => 
                     Array.update( 
                       truthReal, 
-                      j*height+i, 
+                      j+i*width, 
                       if x then 1.0 else 0.0 ) )
               ( BooleanImage.full truth )
 
@@ -168,9 +168,12 @@ struct
       case evalList of
         [] => accum
       | ( image, truths )::evalList' => 
+          case print"Test1\n" of _ =>
           eval( evalList', add( accum, evaluate( image, truths ) ) )
 
+    val _ = print"Test2\n"
     val ( cp, sp, cr, sr, _, _, _ ) = eval( evalList, zeroScore )
+    val _ = print"Test3\n"
 
     val p = real cp/( case sp>0 of false => 1.0 | true => real sp )
     val r = real cr/( case sr>0 of false => 1.0 | true => real sr )

@@ -329,7 +329,6 @@ struct
         | WrapExtension => sub( im, wrap( y, height ), wrap( x, width ) ) 
         | MirrorExtension => sub( im, mirror( y, height ), mirror( x, width ) )
       
-      val _ = print( "Value " ^ pixelToString value ^ "\n" )
     in
       value
     end
@@ -451,8 +450,8 @@ struct
                       pixelMul( 
                         mv, 
                         getValue( 
-                          ( ox+( mx-centerX ) )-left, 
-                          ( oy+( my-centerY ) )-top ) ) ) )
+                          ( ox+( ( maskWidth-mx-1 )-centerX ) )-left, 
+                          ( oy+( ( maskHeight-my-1 )-centerY ) )-top ) ) ) )
                 zeroPixel
                 ( if ox<left andalso oy<top then
                     region( mask, oy, ox, NONE, NONE ) 
