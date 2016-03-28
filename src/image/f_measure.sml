@@ -38,12 +38,13 @@ end (* structure FMeasureCommon *)
 (*
 * This stucture is a wrapper around the Berkeley edge evaluator
 *)
-structure FMeasureBerkeleyEdge : SCORE =
+structure FMeasureBerkeley : SCORE =
 struct
 
   open FMeasureCommon
 
-  type image = BooleanImage.image
+  type segMap = GrayscaleImageInt.image
+  type edgeMap = BooleanImage.image
   type truth = BooleanImage.image
   
   val defaultMaxDist = 0.0075
@@ -54,7 +55,48 @@ struct
     int * int * real * real * 
     real Array.array * real Array.array -> real;
 
-  fun evaluate( image as { width, height, values } : image, 
+  fun evaluateSegmentation( im as { width, height, values } : segMap,
+                            truths : truth list )
+      : score =
+  let 
+    val bdry2 = BooleanImage.zeroImage( width*2+1, height*2+1 )
+    val edgelsV = BooleanImage.zeroImage( widht, height )
+    val edgelsH = BooleanImage.zeroImage( widht, height )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn x => 
+            Util.loopFromToInt 
+              ( fn y => 
+                  BooleanImage.update( 
+                    edgelsH, 
+                    x, y, 
+                    not( 
+                      GrayscaleImageInt.sub( im, x, y )
+                      =
+                      GrayscaleImageInt.sub( im, x+1, y ) ) ) )
+              ( 0, height-1, 1 ) )
+        ( 0, width-2, 1 )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn y => 
+            Util.loopFromToInt 
+              ( fn x => 
+                  BooleanImage.update( 
+                    edgelsV, 
+                    x, y, 
+                    not( 
+                      GrayscaleImageInt.sub( im, x, y )
+                      =
+                      GrayscaleImageInt.sub( im, x, y+1 ) ) ) )
+              ( 0, width-1, 1 ) )
+        ( 0, height-2, 1 )
+  in
+
+  end
+
+  fun evaluateEdge( image as { width, height, values } : edgeMap, 
                 truths : truth list ) 
       : score =
   let
@@ -148,13 +190,13 @@ struct
     ( countP, sumP, countR, sumR, p, r, f )
   end
 
-  fun evaluateList( evalList : ( image * truth list ) list ) : score =
+  fun evaluateList( evalList : ( edgeMap * truth list ) list ) : score =
   let
-    fun eval( evalList : ( image * truth list ) list, accum : score ) : score =
+    fun eval( evalList : ( edgeMap * truth list ) list, accum : score ) : score =
       case evalList of
         [] => accum
       | ( image, truths )::evalList' => 
-          eval( evalList', add( accum, evaluate( image, truths ) ) )
+          eval( evalList', add( accum, evaluateEdge( image, truths ) ) )
 
     val ( cp, sp, cr, sr, _, _, _ ) = eval( evalList, zeroScore )
 
@@ -165,13 +207,13 @@ struct
     ( cp, sp, cr, sr, p, r, f )
   end
 
-  fun evaluateListAvg( evalList : ( image * truth list ) list ) : score =
+  fun evaluateListAvg( evalList : ( edgeMap * truth list ) list ) : score =
   let
-    fun eval( evalList : ( image * truth list ) list, accum : score ) : score =
+    fun eval( evalList : ( edgeMap * truth list ) list, accum : score ) : score =
       case evalList of
         [] => accum
       | ( image, truths )::evalList' => 
-          eval( evalList', add( accum, evaluate( image, truths ) ) )
+          eval( evalList', add( accum, evaluateEdge( image, truths ) ) )
       
     val ( cp, sp, cr, sr, p, r, f ) = eval( evalList, zeroScore )
     val length = List.length evalList
@@ -183,7 +225,7 @@ struct
     score
   end
 
-end (* structure FMeasureBerkeleyEdge *)
+end (* structure FMeasureBerkeley *)
 
 (* 
 * Incomplete SML implementation of the Berkeley edge evaluator 

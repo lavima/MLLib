@@ -61,6 +61,7 @@ struct
   end
 
   val loopFromToReal = loopFromTo ( Real.<, Real.+ )
+  val loopFromToInt = loopFromTo ( Int.<, Int.+ )
 
   fun accumLoopFromTo ( less : 'a * 'a -> bool, add : 'a * 'a -> 'a )
                       ( f : 'a * 'b -> 'b )
@@ -77,6 +78,7 @@ struct
   end
 
   val accumLoopFromToReal = accumLoopFromTo ( Real.<, Real.+ )
+  val accumLoopFromToInt = accumLoopFromTo ( Int.<, Int.+ )
 
   (*
   * Function for iterating in a loop with an increasing index variable. The 
