@@ -56,6 +56,7 @@ struct
     fun loop( i : 'a ) : unit =
       case less( to, i ) of 
         false => ( f i; loop( add( i, inc ) ) )
+      | true => ()
   in
     loop from
   end

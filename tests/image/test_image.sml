@@ -277,7 +277,7 @@ val _ =
     end )
 
 val _ =
-  UnitTest.test( "Testing Berkeley FMeasure for edges",
+  UnitTest.test( "Testing Berkeley FMeasure",
     fn() => 
       let
 
@@ -289,7 +289,7 @@ val _ =
         val Truth = 
           BooleanImage.fromList( 3, 3, 
             [ true, false, false, false, true, false, false, true, false ] )
-        val Score1 = FMeasureBerkeleyEdge.evaluate( Image, [ Truth ] )
+        val Score1 = FMeasureBerkeley.evaluateEdge( Image, [ Truth ] )
 
 
         (* Test with with proper edge classified image *)
@@ -334,6 +334,8 @@ val _ =
 
         val Edges = 
             Option.valOf( BooleanImage.load( "edge_classified.plain.pgm" ) ) 
+        val Segs = 
+            Option.valOf( GrayscaleImageInt.load( "proper2.seg.raw.pgm" ) ) 
 
         val TruthImages =
           List.map
@@ -347,21 +349,31 @@ val _ =
               "edge_truth_6.plain.pbm" ]
 
         (* Uncomment for a single evaluation *)
-        val Score2 = FMeasureBerkeleyEdge.evaluate( Edges, TruthImages )
+        val Score2 = FMeasureBerkeley.evaluateEdge( Edges, TruthImages )
         (* Uncomment for a full statistical comparison *)
         (*val EvalList = List.tabulate( 1000, fn _ => ( Edges, TruthImages ) )
         val Score2 = FMeasureBerkeleyEdge.evaluateList( EvalList )*)
         (*val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )*)
+
+        val Score3 = FMeasureBerkeley.evaluateSegmentation( Segs, TruthImages )
+        (*val _ = print( FMeasureBerkeley.toString Score3 ^ "\n" ) *)
       in
-        [ Score1, Score2 ] 
+        [ Score1, Score2, Score3 ] 
       end ,
-    fn[ Score1 as ( _, _, _, _, _, _, F1), Score2 as ( _, _, _, _, _, _, F2 ) ] => 
+    fn[ Score1 as ( _, _, _, _, _, _, F1), 
+        Score2 as ( _, _, _, _, _, _, F2 ),
+        Score3 as ( _, _, _, _, _, _, F3 ) ] => 
       (* Uncommment for a single evaluation *)
       Util.approxEqReal( F1, 0.666, 3 ) andalso 
-      Util.approxEqReal( F2, 0.495956270745496, 2 ) 
+      Util.approxEqReal( F2, 0.495956270745496, 2 ) andalso
       (* P = 0.352722029988466
          R = 0.835059185285489
          F = 0.495956270745496 *)
+      Util.approxEqReal( F3, 0.767055072099290, 2 ) 
+      (* P = 0.914462944825335
+         R = 0.660573234032950
+         F = 0.767055072099290
+      *)
       )
 
 val _ = 

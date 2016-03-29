@@ -1,3 +1,10 @@
+2016-03-29	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Refactored the SCORE signature to allow for region based F-measure tests. 
+		Changed FMeasureBerkeleyEdge to FMeasureBerkeley and copied the 
+		transformation code provided in BSDS500. The implementation produce the
+		same result on in a simple test, but a more thorough test is needed to 
+		determine if the implementation is valid.
+
 2016-03-25	Marius Geitle <marius.geitle@hiof.no>
 	* Added random test for image rotation.
 

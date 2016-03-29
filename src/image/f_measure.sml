@@ -55,47 +55,6 @@ struct
     int * int * real * real * 
     real Array.array * real Array.array -> real;
 
-  fun evaluateSegmentation( im as { width, height, values } : segMap,
-                            truths : truth list )
-      : score =
-  let 
-    val bdry2 = BooleanImage.zeroImage( width*2+1, height*2+1 )
-    val edgelsV = BooleanImage.zeroImage( widht, height )
-    val edgelsH = BooleanImage.zeroImage( widht, height )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn x => 
-            Util.loopFromToInt 
-              ( fn y => 
-                  BooleanImage.update( 
-                    edgelsH, 
-                    x, y, 
-                    not( 
-                      GrayscaleImageInt.sub( im, x, y )
-                      =
-                      GrayscaleImageInt.sub( im, x+1, y ) ) ) )
-              ( 0, height-1, 1 ) )
-        ( 0, width-2, 1 )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn y => 
-            Util.loopFromToInt 
-              ( fn x => 
-                  BooleanImage.update( 
-                    edgelsV, 
-                    x, y, 
-                    not( 
-                      GrayscaleImageInt.sub( im, x, y )
-                      =
-                      GrayscaleImageInt.sub( im, x, y+1 ) ) ) )
-              ( 0, width-1, 1 ) )
-        ( 0, height-2, 1 )
-  in
-
-  end
-
   fun evaluateEdge( image as { width, height, values } : edgeMap, 
                 truths : truth list ) 
       : score =
@@ -188,6 +147,117 @@ struct
     val f = 2.0*p*r/( case ( p+r )>0.0 of false => 1.0 | true => ( p+r ) )
   in
     ( countP, sumP, countR, sumR, p, r, f )
+  end
+
+  fun evaluateSegmentation( im as { width, height, values } : segMap,
+                            truths : truth list )
+      : score =
+  let 
+    val bdry as { width=bdryWidth, height=bdryHeight, ... } = 
+      BooleanImage.zeroImage( width*2+1, height*2+1 )
+
+    val edgelsV = BooleanImage.zeroImage( width, height )
+    val edgelsH = BooleanImage.zeroImage( width, height )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn x => 
+            Util.loopFromToInt 
+              ( fn y => 
+                  BooleanImage.update( 
+                    edgelsH, 
+                    x, y, 
+                    not( 
+                      GrayscaleImageInt.sub( im, x, y )
+                      =
+                      GrayscaleImageInt.sub( im, x+1, y ) ) ) )
+              ( 0, height-1, 1 ) )
+        ( 0, width-2, 1 )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn y => 
+            Util.loopFromToInt 
+              ( fn x => 
+                  BooleanImage.update( 
+                    edgelsV, 
+                    x, y, 
+                    not( 
+                      GrayscaleImageInt.sub( im, x, y )
+                      =
+                      GrayscaleImageInt.sub( im, x, y+1 ) ) ) )
+              ( 0, width-1, 1 ) )
+        ( 0, height-2, 1 )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn x => 
+            Util.loopFromToInt 
+              ( fn y => (
+                  BooleanImage.update( 
+                    bdry, 
+                    x+1, y, 
+                    BooleanImage.sub( edgelsH, x div 2, y div 2 ) );
+                  BooleanImage.update( 
+                    bdry, 
+                    x, y+1, 
+                    BooleanImage.sub( edgelsV, x div 2, y div 2 ) );
+                  if x<bdryWidth-2 andalso y<bdryHeight-2 then
+                    BooleanImage.update( 
+                      bdry, 
+                      x+1, y+1, 
+                      BooleanImage.sub( edgelsH, x div 2, y div 2 ) 
+                      orelse
+                      BooleanImage.sub( edgelsH, x div 2, ( y div 2 )+1 ) 
+                      orelse
+                      BooleanImage.sub( edgelsV, x div 2, y div 2 ) 
+                      orelse
+                      BooleanImage.sub( edgelsV, ( x div 2 )+1, y div 2 ) )
+                  else
+                    () ) )
+              ( 1, bdryHeight-2, 2 ) )
+        ( 1, bdryWidth-2, 2 )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn x => (
+            BooleanImage.update( 
+              bdry, 
+              x, 0, 
+              BooleanImage.sub( bdry, x, 1 ) ); 
+            BooleanImage.update( 
+              bdry, 
+              x, bdryHeight-1, 
+              BooleanImage.sub( bdry, x, bdryHeight-2 ) ) ) )
+        ( 0, bdryWidth-1, 1 )
+
+    val _ = 
+      Util.loopFromToInt
+        ( fn y => (
+            BooleanImage.update( 
+              bdry, 
+              0, y, 
+              BooleanImage.sub( bdry, 1, y ) ); 
+            BooleanImage.update( 
+              bdry, 
+              bdryWidth-1, y, 
+              BooleanImage.sub( bdry, bdryWidth-2, y ) ) ) )
+        ( 0, bdryHeight-1, 1 )
+
+    val out = BooleanImage.zeroImage( width, height )
+    val _ = 
+      Util.loopFromToInt
+        ( fn x => 
+            Util.loopFromToInt 
+              ( fn y => 
+                  BooleanImage.update( 
+                    out, 
+                    ( x-1 ) div 2, ( y-1 ) div 2, 
+                    BooleanImage.sub( bdry, x, y ) ) )
+              ( 2, bdryHeight-1, 2 ) )
+        ( 2, bdryWidth-1, 2 )
+  in
+    evaluateEdge( out, truths )
   end
 
   fun evaluateList( evalList : ( edgeMap * truth list ) list ) : score =

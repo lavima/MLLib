@@ -1,7 +1,8 @@
 signature SCORE =
 sig
   
-  type image
+  type segMap
+  type edgeMap
   type truth
   type score 
 
@@ -9,9 +10,10 @@ sig
   
   val add : score * score -> score
   
-  val evaluate : image * truth list -> score
-  val evaluateList : ( image * truth list ) list -> score
-  val evaluateListAvg : ( image * truth list ) list -> score
+  val evaluateSegmentation : segMap * truth list -> score
+  val evaluateEdge : edgeMap * truth list -> score
+  val evaluateList : ( edgeMap * truth list ) list -> score
+  val evaluateListAvg : ( edgeMap * truth list ) list -> score
 
   val toString : score -> string
 
