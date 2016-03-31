@@ -267,7 +267,7 @@ val _ =
       [ 
         RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-          ( im1, Filter )
+          ( im1, Filter ),
     end ,
     fn x => 
     let
