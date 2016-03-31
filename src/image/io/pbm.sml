@@ -35,12 +35,12 @@ struct
     val out = 
       case format of
         plainPBM => 
-          SOME( fromList( width, height, PNMText.parseBooleanPixels input ) )
+          SOME( fromList( height, width, PNMText.parseBooleanPixels input ) )
       | rawPBM => 
           SOME( 
             fromList( 
-              width, 
               height, 
+              width, 
               PNMBinary.readBooleanPixels( input, width, height ) ) )
       | _ => NONE 
 

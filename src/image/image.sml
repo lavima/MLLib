@@ -508,10 +508,10 @@ struct
              (0 <= y0) andalso (y1 < height) then
           let
 
-             val m00 = sub (img, x0, y0)
-             val m01 = sub (img, x0, y1)
-             val m10 = sub (img, x1, y0)
-             val m11 = sub (img, x1, y1)
+             val m00 = sub (img, y0, x0)
+             val m01 = sub (img, y1, x0)
+             val m10 = sub (img, y0, x1)
+             val m11 = sub (img, y1, x1)
              
              val t0 = if (not(x0 = x1)) then 
                          Spec.pixelAdd(Spec.pixelScale(m00, (real x1) - x),
@@ -524,7 +524,7 @@ struct
                          Spec.pixelScale(t1,  y - (real y0)))
                       else t0
             
-             val _ = update (newImage, dstX, dstY, ty)
+             val _ = update (newImage, dstY, dstX, ty)
           in
              ()
           end

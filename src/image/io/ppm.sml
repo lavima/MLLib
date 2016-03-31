@@ -37,15 +37,15 @@ struct
         plainPPM => 
           SOME( 
             fromList( 
-              width, 
               height, 
+              width, 
               maxVal, 
               PNMText.parseColorPixels input ) )
       | rawPPM => 
           SOME( 
             fromList( 
-              width, 
               height, 
+              width, 
               maxVal, 
               PNMBinary.readColorPixels( input, maxVal, width*height ) ) )
       | _ => NONE
@@ -101,8 +101,8 @@ local
           im )
     end
 
-    fun fromList( width : int, 
-                  height : int, 
+    fun fromList( height : int, 
+                  width : int, 
                   maxVal : word, 
                   pixels : ( word * word * word ) list )
         : image = 
@@ -113,8 +113,8 @@ local
         w8fr( ( rfw x/rfw maxVal )*255.0 )
     in
       Word8RGBImage.fromList'( 
-        width, 
         height, 
+        width, 
         List.map ( fn( r, g, b ) => ( wfw r, wfw g, wfw b ) ) pixels )
     end
 
@@ -138,8 +138,8 @@ local
           im )
     end
 
-    fun fromList( width : int, 
-                  height : int, 
+    fun fromList( height : int, 
+                  width : int, 
                   maxVal : word, 
                   pixels : ( word * word * word ) list )
         : image = 
@@ -148,8 +148,8 @@ local
         real( Word.toInt x )/real( Word.toInt maxVal ) 
     in
       RealRGBImage.fromList'( 
-        width, 
         height, 
+        width, 
         List.map ( fn( r, g, b ) => ( rfw r, rfw g, rfw b ) ) pixels )
     end
 

@@ -14,7 +14,7 @@ struct
   let
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = BooleanImage.image( width, height, false )
+    val out = BooleanImage.zeroImage( height, width )
     val _ =
       RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
         ( fn( y, x, w ) =>
@@ -33,7 +33,7 @@ struct
   let
     val ( height, width ) = Word8GrayscaleImage.dimensions im
 
-    val out = RealGrayscaleImage.image( width, height, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
       Word8GrayscaleImage.appi Word8GrayscaleImage.RowMajor
         ( fn( y, x, w ) =>
@@ -49,7 +49,7 @@ struct
   let
     val ( height, width ) = BooleanImage.dimensions im
 
-    val out = RealGrayscaleImage.image( width, height, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
       BooleanImage.appi BooleanImage.RowMajor
         ( fn( y, x, w ) =>
@@ -67,7 +67,7 @@ struct
   let
     val ( height, width ) = BooleanImage.dimensions im
 
-    val out = RealGrayscaleImage.image( height, width, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( width, height )
     val _ = 
       BooleanImage.appi BooleanImage.RowMajor
         ( fn( y, x, w ) =>
@@ -101,7 +101,7 @@ struct
 
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val normalized = RealGrayscaleImage.image( width, height, 0.0 )
+    val normalized = RealGrayscaleImage.zeroImage( height, width )
 
     val max = RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
       ( fn( x, max ) => 
@@ -159,7 +159,7 @@ struct
 
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val normalized = RealGrayscaleImage.image( width, height, 0.0 )    
+    val normalized = RealGrayscaleImage.zeroImage( height, width )    
 
     val max = 
       RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
@@ -228,7 +228,7 @@ struct
     val sub = RealGrayscaleImage.sub
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = RealGrayscaleImage.zeroImage( width, height )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
       RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
         ( fn( y, x, _ ) => 
@@ -250,7 +250,7 @@ struct
     val sub = RealGrayscaleImage.sub
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = RealGrayscaleImage.zeroImage( width, height )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
       RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
         ( fn( y, x, _ ) => 
@@ -278,7 +278,7 @@ struct
     val im::_ = images 
     val ( height, width ) = BooleanImage.dimensions im
 
-    val out = Word8GrayscaleImage.image( width, height, 0w0)
+    val out = Word8GrayscaleImage.zeroImage( height, width )
 
     fun pack( images, index ) : unit =
       case images of 
@@ -321,14 +321,14 @@ struct
         false => []
       | true => 
         let
-          val out = BooleanImage.image( width, height, false )
+          val out = BooleanImage.zeroImage( height, width )
           val _ =
             BooleanImage.modifyi BooleanImage.RowMajor
-              ( fn( x, y, _ ) =>
+              ( fn( y, x, _ ) =>
                 let
                   val w = 
                     Word8.>>( 
-                      Word8GrayscaleImage.sub( im, x, y ), 
+                      Word8GrayscaleImage.sub( im, y, x ), 
                       index ) mod 0w2
                 in
                   if w>0w0 then

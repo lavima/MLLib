@@ -37,15 +37,15 @@ struct
         plainPGM => 
           SOME( 
             fromList( 
-              width, 
               height, 
+              width, 
               maxVal, 
               PNMText.parseGrayscalePixels input ) )
       | rawPGM => 
           SOME( 
             fromList( 
-              width, 
               height, 
+              width, 
               maxVal, 
               PNMBinary.readGrayscalePixels( input, maxVal, width*height ) ) )
       | _ => NONE
@@ -100,15 +100,15 @@ local
           im )
     end
 
-    fun fromList( width : int, height : int, maxVal : word, pixels : word list )
+    fun fromList( height : int, width : int, maxVal : word, pixels : word list )
         : image = 
     let
       val rfw = Real.fromInt o Word.toInt  
       val w8fr = Word8.fromInt o Real.toInt IEEEReal.TO_NEAREST
     in
       Word8GrayscaleImage.fromList'( 
-        width, 
         height, 
+        width, 
         List.map ( fn x => w8fr( ( rfw x/rfw maxVal )*255.0 ) ) pixels )
     end
 
@@ -132,14 +132,14 @@ local
           im )
     end
 
-    fun fromList( width : int, height : int, maxVal : word, pixels : word list )
+    fun fromList( height : int, width : int, maxVal : word, pixels : word list )
         : image = 
     let
       val rfw = Real.fromInt o Word.toInt
     in
       RealGrayscaleImage.fromList'( 
-        width, 
         height, 
+        width, 
         List.map ( fn x => rfw x/rfw maxVal ) pixels )
     end
 

@@ -62,7 +62,7 @@ struct
         mask
     val _ = 
       RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
-        ( fn( x ) => x/sum ) 
+        ( fn x => x/sum ) 
         mask
 
   in

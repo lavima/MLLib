@@ -70,7 +70,7 @@ struct
     val _ = 
       BooleanImage.appi BooleanImage.ColMajor
         ( fn( i, j, x ) => 
-            Array.update( imageReal, j+i*width, if x then 1.0 else 0.0 ) )
+            Array.update( imageReal, j*height+i, if x then 1.0 else 0.0 ) )
         ( BooleanImage.full image )
       
     val truthReal = Array.array( width*height, 0.0 )
@@ -87,7 +87,7 @@ struct
                 ( fn( i, j, x ) => 
                     Array.update( 
                       truthReal, 
-                      j+i*width, 
+                      j*height+i, 
                       if x then 1.0 else 0.0 ) )
               ( BooleanImage.full truth )
 

@@ -258,15 +258,16 @@ val _ =
   test( "Testing RealGrayscaleImage.convolve",
     fn() =>
     let
-      val im = 
+      val im1 = 
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
       val Filter =
         RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
     in
-      RealGrayscaleImage.convolve 
-        ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-        ( im, Filter )
+      [ 
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( im1, Filter )
     end ,
     fn x => 
     let
@@ -310,8 +311,8 @@ val _ =
 
         val Score2 = FMeasureBerkeleyEdge.evaluate( Edges, TruthImages )
 
-        val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )
-        val _ = print( FMeasureBerkeleyEdge.toString Score2 ^ "\n" )
+        (*val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )*)
+        (*val _ = print( FMeasureBerkeleyEdge.toString Score2 ^ "\n" )*)
       in
         [ Score1, Score2 ] 
       end ,

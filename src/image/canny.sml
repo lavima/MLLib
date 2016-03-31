@@ -57,6 +57,7 @@ struct
       val gaussian = FilterUtil.createGaussianMask sigma 
       val gaussianDerived = ImageUtil.gradientXReal gaussian
 
+      val _ = print"Test1\n"
       val ( sumPos, sumNeg ) = 
         fold RealGrayscaleImage.RowMajor
           ( fn( x, ( sumPos, sumNeg ) ) => 
@@ -78,12 +79,15 @@ struct
               else
                 x )
           gaussianDerived
+      val _ = print"Test2\n"
 
       val smoothX = convolve( image, transposed gaussian )
       val gradX = convolve( smoothX, gaussianDerived )
 
       val smoothY = convolve( image, gaussian )
       val gradY = convolve( smoothY, transposed gaussianDerived )
+
+      val _ = print"Test3\n"
 
       val magnitude = RealGrayscaleImage.zeroImage( height, width )
       val _ =
