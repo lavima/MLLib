@@ -248,7 +248,7 @@ struct
   fun transposed( im : image ) : image =
   let
     val ( height, width ) = dimensions im
-    val out = zeroImage( height, width )
+    val out = zeroImage( width, height )
     val _ =
       appi RowMajor
         ( fn( y, x, pix ) => update( out, x, y, pix ) )

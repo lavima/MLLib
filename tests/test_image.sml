@@ -261,21 +261,48 @@ val _ =
       val im1 = 
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
-      val Filter =
+      val filter1 =
         RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
+
+      val im2 = 
+        RealGrayscaleImage.fromList(
+          [ [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
+            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
+            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
+            [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
+            [ 21.0, 22.0, 23.0, 24.0, 25.0 ] ] )
+      val filter2 =
+        RealGrayscaleImage.fromList( 
+          [ [ 10.0, 15.0, 11.0 ],
+            [ 5.0, 3.0, 4.0 ],
+            [ 21.0, 20.0, 19.0 ] ] )
     in
       [ 
         RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-          ( im1, Filter ) ]
+          ( im1, filter1 ),
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( im2, filter2 )
+          
+        ]
     end ,
-    fn[ x ] => 
+    fn[ x, y ] => 
     let
-      val truth = 
+      val truth1 = 
         RealGrayscaleImage.fromList'( 3, 3, 
           [ 4.0, 7.0, 9.0, 13.0, 16.0, 18.0, 22.0, 25.0, 27.0 ] )
+      val truth2 = 
+        RealGrayscaleImage.fromList(
+          [ [ 324.0, 398.0, 506.0, 614.0, 686.0 ],
+            [ 564.0, 638.0, 746.0, 854.0, 926.0 ],
+            [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
+            [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
+            [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
     in
-      RealGrayscaleImage.equal( x, truth )
+      RealGrayscaleImage.equal( x, truth1 )
+      andalso
+      RealGrayscaleImage.equal( y, truth2 )
     end )
 
 val _ =
