@@ -1,3 +1,6 @@
+2016-04-01	Marius Geitle <marius.geitle@hiof.no>
+	* Added labeling of connected components
+
 2016-03-29	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Refactored the SCORE signature to allow for region based F-measure tests. 
 		Changed FMeasureBerkeleyEdge to FMeasureBerkeley and copied the 

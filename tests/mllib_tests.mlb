@@ -21,6 +21,7 @@ end
 
 image/test_image_threshold.sml
 image/test_image_canny.sml
+image/test_connected_components.sml
 image/test_filter.sml
 image/test_filterUtil.sml
 image/test_gradient.sml

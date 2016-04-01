@@ -31,3 +31,4 @@ probability_rand_index.sml
 texton.sml
 gradient.sml
 multiscale_cue.sml
+connected_components.sml
