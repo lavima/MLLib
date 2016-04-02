@@ -13,6 +13,9 @@
 	* All tests pass (except for one which caused an error before merging), but
 		more testing is required to ensure the validity of the implementation.
 
+2016-04-02	Marius Geitle <marius.geitle@hiof.no>
+	* Added sequential testing.
+
 2016-04-01	Marius Geitle <marius.geitle@hiof.no>
 	* Added labeling of connected components
 

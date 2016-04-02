@@ -5,3 +5,4 @@ $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
 unit_test.sml
 random_test.sml
 random_argument_utilities.sml
+sequential_test.sml
