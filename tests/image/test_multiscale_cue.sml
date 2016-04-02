@@ -11,7 +11,7 @@ val _ = UnitTest.test( "Generate oriented multiscale cue response",
   fn() => 
     let
       val savgol_A = [(3.0, 3.0 / 4.0), (5.0, 5.0/4.0), (10.0, 10.0 / 4.0)]
-      val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))
+      val img = Option.valOf(RealPGM.read("proper.plain.pgm"))
       val weights = [1.0, 1.0, 1.0]
       val grad = MultiscaleCue.orientedMultiscale
          (img, weights, 32, 10, Math.pi / 4.0, savgol_A)
@@ -21,7 +21,7 @@ val _ = UnitTest.test( "Generate oriented multiscale cue response",
   fn x =>
      let
          val normalizedImage = ImageUtil.normalizeReal'' x
-         val _ = GrayscaleImageReal.save
+         val _ = RealPGM.write
             (normalizedImage, "output/OrientedMultiscale.pgm")
      in
          true
@@ -31,7 +31,7 @@ val _ = UnitTest.test( "Generate oriented multiscale cue response",
 val _ = UnitTest.test( "Generate multiscale cue response",
   fn() => 
     let
-      val img = Option.valOf(GrayscaleImageReal.load("proper.plain.pgm"))
+      val img = Option.valOf(RealPGM.read("proper.plain.pgm"))
       val weights = [1.0, 1.0, 1.0]
       val grad = MultiscaleCue.multiscale
          (img, img, weights, 32, 10, 8)
@@ -41,7 +41,7 @@ val _ = UnitTest.test( "Generate multiscale cue response",
   fn x =>
      let
          val normalizedImage = ImageUtil.normalizeReal'' x
-         val _ = GrayscaleImageReal.save
+         val _ = RealPGM.write
             (normalizedImage, "output/Multiscale.pgm")
      in
          true

@@ -11,8 +11,8 @@ val _ = print"\n\n********** Complex number tests **********\n"
 val _ = UnitTest.test( "negative",
   fn() => Complex.negative(Complex.complex(2.0, 3.0)),
   fn x =>
-      Util.eqReal(Complex.re(x), ~2.0) andalso
-      Util.eqReal(Complex.im(x), ~3.0)
+      Real.==(Complex.re(x), ~2.0) andalso
+      Real.==(Complex.im(x), ~3.0)
   )
   ;
 
@@ -25,8 +25,8 @@ val _ = UnitTest.test( "plus",
         Complex.plus a b
      end,
   fn x =>
-      Util.eqReal(Complex.re(x), 6.3) andalso
-      Util.eqReal(Complex.im(x), 5.1)
+      Real.==(Complex.re(x), 6.3) andalso
+      Real.==(Complex.im(x), 5.1)
   )
   ;
 
@@ -39,7 +39,7 @@ val _ = UnitTest.test( "minus",
         Complex.minus a b
      end,
   fn x =>
-      Util.eqReal(Complex.re(x), ~2.3) andalso
+      Real.==(Complex.re(x), ~2.3) andalso
       Util.approxEqReal(Complex.im(x), 0.9, 4)
   )
   ;

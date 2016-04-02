@@ -16,13 +16,8 @@ struct
             run : unit -> 'a, 
             evaluate : 'a -> bool ) : bool =
   let
-    fun exnToString(e) =
-        List.foldr (op ^) "" [ "[",
-                              exnName e,
-                              " ",
-                              exnMessage e,
-                              "]"]
-
+    fun exnToString e = 
+      "[" ^ exnName e ^ " " ^ exnMessage e ^ "]"
 
     val _ = print( Text ^ ": " )
 

@@ -9,99 +9,101 @@
 structure ImageUtil =
 struct
   
-  fun convertGrayscaleRealToBoolean( im : GrayscaleImageReal.image )
+  fun convertGrayscaleRealToBoolean( im : RealGrayscaleImage.image )
       : BooleanImage.image = 
   let
-    val { width, height, ... } = im
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = BooleanImage.image( width, height, false )
+    val out = BooleanImage.zeroImage( height, width )
     val _ =
-      GrayscaleImageReal.appxy
-        ( fn( x, y, w ) =>
+      RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
+        ( fn( y, x, w ) =>
             if w>0.0 then
-              BooleanImage.update( out, x, y, true )
+              BooleanImage.update( out, y, x, true )
             else
               () )
+        ( RealGrayscaleImage.full im )
+
   in
     out
   end
 
-  fun convertGrayscaleWord8ToReal( im : GrayscaleImageWord8.image )
-      : GrayscaleImageReal.image =
+  fun convertGrayscaleWord8ToReal( im : Word8GrayscaleImage.image )
+      : RealGrayscaleImage.image =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = Word8GrayscaleImage.dimensions im
 
-    val out = GrayscaleImageReal.image( width, height, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
-      GrayscaleImageWord8.appxy
-        ( fn( x, y, w ) =>
-            GrayscaleImageReal.update( out, x, y, 
+      Word8GrayscaleImage.appi Word8GrayscaleImage.RowMajor
+        ( fn( y, x, w ) =>
+            RealGrayscaleImage.update( out, y, x, 
               real( Word8.toInt w )/255.0 ) )
-        im
+        ( Word8GrayscaleImage.full im )
   in
     out
   end
 
   fun convertBooleanToReal( im : BooleanImage.image )
-      : GrayscaleImageReal.image =
+      : RealGrayscaleImage.image =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = BooleanImage.dimensions im
 
-    val out = GrayscaleImageReal.image( width, height, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
-      BooleanImage.appxy
-        ( fn( x, y, w ) =>
+      BooleanImage.appi BooleanImage.RowMajor
+        ( fn( y, x, w ) =>
             if w then
-              GrayscaleImageReal.update( out, x, y, 1.0 )
+              RealGrayscaleImage.update( out, y, x, 1.0 )
             else
-              GrayscaleImageReal.update( out, x, y, 0.0 ) )
-        im
+              RealGrayscaleImage.update( out, y, x, 0.0 ) )
+        ( BooleanImage.full im )
   in
     out
   end
 
   fun convertBooleanToTransposedReal( im : BooleanImage.image )
-      : GrayscaleImageReal.image =
+      : RealGrayscaleImage.image =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = BooleanImage.dimensions im
 
-    val out = GrayscaleImageReal.image( height, width, 0.0 )
+    val out = RealGrayscaleImage.zeroImage( width, height )
     val _ = 
-      BooleanImage.appxy
-        ( fn( x, y, w ) =>
+      BooleanImage.appi BooleanImage.RowMajor
+        ( fn( y, x, w ) =>
             if w then
-              GrayscaleImageReal.update( out, y, x, 1.0 )
+              RealGrayscaleImage.update( out, x, y, 1.0 )
             else
-              GrayscaleImageReal.update( out, y, x, 0.0 ) )
-        im
+              RealGrayscaleImage.update( out, x, y, 0.0 ) )
+        ( BooleanImage.full im )
   in
     out
   end
 
   fun copyBooleanToTransposedReal( src : BooleanImage.image, 
-                                   dst : GrayscaleImageReal.image )
+                                   dst : RealGrayscaleImage.image )
       : unit =
-    BooleanImage.appxy
-      ( fn( x, y, w ) =>
+    BooleanImage.appi BooleanImage.RowMajor
+      ( fn( y, x, w ) =>
           if w then
-            GrayscaleImageReal.update( dst, y, x, 1.0 )
+            RealGrayscaleImage.update( dst, x, y, 1.0 )
           else
-            GrayscaleImageReal.update( dst, y, x, 0.0 ) )
-      src
+            RealGrayscaleImage.update( dst, x, y, 0.0 ) )
+      ( BooleanImage.full src )
 
   (*
   * Normalize an image of reals to the interval [0.0 1.0]. Note that all pixels 
   * are assumed to be equal to or larger than 0.0.
   *)
-  fun normalizeReal( im : GrayscaleImageReal.image )
-      : GrayscaleImageReal.image =
+  fun normalizeReal( im : RealGrayscaleImage.image )
+      : RealGrayscaleImage.image =
   let
 
-    val { width, height, ... } = im
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val normalized = GrayscaleImageReal.image( width, height, 0.0 )
+    val normalized = RealGrayscaleImage.zeroImage( height, width )
 
-    val max = GrayscaleImageReal.foldl
+    val max = RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
       ( fn( x, max ) => 
           if x>max then
             x
@@ -112,23 +114,23 @@ struct
 
     val _ = 
       if max>0.0 then
-        GrayscaleImageReal.appi
-          ( fn( I, x ) =>
-              GrayscaleImageReal.update'( normalized, I, x/max ) )
-          im
+        RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
+          ( fn( i, j, x ) =>
+              RealGrayscaleImage.update( normalized, i, j, x/max ) )
+          ( RealGrayscaleImage.full im )
       else
         ()
   in
     normalized
   end
 
-  fun normalizeReal'( im : GrayscaleImageReal.image )
+  fun normalizeReal'( im : RealGrayscaleImage.image )
       : unit =
   let
 
-    val { width, height, ... } = im
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val max = GrayscaleImageReal.foldl
+    val max = RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
       ( fn( x, max ) => 
           if x>max then
             x
@@ -139,8 +141,8 @@ struct
 
     val _ = 
       if max>0.0 then
-        GrayscaleImageReal.modifyi
-          ( fn( I, x ) => x/max )
+        RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
+          ( fn x => x/max )
           im
       else
         ()
@@ -151,21 +153,33 @@ struct
   (*
    * Normalize an image of reals by translating and scaling.
    *)
-  fun normalizeReal''( im : GrayscaleImageReal.image )
-       : GrayscaleImageReal.image =
+  fun normalizeReal''( im : RealGrayscaleImage.image )
+       : RealGrayscaleImage.image =
   let
 
-    val { width, height, ... } = im
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val normalized = GrayscaleImageReal.image( width, height, 0.0 )    
+    val normalized = RealGrayscaleImage.zeroImage( height, width )    
 
-    val max = GrayscaleImageReal.foldl Real.max Real.negInf im
-    val min = GrayscaleImageReal.foldl Real.min Real.posInf im
+    val max = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        Real.max 
+        Real.negInf 
+        im
+    val min = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        Real.min 
+        Real.posInf 
+        im
 
-    val _ = GrayscaleImageReal.appi
-          ( fn( I, x ) =>
-            GrayscaleImageReal.update'( normalized, I, (x - min)/(max - min) ) )
-          im
+    val _ = 
+      RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
+        ( fn( i, j, x ) =>
+          RealGrayscaleImage.update( 
+            normalized, 
+            i, j, 
+            ( x-min)/( max-min ) ) )
+        ( RealGrayscaleImage.full im )
   in
     normalized
   end
@@ -173,76 +187,86 @@ struct
   (*
    * Normalize an image by making it zero mean and l1 norm
    *)
-  fun makeRealZeroMean'( image : GrayscaleImageReal.image )
+  fun makeRealZeroMean'( image : RealGrayscaleImage.image )
        : unit =
   let
 
-    val { width=width, height=height, ... } = image
+    val ( height, width ) = RealGrayscaleImage.dimensions image
 
-    val mean = (GrayscaleImageReal.foldl 
-                   (fn (x, a) => x + a) 0.0 image) / (real (width * height))
+    val mean = 
+      ( RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+          ( fn ( x, a ) => x+a ) 
+          0.0 
+          image ) 
+      / 
+      ( real( width*height ) )
 
   in
-     GrayscaleImageReal.modify (fn x => x - mean) image    
+     RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+      ( fn x => x-mean ) 
+      image    
   end
 
-  fun makeRealL1Norm'( image : GrayscaleImageReal.image )
+  fun makeRealL1Norm'( image : RealGrayscaleImage.image )
        : unit =
   let
-    val sum = (GrayscaleImageReal.foldl 
-                   (fn (x, a) => Real.abs(x) + a) 0.0 image)
+    val sum = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        ( fn( x, a ) => ( Real.abs x )+a ) 
+        0.0 
+        image 
   in
-     GrayscaleImageReal.modify (fn x => x / sum) image    
+     RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+      ( fn x => x/sum ) 
+      image    
   end
 
-  
-
-  fun gradientXReal( im : GrayscaleImageReal.image )
-      : GrayscaleImageReal.image =
+  fun gradientXReal( im : RealGrayscaleImage.image )
+      : RealGrayscaleImage.image =
   let
 
-    val sub = GrayscaleImageReal.sub
-    val { width, height, ... } = im
+    val sub = RealGrayscaleImage.sub
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = GrayscaleImageReal.zeroImage( width, height )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
-      GrayscaleImageReal.modifyxy
-        ( fn( x, y, _ ) => 
+      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
+        ( fn( y, x, _ ) => 
             if x=0 then
-              sub( im, x+1, y )-sub( im, x, y )
+              sub( im, y, x+1 )-sub( im, y, x )
             else if x=width-1 then
-              sub( im, x, y )-sub( im, x-1, y )
+              sub( im, y, x )-sub( im, y, x-1 )
             else
-              ( sub( im, x+1, y )-sub( im, x-1, y ) )/2.0 )
-        out
+              ( sub( im, y, x+1 )-sub( im, y, x-1 ) )/2.0 )
+        ( RealGrayscaleImage.full out )
   in
     out
   end
 
-  fun gradientYReal( im : GrayscaleImageReal.image )
-      : GrayscaleImageReal.image =
+  fun gradientYReal( im : RealGrayscaleImage.image )
+      : RealGrayscaleImage.image =
   let
 
-    val sub = GrayscaleImageReal.sub
-    val { width, height, ... } = im
+    val sub = RealGrayscaleImage.sub
+    val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val out = GrayscaleImageReal.zeroImage( width, height )
+    val out = RealGrayscaleImage.zeroImage( height, width )
     val _ = 
-      GrayscaleImageReal.modifyxy
-        ( fn( x, y, _ ) => 
+      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
+        ( fn( y, x, _ ) => 
             if y=0 then
-              sub( im, x, y+1 )-sub( im, x, y )
+              sub( im, y+1, x )-sub( im, y, x )
             else if x=width-1 then
-              sub( im, x, y )-sub( im, x, y-1 )
+              sub( im, y, x )-sub( im, y-1, x )
             else
-              ( sub( im, x, y+1 )-sub( im, x, y-1 ) )/2.0 )
-        out
+              ( sub( im, y+1, x )-sub( im, y-1, x ) )/2.0 )
+        ( RealGrayscaleImage.full out )
   in
     out
   end
 
   fun packBooleanIntoWord8( images : BooleanImage.image list )
-    : GrayscaleImageWord8.image * Word.word =
+    : Word8GrayscaleImage.image * Word.word =
   let 
 
     val num =
@@ -251,9 +275,10 @@ struct
       else
         Word.fromInt( List.length images )
 
-    val ( { width, height, ... } )::_ = images
+    val im::_ = images 
+    val ( height, width ) = BooleanImage.dimensions im
 
-    val out = GrayscaleImageWord8.image( width, height, 0w0)
+    val out = Word8GrayscaleImage.zeroImage( height, width )
 
     fun pack( images, index ) : unit =
       case images of 
@@ -264,18 +289,18 @@ struct
           | true =>
             let
               val _ =
-                GrayscaleImageWord8.modifyxy
-                  ( fn( x, y, w ) =>
+                Word8GrayscaleImage.modifyi Word8GrayscaleImage.RowMajor
+                  ( fn( y, x, w ) =>
                     let
-                      val Z = 
-                        if BooleanImage.sub( im, x, y ) then 
+                      val z = 
+                        if BooleanImage.sub( im, y, x ) then 
                           0w1 
                         else 
                           0w0
                     in
-                      Word8.orb( Word8.<<( Z, index ), w )
+                      Word8.orb( Word8.<<( z, index ), w )
                     end )
-                  out
+                  ( Word8GrayscaleImage.full out )
             in
               pack( images', index+0w1 ) 
             end
@@ -285,25 +310,25 @@ struct
     ( out, num )
   end
 
-  fun unpackBooleanFromWord8( im : GrayscaleImageWord8.image, 
+  fun unpackBooleanFromWord8( im : Word8GrayscaleImage.image, 
                               num : Word.word )
     : BooleanImage.image list =
   let 
-    val { width, height, ... } = im
+    val ( height, width ) = Word8GrayscaleImage.dimensions im
 
     fun unpack( index ) : BooleanImage.image list =
       case index<num of 
         false => []
       | true => 
         let
-          val out = BooleanImage.image( width, height, false )
+          val out = BooleanImage.zeroImage( height, width )
           val _ =
-            BooleanImage.modifyxy
-              ( fn( x, y, _ ) =>
+            BooleanImage.modifyi BooleanImage.RowMajor
+              ( fn( y, x, _ ) =>
                 let
                   val w = 
                     Word8.>>( 
-                      GrayscaleImageWord8.sub( im, x, y ), 
+                      Word8GrayscaleImage.sub( im, y, x ), 
                       index ) mod 0w2
                 in
                   if w>0w0 then
@@ -311,7 +336,7 @@ struct
                   else
                     false
                 end )
-              out
+              ( BooleanImage.full out )
         in
           out::unpack( index+0w1 ) 
         end

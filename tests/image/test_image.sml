@@ -12,72 +12,73 @@ fun rgbeq ( eq : 'a * 'a -> bool )
             P2 as ( R2, G2, B2 ) : 'a * 'a * 'a ) : bool =
   ( eq( R1, R2 ) andalso eq( G1, G2 ) andalso eq( B1, B2 ) )
 
-val rgbreq = rgbeq Util.eqReal
-val rgbweq = rgbeq ( Util.eq Word8.compare )
+val rgbreq = rgbeq Real.==
+val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y ) 
 
 
 
 val _ = print"\n\n********** Image Tests **********\n"
 
 val _ = UnitTest.test( "Loading PGM image as GrayscaleImageWord8.image",
-  fn() => Option.valOf( GrayscaleImageWord8.load("simple.plain.pgm") ),
-  fn X => 
-    if GrayscaleImageWord8.sub( X, 0, 0 )=0w0 andalso
-       GrayscaleImageWord8.sub( X, 1, 0 )=0w64 andalso
-       GrayscaleImageWord8.sub( X, 0, 1 )=0w128 andalso
-       GrayscaleImageWord8.sub( X, 1, 1 )=0w255 then
+  fn() => Option.valOf( Word8PGM.read("simple.plain.pgm") ),
+  fn im => 
+    if Word8GrayscaleImage.sub( im, 0, 0 )=0w0 andalso
+       Word8GrayscaleImage.sub( im, 0, 1 )=0w64 andalso
+       Word8GrayscaleImage.sub( im, 1, 0 )=0w128 andalso
+       Word8GrayscaleImage.sub( im, 1, 1 )=0w255 then
       true
     else
       false )
 
 val _ = UnitTest.test( "Loading PGM image as GrayscaleImageReal.image",
-  fn() => Option.valOf( GrayscaleImageReal.load("simple.plain.pgm") ),
-  fn X => 
-    if Util.eqReal( GrayscaleImageReal.sub( X, 0, 0 ), 0.0 ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 1, 0 ), ( 64.0/255.0 ) ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 0, 1 ), ( 128.0/255.0 ) ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 1, 1 ), 1.0 ) then
+  fn() => Option.valOf( RealPGM.read("simple.plain.pgm") ),
+  fn im => 
+    if Real.==( RealGrayscaleImage.sub( im, 0, 0 ), 0.0 ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 0, 1 ), ( 64.0/255.0 ) ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 1, 0 ), ( 128.0/255.0 ) ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 1, 1 ), 1.0 ) then
       true
     else
       false )
 
 val _ = UnitTest.test( "Loading simple RAW PGM image as GrayscaleImageReal.image",
-  fn() => Option.valOf( GrayscaleImageReal.load("simple.raw.pgm") ),
-  fn X => 
-    if Util.eqReal( GrayscaleImageReal.sub( X, 0, 0 ), 0.0 ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 1, 0 ), ( 64.0/255.0 ) ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 0, 1 ), ( 128.0/255.0 ) ) andalso
-       Util.eqReal( GrayscaleImageReal.sub( X, 1, 1 ), 1.0 ) then
+  fn() => Option.valOf( RealPGM.read("simple.raw.pgm") ),
+  fn im => 
+    if Real.==( RealGrayscaleImage.sub( im, 0, 0 ), 0.0 ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 0, 1 ), ( 64.0/255.0 ) ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 1, 0 ), ( 128.0/255.0 ) ) andalso
+       Real.==( RealGrayscaleImage.sub( im, 1, 1 ), 1.0 ) then
       true
     else
       false )
 
 val _ = UnitTest.test( "Loading proper PGM image as GrayscaleImageReal.image",
-  fn() => Option.valOf( GrayscaleImageReal.load("proper.plain.pgm") ),
-  fn Image => 
+  fn() => Option.valOf( RealPGM.read("proper.plain.pgm") ),
+  fn im => 
   let
-    val Truth = Array.fromList( TextFileUtil.readCSReals "proper.real.csv" )
+    val ( height, width ) = RealGrayscaleImage.dimensions im
+    val truth = Array.fromList( TextFileUtil.readCSReals "proper.real.csv" )
   in
-    GrayscaleImageReal.foldli
-      ( fn( I, X, Equal ) =>
-          if Equal andalso 
-             Util.approxEqReal( X, Array.sub( Truth, I ), 3 ) then
-            Equal
+    RealGrayscaleImage.foldi RealGrayscaleImage.RowMajor
+      ( fn( i, j, x, equal ) =>
+          if equal andalso 
+             Util.approxEqReal( x, Array.sub( truth, i*width+j ), 3 ) then
+            equal
           else
             false )
       true
-      Image        
+      ( RealGrayscaleImage.full im )       
   end )
 
 val _ =
   UnitTest.test( "Loading a simple PBM",
     fn() =>
-      Option.valOf( BooleanImage.load( "simple.plain.pbm" ) ) ,
-    fn X =>
-      if BooleanImage.sub( X, 0, 0 ) andalso
-         not( BooleanImage.sub( X, 1, 0 ) ) andalso
-         BooleanImage.sub( X, 0, 1 ) andalso
-         not( BooleanImage.sub( X, 1, 1 ) ) then
+      Option.valOf( BooleanPBM.read( "simple.plain.pbm" ) ) ,
+    fn x =>
+      if BooleanImage.sub( x, 0, 0 ) andalso
+         not( BooleanImage.sub( x, 0, 1 ) ) andalso
+         BooleanImage.sub( x, 1, 0 ) andalso
+         not( BooleanImage.sub( x, 1, 1 ) ) then
         true
       else
         false )
@@ -85,35 +86,35 @@ val _ =
 val _ =
   UnitTest.test( "Loading a simple RAW PBM",
     fn() =>
-      Option.valOf( BooleanImage.load( "simple.raw.pbm" ) ) ,
-    fn X =>
-      if BooleanImage.sub( X, 0, 0 ) andalso
-         not( BooleanImage.sub( X, 1, 0 ) ) andalso
-         BooleanImage.sub( X, 0, 1 ) andalso
-         not( BooleanImage.sub( X, 1, 1 ) ) then
+      Option.valOf( BooleanPBM.read( "simple.raw.pbm" ) ) ,
+    fn x =>
+      if BooleanImage.sub( x, 0, 0 ) andalso
+         not( BooleanImage.sub( x, 0, 1 ) ) andalso
+         BooleanImage.sub( x, 1, 0 ) andalso
+         not( BooleanImage.sub( x, 1, 1 ) ) then
         true
       else
         false )
 
 val _ = UnitTest.test( "Loading proper RAW PBM image as BooleanImage.image",
-  fn() => Option.valOf( BooleanImage.load("proper.raw.pbm") ),
-  fn X => true )
+  fn() => Option.valOf( BooleanPBM.read("proper.raw.pbm") ),
+  fn x => true )
 
 val _ = 
   UnitTest.test( "Loading, saving, and reloading PGM image as GrayscaleImageWord8.image",
     fn () => 
       let
-        val Image = Option.valOf( GrayscaleImageWord8.load("simple.plain.pgm") )
-        val _ = GrayscaleImageWord8.save( Image, "output/output1.pgm" )
-        val Loaded = Option.valOf( GrayscaleImageWord8.load("output/output1.pgm") )
+        val im = Option.valOf( Word8PGM.read("simple.plain.pgm") )
+        val _ = Word8PGM.write( im, "output2.pgm" )
+        val loaded = Option.valOf( Word8PGM.read("output2.pgm") )
       in
-        Loaded
+        loaded
       end ,
-    fn X => 
-      if GrayscaleImageWord8.sub( X, 0, 0 )=0w0 andalso
-         GrayscaleImageWord8.sub( X, 1, 0 )=0w64 andalso
-         GrayscaleImageWord8.sub( X, 0, 1 )=0w128 andalso
-         GrayscaleImageWord8.sub( X, 1, 1 )=0w255 then
+    fn x => 
+      if Word8GrayscaleImage.sub( x, 0, 0 )=0w0 andalso
+         Word8GrayscaleImage.sub( x, 0, 1 )=0w64 andalso
+         Word8GrayscaleImage.sub( x, 1, 0 )=0w128 andalso
+         Word8GrayscaleImage.sub( x, 1, 1 )=0w255 then
         true
       else
         false )
@@ -122,16 +123,16 @@ val _ =
   UnitTest.test( "Loading, saving, and reloading PGM image as GrayscaleImageReal.image",
     fn() => 
       let
-        val Image = Option.valOf( GrayscaleImageReal.load("simple.plain.pgm") )
-        val _ = GrayscaleImageReal.save( Image, "output/output1.pgm" )
+        val im = Option.valOf( RealPGM.read("simple.plain.pgm") )
+        val _ = RealPGM.write( im, "output1.pgm" )
       in
-        Option.valOf( GrayscaleImageReal.load("output/output1.pgm") )
+        Option.valOf( RealPGM.read "output1.pgm" )
       end ,
-    fn X => 
-      if Util.eqReal( GrayscaleImageReal.sub( X, 0, 0 ), 0.0 ) andalso
-         Util.eqReal( GrayscaleImageReal.sub( X, 1, 0 ), ( 64.0/255.0 ) ) andalso
-         Util.eqReal( GrayscaleImageReal.sub( X, 0, 1 ), ( 128.0/255.0 ) ) andalso
-         Util.eqReal( GrayscaleImageReal.sub( X, 1, 1 ), 1.0 ) then
+    fn x => 
+      if Real.==( RealGrayscaleImage.sub( x, 0, 0 ), 0.0 ) andalso
+         Real.==( RealGrayscaleImage.sub( x, 0, 1 ), ( 64.0/255.0 ) ) andalso
+         Real.==( RealGrayscaleImage.sub( x, 1, 0 ), ( 128.0/255.0 ) ) andalso
+         Real.==( RealGrayscaleImage.sub( x, 1, 1 ), 1.0 ) then
         true
       else
         false )
@@ -140,16 +141,16 @@ val _ =
   UnitTest.test( "Loading, saving and reloading PBM image as Boolean.image",
     fn() =>
       let
-        val Image = Option.valOf( BooleanImage.load("simple.raw.pbm") )
-        val _ = BooleanImage.save( Image, "output/output1.pbm" )
+        val im = Option.valOf( BooleanPBM.read("simple.raw.pbm") )
+        val _ = BooleanPBM.write( im, "output1.pbm" )
       in
-        Option.valOf( BooleanImage.load("output/output1.pbm") )
+        Option.valOf( BooleanPBM.read("output1.pbm") )
       end ,
-    fn X =>
-      if BooleanImage.sub( X, 0, 0 ) andalso
-         not( BooleanImage.sub( X, 1, 0 ) ) andalso
-         BooleanImage.sub( X, 0, 1 ) andalso
-         not( BooleanImage.sub( X, 1, 1 ) ) then
+    fn x =>
+      if BooleanImage.sub( x, 0, 0 ) andalso
+         not( BooleanImage.sub( x, 0, 1 ) ) andalso
+         BooleanImage.sub( x, 1, 0 ) andalso
+         not( BooleanImage.sub( x, 1, 1 ) ) then
         true
       else
         false )
@@ -158,18 +159,16 @@ val _ =
   UnitTest.test( "Saving and reloading a simple binary image using RAW PBM",
     fn() =>
       let
-        val Image = BooleanImage.fromList( 2, 2, [ true, false, true, false ] )
-        val _ = BooleanImage.save' ( PNMCommon.rawPBM, 0w1 ) 
-                                   ( Image, "output/output2.pbm" )
-
+        val im = BooleanImage.fromList'( 2, 2, [ true, false, true, false ] )
+        val _ = BooleanPBM.write' PNM.rawPBM ( im, "output2.pbm" )
       in
-        Option.valOf( BooleanImage.load( "output/output2.pbm" ) )
+        Option.valOf( BooleanPBM.read "output2.pbm" )
       end , 
-    fn X =>
-      if BooleanImage.sub( X, 0, 0 ) andalso
-         not( BooleanImage.sub( X, 1, 0 ) ) andalso
-         BooleanImage.sub( X, 0, 1 ) andalso
-         not( BooleanImage.sub( X, 1, 1 ) ) then
+    fn x =>
+      if BooleanImage.sub( x, 0, 0 ) andalso
+         not( BooleanImage.sub( x, 0, 1 ) ) andalso
+         BooleanImage.sub( x, 1, 0 ) andalso
+         not( BooleanImage.sub( x, 1, 1 ) ) then
         true
       else
         false )
@@ -178,21 +177,21 @@ val _ =
   UnitTest.test( "Testing histogram on small generated image",
     fn() => 
       let
-        val Image = 
-          GrayscaleImageReal.fromList( 3, 3, 
+        val im = 
+          RealGrayscaleImage.fromList'( 3, 3, 
             [ 1.0, 0.5, 0.3, 0.54, 0.0, 0.1, 0.65, 0.56, 0.31 ] )
-        val [ Histogram ] = GrayscaleImageReal.histograms( Image, 4 )
+        val Histogram = RealGrayscaleHistogram.histogram' 4 im
       in
         Histogram
       end ,
     fn Histogram => 
     let
-      val Truth = 
+      val truth = 
         Array.fromList( [ 2, 2, 4, 1 ] )
     in
       Array.foldli 
-        ( fn( I, X, T ) => 
-            if T andalso X=Array.sub( Truth, I ) then
+        ( fn( I, x, t ) => 
+            if t andalso x=Array.sub( truth, I ) then
               true
             else
               false ) 
@@ -204,14 +203,14 @@ val _ =
   UnitTest.test( "Testing histogram on proper grayscale image",
     fn() =>
     let
-      val Image = Option.valOf( GrayscaleImageReal.load "proper.plain.pgm" )
-      val [ Histogram ] = GrayscaleImageReal.histograms( Image, 64 )
+      val im = Option.valOf( RealPGM.read "proper.plain.pgm" )
+      val Histogram = RealGrayscaleHistogram.histogram' 64 im
     in
       Histogram
     end ,
     fn Histogram => 
     let
-      val Truth = 
+      val truth = 
         Array.fromList( 
           [ 2247, 527, 335, 181, 98, 71, 47, 34, 
             34, 70, 191, 138, 168, 258, 406, 579, 
@@ -223,8 +222,8 @@ val _ =
             509, 532, 497, 389, 115, 30, 0, 0 ] ) 
     in
       Array.foldli
-        ( fn( I, X, Equal ) =>
-            if Equal andalso X=Array.sub( Truth, I ) then
+        ( fn( I, x, Equal ) =>
+            if Equal andalso x=Array.sub( truth, I ) then
               true
             else
               false )
@@ -236,44 +235,74 @@ val _ =
   UnitTest.test( "Testing GrayscaleImageReal.correlate",
     fn() =>
     let
-      val Image = 
-        GrayscaleImageReal.fromList( 3, 3, 
+      val im = 
+        RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
       val Filter =
-        GrayscaleImageReal.fromList( 2, 1, [ 1.0, 2.0 ] )
+        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
     in
-      GrayscaleImageReal.correlate ( ImageCommon.copy, ImageCommon.original )
-        ( Image, Filter )
+      RealGrayscaleImage.correlate 
+        ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+        ( im, Filter )
     end ,
-    fn X => 
+    fn x => 
     let
-      val Truth = 
-        GrayscaleImageReal.fromList( 3, 3, 
+      val truth = 
+        RealGrayscaleImage.fromList'( 3, 3, 
           [ 5.0, 8.0, 9.0, 14.0, 17.0, 18.0, 23.0, 26.0, 27.0 ] )
     in
-      GrayscaleImageReal.equal( X, Truth )
+      RealGrayscaleImage.equal( x, truth )
     end )
 
 val _ = 
   UnitTest.test( "Testing GrayscaleImageReal.convolve",
     fn() =>
     let
-      val Image = 
-        GrayscaleImageReal.fromList( 3, 3, 
+      val im1 = 
+        RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
-      val Filter =
-        GrayscaleImageReal.fromList( 2, 1, [ 1.0, 2.0 ] )
+      val filter1 =
+        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
+
+      val im2 = 
+        RealGrayscaleImage.fromList(
+          [ [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
+            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
+            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
+            [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
+            [ 21.0, 22.0, 23.0, 24.0, 25.0 ] ] )
+      val filter2 =
+        RealGrayscaleImage.fromList( 
+          [ [ 10.0, 15.0, 11.0 ],
+            [ 5.0, 3.0, 4.0 ],
+            [ 21.0, 20.0, 19.0 ] ] )
     in
-      GrayscaleImageReal.convolve ( ImageCommon.copy, ImageCommon.original )
-        ( Image, Filter )
+      [ 
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( im1, filter1 ),
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( im2, filter2 )
+          
+        ]
     end ,
-    fn X => 
+    fn[ x, y ] => 
     let
-      val Truth = 
-        GrayscaleImageReal.fromList( 3, 3, 
+      val truth1 = 
+        RealGrayscaleImage.fromList'( 3, 3, 
           [ 4.0, 7.0, 9.0, 13.0, 16.0, 18.0, 22.0, 25.0, 27.0 ] )
+      val truth2 = 
+        RealGrayscaleImage.fromList(
+          [ [ 324.0, 398.0, 506.0, 614.0, 686.0 ],
+            [ 564.0, 638.0, 746.0, 854.0, 926.0 ],
+            [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
+            [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
+            [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
     in
-      GrayscaleImageReal.equal( X, Truth )
+      RealGrayscaleImage.equal( x, truth1 )
+      andalso
+      RealGrayscaleImage.equal( y, truth2 )
     end )
 
 val _ =
@@ -283,64 +312,26 @@ val _ =
 
         (* Test with simple generated image *)
 
-        val Image = 
-          BooleanImage.fromList( 3, 3, 
+        val im = 
+          BooleanImage.fromList'( 3, 3, 
             [ true, false, false, false, true, false, false, false, true ] )
-        val Truth = 
-          BooleanImage.fromList( 3, 3, 
+        val truth = 
+          BooleanImage.fromList'( 3, 3, 
             [ true, false, false, false, true, false, false, true, false ] )
-        val Score1 = FMeasureBerkeley.evaluateEdge( Image, [ Truth ] )
+        val score1 = FMeasureBerkeley.evaluateEdge( im, [ truth ] )
 
 
-        (* Test with with proper edge classified image *)
+        (* Test with proper edge classified image *)
 
-        (* The following code generates an edge classified image by running
-           the Canny detector on the first image in the BSDS. It saves a copy of
-           the result and the corresponding ground truths. *)
-        (*
-        val DataDir = "../../Research/imageanalysis/data/BSDS_PNM/"
-        val ImageDir = DataDir ^ "images/"
-        val TruthDir = DataDir ^ "truth/"
-        val FilenamesFile = "bsds.train.grayscale.filenames"
-        val TruthFilenamesFile = "bsds.train.truth.filenames"
+        val edges = 
+            Option.valOf( BooleanPBM.read( "edge_classified.plain.pbm" ) ) 
+        val segs = 
+            Option.valOf( IntPGM.read( "proper2.seg.raw.pgm" ) ) 
 
-        val FirstFile::_ = TextFileUtil.readFilenames( DataDir ^ FilenamesFile )
-        val FirstTruthFile::_ = TextFileUtil.readFilenames( DataDir ^ TruthFilenamesFile )
-        val FirstFileName = OS.Path.base FirstFile
-        val Image = 
-          Option.valOf( GrayscaleImageReal.load( ImageDir ^ FirstFile ) )
-        val Edges = Canny.findEdges' ( Canny.otsuHighLowRatio 0.8 ) Image
-
-        val _ = 
-          GrayscaleImageReal.save( 
-            ImageUtil.convertBooleanToReal Edges, 
-            FirstFileName ^ ".pgm" )
-
-        val TruthFilenames = 
-          TextFileUtil.readFilenames( TruthDir ^ FirstTruthFile )
-
-        val TruthImages = 
-          List.map
-            ( fn TruthImageFilename => 
-                Option.valOf( BooleanImage.load( TruthDir ^ TruthImageFilename ) ) )
-            TruthFilenames 
-
-        val _ = 
-          List.app
-            ( fn( Truth, Filename ) => 
-                BooleanImage.save( Truth, Filename ) )
-            ( ListUtil.combine( TruthImages, TruthFilenames ) ) 
-        *)
-
-        val Edges = 
-            Option.valOf( BooleanImage.load( "edge_classified.plain.pgm" ) ) 
-        val Segs = 
-            Option.valOf( GrayscaleImageInt.load( "proper2.seg.raw.pgm" ) ) 
-
-        val TruthImages =
+        val truths =
           List.map
             ( fn Filename => 
-                Option.valOf( BooleanImage.load( Filename ) ) )
+                Option.valOf( BooleanPBM.read Filename ) )
             [ "edge_truth_1.plain.pbm",
               "edge_truth_2.plain.pbm",
               "edge_truth_3.plain.pbm",
@@ -348,21 +339,18 @@ val _ =
               "edge_truth_5.plain.pbm",
               "edge_truth_6.plain.pbm" ]
 
-        (* Uncomment for a single evaluation *)
-        val Score2 = FMeasureBerkeley.evaluateEdge( Edges, TruthImages )
-        (* Uncomment for a full statistical comparison *)
-        (*val EvalList = List.tabulate( 1000, fn _ => ( Edges, TruthImages ) )
-        val Score2 = FMeasureBerkeleyEdge.evaluateList( EvalList )*)
-        (*val _ = print( FMeasureBerkeleyEdge.toString Score1 ^ "\n" )*)
+        val score2 = FMeasureBerkeley.evaluateEdge( edges, truths )
 
-        val Score3 = FMeasureBerkeley.evaluateSegmentation( Segs, TruthImages )
-        (*val _ = print( FMeasureBerkeley.toString Score3 ^ "\n" ) *)
+        val score3 = FMeasureBerkeley.evaluateSegmentation( segs, truths )
+
+        (*val _ = print( FMeasureBerkeleyEdge.toString score1 ^ "\n" )*)
+        (*val _ = print( FMeasureBerkeleyEdge.toString score2 ^ "\n" )*)
       in
-        [ Score1, Score2, Score3 ] 
+        [ score1, score2, score3 ] 
       end ,
-    fn[ Score1 as ( _, _, _, _, _, _, F1), 
-        Score2 as ( _, _, _, _, _, _, F2 ),
-        Score3 as ( _, _, _, _, _, _, F3 ) ] => 
+    fn[ score1 as ( _, _, _, _, _, _, F1), 
+        score2 as ( _, _, _, _, _, _, F2 ),
+        score3 as ( _, _, _, _, _, _, F3 ) ] => 
       (* Uncommment for a single evaluation *)
       Util.approxEqReal( F1, 0.666, 3 ) andalso 
       Util.approxEqReal( F2, 0.495956270745496, 2 ) andalso
@@ -380,31 +368,31 @@ val _ =
   UnitTest.test( "Testing morphological thinning",
     fn() =>
     let
-      val T = true
-      val F = false
-      val Image = 
-        BooleanImage.fromList( 11, 5, 
-          [ T, T, T, T, T, T, T, T, T, T, T, 
-            T, T, T, T, T, T, T, T, T, F, F,
-            T, T, T, T, T, T, T, T, T, F, F,
-            T, T, T, T, T, T, T, T, T, F, F,
-            T, T, T, F, F, T, T, T, T, F, F ] )
+      val t = true
+      val f = false
+      val im = 
+        BooleanImage.fromList'( 5, 11, 
+          [ t, t, t, t, t, t, t, t, t, t, t, 
+            t, t, t, t, t, t, t, t, t, f, f,
+            t, t, t, t, t, t, t, t, t, f, f,
+            t, t, t, t, t, t, t, t, t, f, f,
+            t, t, t, f, f, t, t, t, t, f, f ] )
     in
-      Morphology.thin Image
+      Morphology.thin im
     end , 
-    fn X => 
+    fn x => 
     let 
-      val T = true
-      val F = false
-      val Truth = 
-        BooleanImage.fromList( 11, 5, 
-          [ T, F, F, F, F, F, F, F, T, T, T, 
-            T, T, F, F, F, F, F, T, T, F, F, 
-            F, T, T, T, T, T, T, T, F, F, F,
-            T, T, F, F, F, F, F, T, F, F, F,
-            T, F, F, F, F, F, F, T, T, F, F ] )
+      val t = true
+      val f = false
+      val truth = 
+        BooleanImage.fromList'( 5, 11, 
+          [ t, f, f, f, f, f, f, f, t, t, t, 
+            t, t, f, f, f, f, f, t, t, f, f, 
+            f, t, t, t, t, t, t, t, f, f, f,
+            t, t, f, f, f, f, f, t, f, f, f,
+            t, f, f, f, f, f, f, t, t, f, f ] )
     in
-      BooleanImage.equal( X, Truth )       
+      BooleanImage.equal( x, truth )       
     end )
 
 
@@ -412,46 +400,32 @@ val _ =
   UnitTest.test( "Rotating a image as GrayscaleImageReal.image",
     fn() => 
       let
-        val Image = Option.valOf( GrayscaleImageReal.load("test2.pgm") )
-        val newImage = GrayscaleImageReal.rotate (Image, 1.5708) (* 90 deg.  *)
-        val _ = GrayscaleImageReal.save( newImage, "output/outputRotate1.pgm" )
+        val Image = Option.valOf( RealPGM.read("test2.pgm") )
+        val newImage = RealGrayscaleImage.rotate (Image, 1.5708) (* 90 deg.  *)
+        val _ = RealPGM.write( newImage, "output/outputRotate1.pgm" )
       in
-        Option.valOf( GrayscaleImageReal.load("output/outputRotate1.pgm") )
+        Option.valOf( RealPGM.read("output/outputRotate1.pgm") )
       end ,
-    fn { height, width, ...} => height = 482 andalso width = 322 )
+    fn( rotated ) =>
+      RealGrayscaleImage.nRows rotated = 482 andalso 
+      RealGrayscaleImage.nCols rotated = 322 )
 
 
 val _ = 
   UnitTest.test( "Adding border using borderextension.mirror",
     fn() => 
       let
-        val image = Option.valOf( GrayscaleImageReal.load("test2.pgm") )
-        val newImage = GrayscaleImageReal.border (ImageCommon.mirror, 100) image
-        val _ = GrayscaleImageReal.save( newImage, "output/outputBorderMirror.pgm" )
+        val image = Option.valOf( RealPGM.read("test2.pgm") )
+        val newImage = 
+          RealGrayscaleImage.border 
+            ( RealGrayscaleImage.MirrorExtension, 100 ) 
+            image
       in
-        Option.valOf( GrayscaleImageReal.load("output/outputBorderMirror.pgm") )
+        newImage
       end ,
-    fn { height, width, ...} => height = 482 andalso width = 322 )
-
-fun convertRowToColMajor(width, height, arr : real Array.array) : real Array.array =
-  Array.tabulate(width * height, 
-    fn i => 
-      let
-        val x = i mod width
-        val y = i div width
-      in
-        Array.sub(arr, x * height + y)
-      end)
-
-fun convertColToRowMajor(width, height, arr : real Array.array) : real Array.array =
-  Array.tabulate(width * height, 
-    fn i => 
-      let
-        val x = i div height
-        val y = i mod height
-      in
-        Array.sub(arr, y * width + x)
-      end)
+    fn( extended ) =>
+      RealGrayscaleImage.nRows extended = 482 andalso 
+      RealGrayscaleImage.nCols extended = 322 )
 
 val _ =
   RandomTest.runTest(
@@ -465,29 +439,35 @@ val _ =
     implementations = [
       fn (imageFile, rad) => 
       let
-        val image = Option.valOf( GrayscaleImageReal.load imageFile )
-        val rotated = GrayscaleImageReal.rotate (image, rad)
+        val image = Option.valOf( RealPGM.read imageFile )
+        val rotated = RealGrayscaleImage.rotate( image, rad )
       in
         rotated
       end,
-      fn (imageFile, rad) =>
+      fn( imageFile, rad ) =>
       let 
         val fitest_image_rotate  = _import"fitest_image_rotate" : 
           real Array.array * real Array.array * 
           Word64.word * Word64.word * Word64.word * Word64.word * real -> unit;
 
-        val image = Option.valOf( GrayscaleImageReal.load imageFile )
-        val { width = width, height = height, values = src } = image
+        val image = Option.valOf( RealPGM.read imageFile )
+        val ( height, width ) = RealGrayscaleImage.dimensions image
 
         val newWidth = Real.ceil(Real.max(
           abs((real width) * Math.cos(rad) - (real height) * Math.sin(rad)),
-          abs((real width) * Math.cos(rad) + (real height) * Math.sin(rad))));
+          abs((real width) * Math.cos(rad) + (real height) * Math.sin(rad))))
         val newHeight = Real.ceil(Real.max(
           abs((real width) * Math.sin(rad) - (real height) * Math.cos(rad)),
-          abs((real width) * Math.sin(rad) + (real height) * Math.cos(rad))));
+          abs((real width) * Math.sin(rad) + (real height) * Math.cos(rad))))
 
-        val srcArray = convertColToRowMajor(width, height, #values(image)) 
-        val destArray = Array.array(newWidth * newHeight, 0.0)
+        val srcArray = Array.array( width*height, 0.0 ) 
+        val _ = 
+          RealGrayscaleImage.appi RealGrayscaleImage.ColMajor
+            ( fn( i, j, x ) =>
+                Array.update( srcArray, j*height+i, x ) )
+            ( RealGrayscaleImage.full image )
+
+        val destArray = Array.array( newWidth*newHeight, 0.0 )
          
         val _ = fitest_image_rotate 
           (srcArray,
@@ -498,14 +478,14 @@ val _ =
            Word64.fromInt newHeight,
            rad);
 
-        val destArrayFix = convertRowToColMajor(newWidth, newHeight, destArray)
-
-        val dest = GrayscaleImageReal.tabulate(newWidth, newHeight, 
-             fn i => Array.sub(destArrayFix, i))
+        val dest = 
+          RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor ( 
+            newHeight, newWidth, 
+            fn( i, j ) => Array.sub( destArray, j*newHeight+i ) )
       in
         dest
       end
     ],
-    compareResult = fn (x, y) => GrayscaleImageReal.equal (x, y),
-    argsToString = fn (file, rand) => file
-   })
+    compareResult = RealGrayscaleImage.equal,
+    argsToString = fn( file, rand ) => file
+  } )

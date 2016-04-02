@@ -1,0 +1,11 @@
+$(SML_LIB)/basis/basis.mlb
+
+../mllib_image.mlb
+
+image_io.sml
+pnm.sml
+pnm_text.sml
+pnm_binary.sml
+pbm.sml
+pgm.sml
+ppm.sml

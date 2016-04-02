@@ -16,7 +16,7 @@ val _ =
       val T = true
       val F = false
       val image = 
-        BooleanImage.fromList( 11, 5, 
+        BooleanImage.fromList'( 5, 11, 
           [ T, T, T, F, F, F, F, F, F, F, F, 
             T, T, T, F, F, F, F, F, F, F, F,
             T, T, T, F, F, T, T, T, F, F, F,
@@ -28,14 +28,14 @@ val _ =
     fn x => 
     let
       val expected = 
-        GrayscaleImageInt.fromList( 11, 5, 
+        IntGrayscaleImage.fromList'( 5, 11, 
           [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
            1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
            1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 
            0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 
            0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0 ] ) 
     in
-      GrayscaleImageInt.equal( x, expected )
+      IntGrayscaleImage.equal( x, expected )
     end )
 
 

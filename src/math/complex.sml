@@ -41,7 +41,7 @@ structure Complex :> COMPLEX = struct
   fun times (a1 : real, b1 : real) (a2 : real, b2 : real) = 
     ((a1 * a2) - (b1 * b2), (a1 * b2) + (a2 * b1))
 
-  fun divide (a1, b1) (a2, b2) =
+  fun divide( ( a1, b1 ) : number ) ( ( a2, b2 ) : number ) : number =
     let
       val magnitude = Real.+(Real.*(a2, a2), Real.*(b2, b2));
       val re = Real./(Real.+(Real.*(a1, a2), Real.*(b1, b2)) ,magnitude)
@@ -61,7 +61,7 @@ structure Complex :> COMPLEX = struct
     let
         val e_x = Math.exp(a);
     in
-        (Real.*(e_x, Math.cos(b)), Real.*(e_x, Math.sin(b)))
+        ( ( e_x*Math.cos b ), ( e_x*Math.sin b ) )
     end;
 
   fun re (a, b) =

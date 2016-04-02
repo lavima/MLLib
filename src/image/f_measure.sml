@@ -43,7 +43,7 @@ struct
 
   open FMeasureCommon
 
-  type segMap = GrayscaleImageInt.image
+  type segMap = IntGrayscaleImage.image
   type edgeMap = BooleanImage.image
   type truth = BooleanImage.image
   
@@ -55,46 +55,60 @@ struct
     int * int * real * real * 
     real Array.array * real Array.array -> real;
 
-  fun evaluateEdge( image as { width, height, values } : edgeMap, 
-                truths : truth list ) 
+  fun evaluateEdge( image : edgeMap, 
+                    truths : truth list ) 
       : score =
   let
+    
+    val ( height, width ) = BooleanImage.dimensions image
     
     val diagonal = Math.sqrt( real( width*width + height*height ) )
 
     val maxDist = defaultMaxDist
     val outlierCost = defaultOutlierCost
 
-    val imageReal = ImageUtil.convertBooleanToTransposedReal image
+    val imageReal = Array.array( width*height, 0.0 )
+    val _ = 
+      BooleanImage.appi BooleanImage.ColMajor
+        ( fn( i, j, x ) => 
+            Array.update( imageReal, j*height+i, if x then 1.0 else 0.0 ) )
+        ( BooleanImage.full image )
+      
+    val truthReal = Array.array( width*height, 0.0 )
 
-    val truthReal = GrayscaleImageReal.image( height, width, 0.0 )
-    val match1 = GrayscaleImageReal.image( height, width, 0.0 )
-    val match2 = GrayscaleImageReal.image( height, width, 0.0 )
-
+    val match1 = Array.array( width*height, 0.0 )
+    val match2 = Array.array( width*height, 0.0 )
 
     val ( sumR, countR, accumMatch ) =
       List.foldl 
         ( fn( truth, ( sumR, countR, accumMatch ) ) =>
           let
-            val _ = ImageUtil.copyBooleanToTransposedReal( truth, truthReal )
+            val _ = 
+              BooleanImage.appi BooleanImage.ColMajor
+                ( fn( i, j, x ) => 
+                    Array.update( 
+                      truthReal, 
+                      j*height+i, 
+                      if x then 1.0 else 0.0 ) )
+              ( BooleanImage.full truth )
 
             val cost = 
-              matchEdges( #values imageReal, #values truthReal, 
+              matchEdges( imageReal, truthReal, 
                           width, height, 
                           maxDist*diagonal, outlierCost*maxDist*diagonal,
-                          #values match1, #values match2 )
+                          match1, match2 )
 
             val _ = 
-              GrayscaleImageReal.appxy
-                ( fn( x, y, m ) => 
-                    if m>0.0 then
-                      BooleanImage.update( accumMatch, x, y, true )
+              Array.appi
+                ( fn( i, x ) => 
+                    if x>0.0 then
+                      Array.update( accumMatch, i, true )
                     else
                       () )
                 match1
 
             val countR = 
-              GrayscaleImageReal.foldl
+              Array.foldl
                 ( fn( m, count ) => 
                     if m>0.0 then
                       count+1
@@ -104,8 +118,8 @@ struct
                 match2
 
             val sumR = 
-              BooleanImage.foldlxy
-                ( fn( x, y, m, sum ) => 
+              BooleanImage.fold BooleanImage.RowMajor
+                ( fn( m, sum ) => 
                     if m then
                       sum+1
                     else
@@ -113,17 +127,17 @@ struct
                 sumR
                 truth
 
-            val _ = GrayscaleImageReal.fill( match1, 0.0 )
-            val _ = GrayscaleImageReal.fill( match2, 0.0 )
+            val _ = ArrayUtil.fill( match1, 0.0 )
+            val _ = ArrayUtil.fill( match2, 0.0 )
 
           in
             ( sumR, countR, accumMatch ) 
           end )
-        ( 0, 0, BooleanImage.image( height, width, false ) )
+        ( 0, 0, Array.array( width*height, false ) )
         truths
     
     val sumP = 
-      BooleanImage.foldl
+      BooleanImage.fold BooleanImage.RowMajor
         ( fn( v, sum ) => 
             if v then
               sum+1 
@@ -133,7 +147,7 @@ struct
         image
 
     val countP = 
-      BooleanImage.foldl
+      Array.foldl
         ( fn( v, count ) => 
             if v then
               count+1 
@@ -149,15 +163,17 @@ struct
     ( countP, sumP, countR, sumR, p, r, f )
   end
 
-  fun evaluateSegmentation( im as { width, height, values } : segMap,
+  fun evaluateSegmentation( im : segMap,
                             truths : truth list )
       : score =
   let 
-    val bdry as { width=bdryWidth, height=bdryHeight, ... } = 
-      BooleanImage.zeroImage( width*2+1, height*2+1 )
+    val ( height, width ) = IntGrayscaleImage.dimensions im
 
-    val edgelsV = BooleanImage.zeroImage( width, height )
-    val edgelsH = BooleanImage.zeroImage( width, height )
+    val bdry = BooleanImage.zeroImage( height*2+1, width*2+1 )
+    val ( bdryHeight, bdryWidth ) = BooleanImage.dimensions bdry
+
+    val edgelsV = BooleanImage.zeroImage( height, width )
+    val edgelsH = BooleanImage.zeroImage( height, width )
 
     val _ = 
       Util.loopFromToInt
@@ -166,11 +182,11 @@ struct
               ( fn y => 
                   BooleanImage.update( 
                     edgelsH, 
-                    x, y, 
+                    y, x, 
                     not( 
-                      GrayscaleImageInt.sub( im, x, y )
+                      IntGrayscaleImage.sub( im, y, x )
                       =
-                      GrayscaleImageInt.sub( im, x+1, y ) ) ) )
+                      IntGrayscaleImage.sub( im, y, x+1 ) ) ) )
               ( 0, height-1, 1 ) )
         ( 0, width-2, 1 )
 
@@ -181,11 +197,11 @@ struct
               ( fn x => 
                   BooleanImage.update( 
                     edgelsV, 
-                    x, y, 
+                    y, x, 
                     not( 
-                      GrayscaleImageInt.sub( im, x, y )
+                      IntGrayscaleImage.sub( im, y, x )
                       =
-                      GrayscaleImageInt.sub( im, x, y+1 ) ) ) )
+                      IntGrayscaleImage.sub( im, y+1, x ) ) ) )
               ( 0, width-1, 1 ) )
         ( 0, height-2, 1 )
 
@@ -196,23 +212,23 @@ struct
               ( fn y => (
                   BooleanImage.update( 
                     bdry, 
-                    x+1, y, 
-                    BooleanImage.sub( edgelsH, x div 2, y div 2 ) );
+                    y, x+1, 
+                    BooleanImage.sub( edgelsH, y div 2, x div 2 ) );
                   BooleanImage.update( 
                     bdry, 
-                    x, y+1, 
-                    BooleanImage.sub( edgelsV, x div 2, y div 2 ) );
+                    y+1, x,  
+                    BooleanImage.sub( edgelsV, y div 2, x div 2 ) );
                   if x<bdryWidth-2 andalso y<bdryHeight-2 then
                     BooleanImage.update( 
                       bdry, 
-                      x+1, y+1, 
-                      BooleanImage.sub( edgelsH, x div 2, y div 2 ) 
+                      y+1, x+1, 
+                      BooleanImage.sub( edgelsH, y div 2, x div 2 ) 
                       orelse
-                      BooleanImage.sub( edgelsH, x div 2, ( y div 2 )+1 ) 
+                      BooleanImage.sub( edgelsH, ( y div 2 )+1, x div 2 ) 
                       orelse
-                      BooleanImage.sub( edgelsV, x div 2, y div 2 ) 
+                      BooleanImage.sub( edgelsV, y div 2, x div 2 ) 
                       orelse
-                      BooleanImage.sub( edgelsV, ( x div 2 )+1, y div 2 ) )
+                      BooleanImage.sub( edgelsV, y div 2, ( x div 2 )+1 ) )
                   else
                     () ) )
               ( 1, bdryHeight-2, 2 ) )
@@ -223,12 +239,12 @@ struct
         ( fn x => (
             BooleanImage.update( 
               bdry, 
-              x, 0, 
-              BooleanImage.sub( bdry, x, 1 ) ); 
+              0, x, 
+              BooleanImage.sub( bdry, 1, x ) ); 
             BooleanImage.update( 
               bdry, 
-              x, bdryHeight-1, 
-              BooleanImage.sub( bdry, x, bdryHeight-2 ) ) ) )
+              bdryHeight-1, x, 
+              BooleanImage.sub( bdry, bdryHeight-2, x ) ) ) )
         ( 0, bdryWidth-1, 1 )
 
     val _ = 
@@ -236,15 +252,15 @@ struct
         ( fn y => (
             BooleanImage.update( 
               bdry, 
-              0, y, 
-              BooleanImage.sub( bdry, 1, y ) ); 
+              y, 0, 
+              BooleanImage.sub( bdry, y, 1 ) ); 
             BooleanImage.update( 
               bdry, 
-              bdryWidth-1, y, 
-              BooleanImage.sub( bdry, bdryWidth-2, y ) ) ) )
+              y, bdryWidth-1, 
+              BooleanImage.sub( bdry, y, bdryWidth-2 ) ) ) )
         ( 0, bdryHeight-1, 1 )
 
-    val out = BooleanImage.zeroImage( width, height )
+    val out = BooleanImage.zeroImage( height, width )
     val _ = 
       Util.loopFromToInt
         ( fn x => 
@@ -252,8 +268,8 @@ struct
               ( fn y => 
                   BooleanImage.update( 
                     out, 
-                    ( x-1 ) div 2, ( y-1 ) div 2, 
-                    BooleanImage.sub( bdry, x, y ) ) )
+                    ( y-1 ) div 2, ( x-1 ) div 2, 
+                    BooleanImage.sub( bdry, y, x ) ) )
               ( 2, bdryHeight-1, 2 ) )
         ( 2, bdryWidth-1, 2 )
   in

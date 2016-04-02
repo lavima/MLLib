@@ -29,13 +29,6 @@ val _ = UnitTest.test( "Testing Util.eq with reals",
       Util.eq Real.compare ( 32.0, 9.0 ) ),
   fn( X, Y, Z ) => not X andalso Y andalso not Z )
 
-val _ = UnitTest.test( "Testing Util.eqReal",
-  fn() => 
-    ( Util.eqReal( 3.0, 10.0 ),
-      Util.eqReal( 102.0, 102.0 ),
-      Util.eqReal( 32.0, 9.0 ) ),
-  fn( X, Y, Z ) => not X andalso Y andalso not Z )
-
 val _ = UnitTest.test( "Testing Util.eqInt",
   fn() => 
     ( Util.eqInt( 3, 10 ),
@@ -69,9 +62,9 @@ val _ = UnitTest.test( "Testing Util.max with reals",
       Util.max Real.< [ 100.0, 10.0, 1.0 ],
       Util.max Real.< [ ~1.0, ~2.0, ~1.5 ] ),
   fn( X, Y, Z ) => 
-    Util.eqReal( X, 3.0 ) andalso
-    Util.eqReal( Y, 100.0 ) andalso
-    Util.eqReal( Z, ~1.0 ) )
+    Real.==( X, 3.0 ) andalso
+    Real.==( Y, 100.0 ) andalso
+    Real.==( Z, ~1.0 ) )
 
 val _ = UnitTest.test( "Testing Util.maxInt",
   fn() => 
@@ -94,10 +87,10 @@ val _ = UnitTest.test( "Testing Util.max2 with reals",
       Util.max2 Real.< ( 3.0, 4.0 ),
       Util.max2 Real.< ( ~3.0, ~4.0 ) ),
   fn( X, Y, Z, W ) => 
-    Util.eqReal( X, 3.0 ) andalso
-    Util.eqReal( Y, 4.0 ) andalso
-    Util.eqReal( Z, 4.0 ) andalso
-    Util.eqReal( W, ~3.0 ) )
+    Real.==( X, 3.0 ) andalso
+    Real.==( Y, 4.0 ) andalso
+    Real.==( Z, 4.0 ) andalso
+    Real.==( W, ~3.0 ) )
 
 val _ = UnitTest.test( "Testing Util.max2Int",
   fn() => 

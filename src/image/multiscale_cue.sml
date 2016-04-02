@@ -10,15 +10,15 @@
 structure MultiscaleCue =
 struct
   fun orientedMultiscale(
-    image : GrayscaleImageReal.image,
+    image : RealGrayscaleImage.image,
     weights : real list,
     bins : int,
     scale : int, 
     ori : real,
     savgolFilters : (real * real) list) =
   let
-    val { width = width, height = height, ... } = image
-    val responseImage = GrayscaleImageReal.zeroImage(width, height)
+    val ( height, width ) = RealGrayscaleImage.dimensions image
+    val responseImage = RealGrayscaleImage.zeroImage( height, width )
 
     val sizes = [scale div 2, scale, scale * 2]
 
@@ -28,8 +28,11 @@ struct
     let
       val grad = Gradient.orientedGradient(image, bins, s, ori)
       val grad = FilterUtil.savgol(grad, savMaj, savMin, ori + Math.pi / 2.0)
-      val _ = GrayscaleImageReal.modify (fn p => p * w) grad
-      val _ = GrayscaleImageReal.add' (a, grad)
+      val _ = 
+        RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+          ( fn p => p * w ) 
+          grad
+      val _ = RealGrayscaleImage.add' (a, grad)
     in
       a
     end
@@ -38,14 +41,14 @@ struct
   end
 
   fun multiscale( 
-    channelA : GrayscaleImageReal.image,
-    textonBase : GrayscaleImageReal.image,
+    channelA : RealGrayscaleImage.image,
+    textonBase : RealGrayscaleImage.image,
     weights : real list,
     bins : int,
     scale : int,
-    nori : int) : GrayscaleImageReal.image =
+    nori : int) : RealGrayscaleImage.image =
   let
-    val { width = width, height = height, ... } = channelA
+    val ( height, width ) = RealGrayscaleImage.dimensions channelA
 
     val savgol_A = [(3.0, 3.0 / 4.0), (5.0, 5.0 / 4.0), (10.0, 10.0 / 4.0)]
     val savgol_T = [(5.0, 5.0 / 4.0), (10.0, 10.0 / 4.0), (20.0, 20.0 / 4.0)]
@@ -62,12 +65,13 @@ struct
        (fn (x, a) => orientedMultiscale
                  (textonImage, weights, bins, scale, x, savgol_T)::a) [] ori
     
-    fun maxResponse(x : int, y : int) : real =
+    fun maxResponse( y : int, x : int) : real =
       List.foldl (fn (resp, a) => 
-              Real.max(GrayscaleImageReal.sub(resp, x, y), a)) 0.0 responses
+              Real.max(RealGrayscaleImage.sub(resp, y, x), a)) 0.0 responses
 
-    val responseImage = GrayscaleImageReal.tabulatexy 
-      (width, height, maxResponse)
+    val responseImage = 
+      RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
+        ( height, width, maxResponse )
   in
      responseImage
   end

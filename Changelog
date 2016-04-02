@@ -1,3 +1,18 @@
+2016-04-02	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Major refactor to all image related functionality.
+	* Images are now represented using Array2 from the basis library. As a 
+		consequence the index order have changed from x,y to i,j, where i is the 
+		row and j is the column. There are still some auxiliary functions where the
+		old setup remains. 
+	* Image functionality have been separated from the image structure into
+		dedicated structures. This is true for IO operations, thresholding, and
+		histogram functionality.
+	* Convolution and correlation have been integrated directly into the image
+		structure, and they have been implemented using the built-in higher-order
+		functions.
+	* All tests pass (except for one which caused an error before merging), but
+		more testing is required to ensure the validity of the implementation.
+
 2016-04-01	Marius Geitle <marius.geitle@hiof.no>
 	* Added labeling of connected components
 

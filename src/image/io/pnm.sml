@@ -1,12 +1,12 @@
 (* 
-* filename: pnm_common.sml
+* filename: pnm.sml
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
-* This file contains a structure with common functionality for the PNM format
+* This file contains an SML implementation of the Portable aNy Map image 
+* formats. 
 *)
 
-
-structure PNMCommon =
+structure PNM =
 struct
 
   exception pnmException of string
@@ -30,4 +30,4 @@ struct
     | rawPPM => 3
     | rawPAM depth => depth
 
-end (* structure PNMCommon *)
+end (* structure PNM *)

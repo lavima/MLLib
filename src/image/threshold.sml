@@ -1,42 +1,42 @@
 (*
-* filename: thresholds.sml
+* filename: threshold.sml
 * author: Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 *
 * This file contains signatures and functor structure that provide different 
 * algorithms for automatically determining threshold values in images.
 *)
 
-signature THRESHOLDS_IMAGE =
+signature THRESHOLD =
 sig
   
-  type pixel
-  type image = { width : int, height : int, values : pixel Array.array }
+  type image
 
-  val histograms : image * int -> int Array.array list
+  val percentage : image * int * real -> real
+  val otsu : image * int -> real
 
 end
 
-signature THRESHOLDS =
+signature THRESHOLD_IMAGE =
 sig
   
-  structure Image : THRESHOLDS_IMAGE
+  type image
 
-  val percentage : Image.image * int * real -> real list
-  val otsu : Image.image * int -> real list
+  val histogram : int -> image -> int Array.array
+  val dimensions : image -> int * int
 
 end
 
-functor ThresholdsFun( Image : THRESHOLDS_IMAGE ) : THRESHOLDS =
+functor ThresholdFun( Image : THRESHOLD_IMAGE ) : THRESHOLD =
 struct
 
-  structure Image = Image
+  open Image
 
-  fun percentage( im : Image.image, numBins : int, percentage : real ) 
-      : real list =
+  fun percentage( im : image, numBins : int, percentage : real ) 
+      : real =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = dimensions im
 
-    val [ histogram ] = Image.histograms( im, numBins )
+    val hist = histogram numBins im
 
     val numPixels = width*height
 
@@ -45,7 +45,7 @@ struct
       ( fn( i, x ) =>
           Array.update( normalizedHistogram, i, 
                         real x/real numPixels ) )
-      histogram
+      hist
 
     val inc = 1.0/( real numBins )
 
@@ -59,14 +59,14 @@ struct
         ( 0.0, 0.0, 0.0 )
         normalizedHistogram
   in
-    [ threshold ]
+    threshold
   end
 
-  fun otsu ( im : Image.image, numBins : int ) : real list =
+  fun otsu ( im : image, numBins : int ) : real =
   let
-    val { width, height, ... } = im
+    val ( height, width ) = dimensions im
 
-    val [ histogram ] = Image.histograms( im, numBins )
+    val hist = histogram numBins im
 
     val numPixels = width*height
 
@@ -75,7 +75,7 @@ struct
       ( fn( i, x ) =>
           Array.update( normalizedHistogram, i, 
                         real x/real numPixels ) )
-      histogram
+      hist
 
     val mean =
       Array.foldli
@@ -116,7 +116,7 @@ struct
         ( 0.0, [ 0.0 ] )
         normalizedHistogram
   in
-    [ ( MathUtil.avg thresholds )/real( numBins-1 ) ]
+    ( MathUtil.avg thresholds )/real( numBins-1 )
   end
 
-end (* structure Threshold *)
+end (* structure ThresholdFun *)

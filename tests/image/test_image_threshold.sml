@@ -11,41 +11,26 @@ val _ = print"\n\n********** Image Threshold Tests **********\n"
 val _ = UnitTest.test( "Testing percentage thresholding on a simple image",
   fn() => 
   let
-    val Image = Option.valOf( GrayscaleImageReal.load("simple.plain.pgm") )
+    val im = Option.valOf( RealPGM.read("simple.plain.pgm") )
   in
-    GrayscaleImageReal.thresholds' ( ImageCommon.percentage( 4, 0.5 ) ) Image
+    RealGrayscaleThreshold.percentage( im, 4, 0.5 )
   end,
-  fn Xs =>
-    let
-      val [ X ] = Xs
-    in
-      Util.eqReal( X, 0.75 )
-    end )
+  fn t => Real.==( t, 0.75 ) )
 
 val _ = UnitTest.test( "Testing otsu thresholding on a simple image",
   fn() => 
   let
-    val Image = Option.valOf( GrayscaleImageReal.load("simple.plain.pgm") )
+    val im = Option.valOf( RealPGM.read("simple.plain.pgm") )
   in
-    GrayscaleImageReal.thresholds' ( ImageCommon.otsu 256 ) Image 
+    RealGrayscaleThreshold.otsu( im, 256 ) 
   end,
-  fn Xs => 
-  let
-    val [ X ] = Xs
-  in
-    Util.approxEqReal( X, 0.749019607843137, 3 )
-  end )
+  fn t => Util.approxEqReal( t, 0.749019607843137, 3 ) )
 
 val _ = UnitTest.test( "Testing otsu thresholding on a proper image",
   fn() => 
   let
-    val Image = Option.valOf( GrayscaleImageReal.load("proper.raw.pgm") )
+    val im = Option.valOf( RealPGM.read("proper.raw.pgm") )
   in
-    GrayscaleImageReal.thresholds' ( ImageCommon.otsu 256 ) Image
+    RealGrayscaleThreshold.otsu( im, 256 )
   end,
-  fn Xs => 
-  let
-    val [ X ] = Xs
-  in
-    Util.approxEqReal( X, 0.439215686274510, 3 )
-  end )
+  fn t => Util.approxEqReal( t, 0.439215686274510, 3 ) )

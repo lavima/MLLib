@@ -8,21 +8,24 @@
 structure Morphology =
 struct
 
-  fun thin( im as { width, height, ... }: BooleanImage.image ) 
+  fun thin( im : BooleanImage.image ) 
       : BooleanImage.image =
   let
+
+    val ( height, width ) = BooleanImage.dimensions im
+
     val t = SOME true
     val f = SOME false
     val tf = NONE
 
-    val m1 = Array2D.fromList( 3, 3, [ f, f, f, tf, t, tf, t, t, t ] )
-    val m2 = Array2D.fromList( 3, 3, [ tf, f, f, t, t, f, t, t, tf ] )
-    val m3 = Array2D.fromList( 3, 3, [ t, tf, f, t, t, f, t, tf, f ] )
-    val m4 = Array2D.fromList( 3, 3, [ t, t, tf, t, t, f, tf, f, f ] )
-    val m5 = Array2D.fromList( 3, 3, [ t, t, t, tf, t, tf, f, f, f ] )
-    val m6 = Array2D.fromList( 3, 3, [ tf, t, t, f, t, t, f, f, tf ] )
-    val m7 = Array2D.fromList( 3, 3, [ f, tf, t, f, t, t, f, tf, t ] )
-    val m8 = Array2D.fromList( 3, 3, [ f, f, tf, f, t, t, tf, t, t ] )
+    val m1 = Array2.fromList( [ [ f, f, f ], [ tf, t, tf ], [ t, t, t ] ] )
+    val m2 = Array2.fromList( [ [ tf, f, f ], [ t, t, f ], [ t, t, tf ] ] )
+    val m3 = Array2.fromList( [ [ t, tf, f ], [ t, t, f ], [ t, tf, f ] ] )
+    val m4 = Array2.fromList( [ [ t, t, tf ], [ t, t, f ], [ tf, f, f ] ] )
+    val m5 = Array2.fromList( [ [ t, t, t ], [ tf, t, tf ], [ f, f, f ] ] )
+    val m6 = Array2.fromList( [ [ tf, t, t ], [ f, t, t ], [ f, f, tf ] ] )
+    val m7 = Array2.fromList( [ [ f, tf, t ], [ f, t, t ], [ f, tf, t ] ] )
+    val m8 = Array2.fromList( [ [ f, f, tf ], [ f, t, t ], [ tf, t, t ] ] )
 
     val masks = [ m1, m2, m3, m4, m5, m6, m7, m8 ]
   
@@ -37,47 +40,50 @@ struct
 
     fun iter( current : BooleanImage.image ) : BooleanImage.image =
     let
-      val thinned = BooleanImage.image( width, height, false )
-      val _ = BooleanImage.appi
-        ( fn( i, x ) =>
-            BooleanImage.update'( thinned, i, x ) )
-        current
+      val thinned = BooleanImage.zeroImage( height, width )
+      val _ = 
+        BooleanImage.appi BooleanImage.RowMajor
+          ( fn( i, j, x ) =>
+              BooleanImage.update( thinned, i, j, x ) )
+          ( BooleanImage.full current )
 
-      fun sub( im : BooleanImage.image, x : int, y : int ) : bool =
+      fun sub( im : BooleanImage.image, y : int, x : int ) : bool =
         if x<width andalso x>=0 andalso y<height andalso y>=0 then
-          BooleanImage.sub( im, x, y )
+          BooleanImage.sub( im, y, x )
         else 
           false
 
-      fun apply( masks : bool option Array2D.array list ) : unit =
+      fun apply( masks : bool option Array2.array list ) : unit =
         case masks of
           [] => ()
         | mask::masks' => 
           let
-            val matched = BooleanImage.image( width, height, false )
+            val matched = BooleanImage.zeroImage( height, width )
 
-            val _ = BooleanImage.appxy
-              ( fn( x, y, _ ) => 
-                let
-                  val valid = Array2D.foldlij
-                    ( fn( i, j, m, v ) => 
-                      let 
-                        val e = sub( thinned, x+j-1, y+i-1 )
-                      in
-                        if v andalso not( valid( e, m ) ) then
-                          false
-                        else 
-                          v
-                      end )
-                    true
-                    mask
-                in
-                  if valid then
-                    BooleanImage.update( matched, x, y, true )
-                  else
-                    ()                   
-                end )
-              thinned
+            val _ = 
+              BooleanImage.appi BooleanImage.RowMajor
+                ( fn( y, x, _ ) => 
+                  let
+                    val valid = 
+                      Array2.foldi Array2.RowMajor
+                        ( fn( i, j, m, v ) => 
+                          let 
+                            val e = sub( thinned, y+i-1, x+j-1 )
+                          in
+                            if v andalso not( valid( e, m ) ) then
+                              false
+                            else 
+                              v
+                          end )
+                        true
+                        { base=mask, row=0, col=0, nrows=NONE, ncols=NONE } 
+                  in
+                    if valid then
+                      BooleanImage.update( matched, y, x, true )
+                    else
+                      ()                   
+                  end )
+              ( BooleanImage.full thinned )
            
             val _ = BooleanImage.subtract'( thinned, matched )
 
@@ -97,17 +103,20 @@ struct
     iter im
   end
 
-  fun thicken( im as { width, height, ... } : BooleanImage.image ) 
+  fun thicken( im : BooleanImage.image ) 
       : BooleanImage.image =
   let 
-    val complement = BooleanImage.image( width, height, false )
-    val _ = BooleanImage.modifyi
-      ( fn( i, _ ) =>
-          if BooleanImage.sub'( im, i ) then
-            false
-          else 
-            true )
-      complement
+    val ( height, width ) = BooleanImage.dimensions im
+    val complement = BooleanImage.zeroImage( height, width )
+
+    val _ = 
+      BooleanImage.modifyi BooleanImage.RowMajor
+        ( fn( i, j, _ ) =>
+            if BooleanImage.sub( im, i, j ) then
+              false
+            else 
+              true )
+        ( BooleanImage.full complement )
   in
     thin complement
   end

@@ -15,8 +15,9 @@ val _ = UnitTest.test( "Generate texton filters",
           let 
             val normalizedImage = ImageUtil.normalizeReal'' (List.nth (x, i) )
           in
-            GrayscaleImageReal.save(
-                    normalizedImage, "output/filter" ^ Int.toString(i))
+            RealPGM.write(
+              normalizedImage, 
+              "output/filter" ^ Int.toString(i) ^ ".pgm" )
           end
           ) (List.length x )
      in
@@ -27,17 +28,16 @@ val _ = UnitTest.test( "Generate texton filters",
 val _ = UnitTest.test( "Generate textons",
   fn() => 
       let
-          val image = Option.valOf(GrayscaleImageReal.load("test2.pgm"))
+          val image = Option.valOf(RealPGM.read("test2.pgm"))
       in
          Texton.generateTextons(image, 8, 2.0, 32, 10)
       end,
-  fn x : GrayscaleImageReal.image =>
+  fn x : RealGrayscaleImage.image =>
      let
         val normalizedImage = ImageUtil.normalizeReal'' x
         
-        val _ =GrayscaleImageReal.save(normalizedImage, "output/textons.pgm")
+        val _ = RealPGM.write(normalizedImage, "output/textons.pgm")
      in
          true
      end 
   )
-  ;

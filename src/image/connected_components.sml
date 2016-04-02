@@ -15,10 +15,10 @@ struct
    * a naive appraoch.
    *)
 
-  fun labelComponents (image : BooleanImage.image) : GrayscaleImageInt.image =
+  fun labelComponents (image : BooleanImage.image) : IntGrayscaleImage.image =
   let
-    val { width = width, height = height, ... } = image
-    val output = GrayscaleImageInt.zeroImage (width, height)
+    val ( height, width ) = BooleanImage.dimensions image
+    val output = IntGrayscaleImage.zeroImage( height, width )
 
     fun labelComponent(labelNo : int, x : int, y : int) : int = 
       if
@@ -26,11 +26,11 @@ struct
         y < 0 orelse 
         x > width - 1 orelse
         y > height - 1 orelse 
-        GrayscaleImageInt.sub(output, x, y) <> 0 orelse
-        BooleanImage.sub(image, x, y) = false then labelNo
+        IntGrayscaleImage.sub(output, y, x) <> 0 orelse
+        BooleanImage.sub(image, y, x) = false then labelNo
       else
       let
-        val _ = GrayscaleImageInt.update(output, x, y, labelNo)
+        val _ = IntGrayscaleImage.update(output, y, x, labelNo)
         val _ = labelComponent(labelNo, x - 1, y)
         val _ = labelComponent(labelNo, x + 1, y)
         val _ = labelComponent(labelNo, x, y - 1)
@@ -40,8 +40,8 @@ struct
       end
 
     fun labelNewComponent(labelNo : int, x : int, y : int) : int =
-      if BooleanImage.sub(image, x, y) <> false andalso 
-         GrayscaleImageInt.sub(output, x, y) = 0 then
+      if BooleanImage.sub(image, y, x) <> false andalso 
+         IntGrayscaleImage.sub(output, y, x) = 0 then
         labelComponent(labelNo + 1, x, y)
       else labelNo
 

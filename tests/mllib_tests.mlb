@@ -3,6 +3,7 @@ $(SML_LIB)/basis/mlton.mlb
 ../mllib_test.mlb
 ../mllib_image.mlb
 ../mllib_ml.mlb
+../mllib_image_io.mlb
 test_util.sml
 test_list_util.sml
 test_optimize.sml
@@ -10,7 +11,7 @@ test_text_file_util.sml
 
 math/test_math_util.sml
 math/test_complex.sml
-math/test_signalUtil.sml
+math/test_signal_util.sml
 math/test_basic_transformations.sml
 
 ann
@@ -23,7 +24,7 @@ image/test_image_threshold.sml
 image/test_image_canny.sml
 image/test_connected_components.sml
 image/test_filter.sml
-image/test_filterUtil.sml
+image/test_filter_util.sml
 image/test_gradient.sml
 image/test_multiscale_cue.sml
 image/test_texton.sml

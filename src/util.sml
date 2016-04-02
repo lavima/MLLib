@@ -42,8 +42,8 @@ struct
       EQUAL => true
     | _ => false
 
-  val eqInt : int * int -> bool = eq Int.compare
-  val eqReal : real * real -> bool = eq Real.compare
+  
+  val eqInt = eq Int.compare
 
   (* TODO put all loop related functions into a Loop structure and add support 
      for loopN functionality like in Optimize.brute *)
