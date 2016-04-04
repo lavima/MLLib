@@ -5,61 +5,41 @@
 * This file contains sequential tests.
 *)
 
-structure SequentialTest =
+structure SequentialTest : TEST =
 struct
 
-  fun runTest(
-   spec : {
-      group : string,
-      what : string,
+  open TestCommon
 
-      numberOfTests : int,
-      testGenerator : int -> ('a * 'b),
-      implementation : 'a -> 'b,
+  type ( 'a, 'b )testSpec = {
+    group : string,
+    what : string,
+    num : int,
+    genInput : int -> ('a * 'b),
+    f : 'a -> 'b,
+    compare : ('b * 'b) -> bool,
+    inputToString : 'a -> string }
 
-      compareResult : ('b * 'b) -> bool,
 
-      argsToString : 'a -> string
-    }
-   ) = 
+  fun test( { group : string,
+              what : string,
+              num : int,
+              genInput : int -> ('a * 'b),
+              f : 'a -> 'b,
+              compare : ('b * 'b) -> bool,
+              inputToString : 'a -> string } : ( 'a, 'b )testSpec )
+      : unit = 
   let
-     
-     val {
-      group = group,
-      what = what,
-      numberOfTests = numberOfTests,
-      testGenerator = testGenerator,
-      implementation = implementation,
-      compareResult = compareResult,
-      argsToString = argsToString
-    } = spec
+    
+    val resultFile = getResultLog( group, what )
 
- 
-    val resultFile = "results/" ^ group ^ "_" ^ what ^ ".log"
-
-    fun clearOldResult () =
-      if OS.FileSys.access (resultFile, []) then
-        OS.FileSys.remove resultFile
-      else ()
-
-    fun saveResult ( success : bool, args ) : unit =
+    fun iterateTests( remaining : int ) : bool =
     let
-      val stream = TextIO.openAppend resultFile
-      val line = (Bool.toString success) ^ "," ^ (argsToString args)
-      val _ = TextIO.output(stream, line ^ "\n")
-      val _ = TextIO.closeOut stream
-    in
-      ()
-    end
-
-    fun iterateTests(remaining : int) : bool =
-    let
-      val (args, expected) = testGenerator( numberOfTests - remaining )
+      val ( args, expected ) = genInput( num-remaining )
    
-      val result = implementation args
-      val success = compareResult (result, expected)
+      val result = f args
+      val success = compare( result, expected )
 
-      val _ = saveResult(success, args)
+      val _ = addResult( resultFile, inputToString args, success )
     in
       if remaining > 0 then 
         success andalso iterateTests(remaining - 1)
@@ -67,14 +47,21 @@ struct
         success
     end
 
-    val _ = clearOldResult()
+    val success = iterateTests num
 
-    val success = iterateTests numberOfTests
-
-    val status = if success then "OK" else "Failed"
-    val _ = print (group ^ ": " ^ what ^ " : " ^ status)
+    val _ = print( group ^ ": " ^ what ^ " : " ^ resultToString success )
   in
-    success
+    ()
   end
+
+  fun test' ( groups : string list )
+            ( spec : ( 'a, 'b )testSpec )
+      : unit =
+    case groups of
+      [] => test spec
+    | _ => 
+      case isGroupMember( #group spec, groups ) of
+        false => ()
+      | true => test spec
 
 end

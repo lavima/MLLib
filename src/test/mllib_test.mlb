@@ -2,7 +2,13 @@ $(SML_LIB)/basis/basis.mlb
 $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
 ../mllib.mlb
 ../math/mllib_math.mlb
-unit_test.sml
-random_test.sml
-random_argument_utilities.sml
-sequential_test.sml
+
+test.sml
+local
+  test_common.sml
+in
+  simple_test.sml
+  differential_test.sml
+  sequential_test.sml
+  random_argument_utilities.sml
+end
