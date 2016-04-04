@@ -9,11 +9,13 @@ image.sml
 boolean_image.sml
 grayscale_image.sml
 rgb_image.sml
+cielab_image.sml
 histogram.sml
 grayscale_histogram.sml
 threshold.sml
 grayscale_threshold.sml
 image_util.sml
+image_convert.sml
 filter_util.sml
 morphology.sml
 canny.sml
