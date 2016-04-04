@@ -1,3 +1,8 @@
+2016-04-02	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Added CIELab image type (not yet tested).
+	* Added new structure ImageConvert for converting between image types. All
+		convertion functions in ImageUtil needs to be moved.
+
 2016-04-04	Marius Geitle <marius.geitle@hiof.no>
 	* Added gamma correction
 	* Added utility function for approximate comparison of real grayscale images.
