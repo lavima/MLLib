@@ -591,7 +591,7 @@ struct
         if (y < border) then (* TR *)
           sub(img, border - y, width - (x - width - border) - 1)
         else if (y > height + border - 1) then (* BR *)
-           sub(img, height - (y - height - border) - 1, width -(x-width-border)-1)
+           sub(img, height - ( y-height-border ) - 1, width -(x-width-border)-1)
         else sub(img, y - border, width - (x - width - border) - 1)
       else if (y < border) then
         sub(img, border - y, x - border)

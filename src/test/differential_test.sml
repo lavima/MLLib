@@ -5,19 +5,35 @@
 * This file contains a structure to do differential tests.
 *)
 
-structure DifferentialTest : TEST =
+signature DIFFERENTIAL_TEST =
+sig
+  val test :  { group : string,
+                what : string,
+                num : int,
+                genInput : int -> 'a,
+                fs : ('a -> 'b) list,
+                compare : ('b * 'b) -> bool,
+                inputToString : 'a -> string }
+              ->
+              unit
+
+  val test' : string list 
+              ->
+              { group : string,
+                what : string,
+                num : int,
+                genInput : int -> 'a,
+                fs : ('a -> 'b) list,
+                compare : ('b * 'b) -> bool,
+                inputToString : 'a -> string }
+              ->
+              unit
+end
+
+structure DifferentialTest : DIFFERENTIAL_TEST =
 struct
 
   open TestCommon
-
-  type ( 'a, 'b )testSpec = { 
-    group : string,
-    what : string,
-    num : int,
-    genInput : int -> 'a,
-    fs : ('a -> 'b) list,
-    compare : ('b * 'b) -> bool,
-    inputToString : 'a -> string }
 
   fun test( { group : string,
               what : string,
@@ -25,7 +41,7 @@ struct
               genInput : int -> 'a,
               fs : ('a -> 'b) list,
               compare : ('b * 'b) -> bool,
-              inputToString : 'a -> string } : ( 'a, 'b )testSpec )
+              inputToString : 'a -> string } )
       : unit = 
   let
 
@@ -66,7 +82,14 @@ struct
   end
 
   fun test' ( groups : string list )
-            ( spec : ( 'a, 'b )testSpec )
+            ( spec : { 
+                group : string,
+                what : string,
+                num : int,
+                genInput : int -> 'a,
+                fs : ('a -> 'b) list,
+                compare : ('b * 'b) -> bool,
+                inputToString : 'a -> string } )
       : unit =
     case groups of
       [] => test spec

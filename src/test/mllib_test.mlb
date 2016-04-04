@@ -3,7 +3,6 @@ $(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
 ../mllib.mlb
 ../math/mllib_math.mlb
 
-test.sml
 local
   test_common.sml
 in

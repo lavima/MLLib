@@ -5,25 +5,41 @@
 * This file contains a structure for performing simple unit tests.
 *)
 
-structure SimpleTest : TEST = 
+signature SIMPLE_TEST =
+sig
+
+  val test :  { group : string, 
+                what : string, 
+                genInput : unit -> 'a list,
+                f : 'a list -> 'b list,
+                evaluate : 'b list -> bool list,
+                inputToString : 'a -> string }
+              ->
+              unit
+
+  val test' : string list 
+              ->
+              { group : string, 
+                what : string, 
+                genInput : unit -> 'a list,
+                f : 'a list -> 'b list,
+                evaluate : 'b list -> bool list,
+                inputToString : 'a -> string }
+              ->
+              unit
+end
+
+structure SimpleTest : SIMPLE_TEST = 
 struct
 
   open TestCommon
-
-  type ( 'a, 'b )testSpec = { 
-    group : string,
-    what : string, 
-    genInput : unit -> 'a list,
-    f : 'a list -> 'b list, 
-    evaluate : 'b list -> bool list,
-    inputToString : 'a -> string }
 
   fun test( { group : string,
               what : string, 
               genInput : unit -> 'a list,
               f : 'a list -> 'b list, 
               evaluate : 'b list -> bool list,
-              inputToString : 'a -> string } : ( 'a, 'b )testSpec )
+              inputToString : 'a -> string } )
       : unit =
   let
     val resultFile = getResultLog( group, what ) 
@@ -49,7 +65,13 @@ struct
   end
 
   fun test' ( groups : string list )
-            ( spec : ( 'a, 'b )testSpec )
+            ( spec : { 
+                group : string, 
+                what : string, 
+                genInput : unit -> 'a list,
+                f : 'a list -> 'b list,
+                evaluate : 'b list -> bool list,
+                inputToString : 'a -> string } )
       : unit =
     case groups of
       [] => test spec

@@ -9,10 +9,9 @@
 
 val _ = print"\n\n********** Util Tests **********\n"
 
-val test = SimpleTest.test' ( CommandLine.arguments() )
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.eq with reals",
     genInput = fn() => [ ( 3.0, 10.0 ), ( 102.0, 102.0 ), ( 32.0, 9.0 ) ] ,
     f = 
@@ -28,7 +27,7 @@ val _ =
       " )" }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.approxEqReal",
     genInput = fn() => [ ( 1.001, 1.002, 2 ), ( 1.001, 1.002, 3 ) ] ,
     f = fn [ i1, i2 ]  => [ Util.approxEqReal i1, Util.approxEqReal i2 ] ,
@@ -41,7 +40,7 @@ val _ =
       " )" }
 
 val _ = 
-  test  { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.approxEqReal'",
     genInput = 
       fn() => [
@@ -62,7 +61,7 @@ val _ =
       " )" }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.eqInt",
     genInput = fn() => [ ( 3, 10 ), ( 102, 102 ), ( 32, 9 ) ] ,
     f =
@@ -75,7 +74,7 @@ val _ =
       " )" }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.loop",
     genInput = fn() => [ 10, 100, 10000 ] ,
     f =
@@ -98,7 +97,7 @@ val _ =
     inputToString = fn x => Int.toString x }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.max with reals",
     genInput = 
       fn() => [ 
@@ -116,7 +115,7 @@ val _ =
     inputToString = ListUtil.toString Real.toString }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.maxInt",
     genInput = 
       fn() => [
@@ -126,7 +125,7 @@ val _ =
     inputToString = ListUtil.toString Int.toString }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.minInt",
     genInput = 
       fn() => [
@@ -136,7 +135,7 @@ val _ =
     inputToString = ListUtil.toString Int.toString }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.max2 with reals",
     genInputs = 
       fn() => [ ( 3.0, ~4.0 ), ( ~3.0, 4.0 ), ( 3.0, 4.0 ), ( ~3.0, ~4.0 ) ] ,
@@ -159,7 +158,7 @@ val _ =
       " )" }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.max2Int",
     genInputs = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
     f = 
@@ -173,7 +172,7 @@ val _ =
       " )" }
 
 val _ = 
-  test { 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.min2Int",
     genInputs = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
     f = 
