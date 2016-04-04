@@ -300,4 +300,11 @@ struct
       ( height, width, calculateElement )
   end
 
+  fun applyGammaCorrection( image : RealGrayscaleImage.image, 
+                            gamma : real ) : unit =
+    RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+      ( fn ( p ) => Math.pow( p, gamma ) )
+      ( image )
+    
+
 end (* structure FilterUtil *)

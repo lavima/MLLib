@@ -344,4 +344,27 @@ struct
     unpack 0w0
   end
 
+  (*
+   * Compare two real grayscale images using approximate comparison
+   *)
+
+  fun approxCompareGrayscaleReal( image1 : RealGrayscaleImage.image,
+                                  image2 : RealGrayscaleImage.image,
+                                  precicion : int ) 
+    : bool =
+  let
+    val ( height1, width1 ) = RealGrayscaleImage.dimensions image1
+    val ( height2, width2 ) = RealGrayscaleImage.dimensions image2
+  in
+    if width1 = width2 andalso height1 = height2 then
+      RealGrayscaleImage.foldi RealGrayscaleImage.RowMajor
+        ( fn( y, x, p, eq ) => 
+            eq andalso 
+              Util.approxEqReal( p, 
+               RealGrayscaleImage.sub( image2, y, x ), precicion ) )
+        true 
+        ( RealGrayscaleImage.full image1 )
+    else
+      false
+  end
 end (* structure ImageUtil *)

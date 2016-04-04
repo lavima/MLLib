@@ -42,3 +42,25 @@ val _ = UnitTest.test( "Savgol filtering",
   in
     true
   end )
+
+
+val _ = UnitTest.test( "applying gamma correction",
+  fn() => 
+  let
+    val img = RealGrayscaleImage.fromList( 
+                [ [ 0.1, 0.2, 0.3 ],
+                  [ 0.4, 0.5, 0.6 ],
+                  [ 0.7, 0.8, 0.9 ] ] )
+    val _ = FilterUtil.applyGammaCorrection( img, 2.5 )
+  in
+    img
+  end,
+  fn x =>
+  let
+    val expected = RealGrayscaleImage.fromList(
+                     [ [ 0.003162278, 0.017888544, 0.04929503 ],
+                       [ 0.101192885, 0.176776695, 0.278854801 ],
+                       [ 0.409963413, 0.572433402, 0.768433471 ] ] )
+  in
+    ImageUtil.approxCompareGrayscaleReal( x, expected, 5 )
+  end )

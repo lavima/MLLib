@@ -1,3 +1,7 @@
+2016-04-04	Marius Geitle <marius.geitle@hiof.no>
+	* Added gamma correction
+	* Added utility function for approximate comparison of real grayscale images.
+
 2016-04-02	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Major refactor to all image related functionality.
 	* Images are now represented using Array2 from the basis library. As a 
