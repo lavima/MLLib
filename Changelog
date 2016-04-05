@@ -1,3 +1,13 @@
+2016-04-05	Marius Geitle <marius.geitle@hiof.no>
+	* Added functions to get the channels in a CIELab image as real 
+		grayscale images.
+	* Added convertion from real RGB to grayscale
+	* Added image scale
+	* Added maximum of list of images utility function
+	* Added normalization of CIELab images according to gPb.
+	* Added CIELAB support in multiscale cue combination.
+	* Added gamma correction for RGB images
+
 2016-04-02	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added CIELab image type (not yet tested).
 	* Added new structure ImageConvert for converting between image types. All

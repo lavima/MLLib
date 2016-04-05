@@ -9,6 +9,24 @@
 
 structure MultiscaleCue =
 struct
+
+  type channelConfiguration = 
+    {
+      weights : real list,
+      savgolFilters : ( real * real ) list,
+      bins : int,
+      scale : int,
+      nori : int
+    }
+
+  type textonConfiguration =
+    {
+      nori : int,
+      sigma : real,
+      nTextons : int,
+      maxIterations : int
+    }
+
   fun orientedMultiscale(
     image : RealGrayscaleImage.image,
     weights : real list,
@@ -20,19 +38,16 @@ struct
     val ( height, width ) = RealGrayscaleImage.dimensions image
     val responseImage = RealGrayscaleImage.zeroImage( height, width )
 
-    val sizes = [scale div 2, scale, scale * 2]
+    val sizes = [ scale div 2, scale, scale*2 ]
 
-    val params = ListPair.zip(sizes, savgolFilters)
+    val params = ListPair.zip( sizes, savgolFilters )
 
-    fun calculateResponse(w, (s, (savMaj, savMin)), a) =
+    fun calculateResponse( w, ( s, ( savMaj, savMin ) ), a ) =
     let
-      val grad = Gradient.orientedGradient(image, bins, s, ori)
-      val grad = FilterUtil.savgol(grad, savMaj, savMin, ori + Math.pi / 2.0)
-      val _ = 
-        RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
-          ( fn p => p * w ) 
-          grad
-      val _ = RealGrayscaleImage.add' (a, grad)
+      val grad = Gradient.orientedGradient( image, bins, s, ori )
+      val grad = FilterUtil.savgol( grad, savMaj, savMin, ori+Math.pi/2.0 )
+      val _ = RealGrayscaleImage.scale'( grad, w )
+      val _ = RealGrayscaleImage.add'( a, grad )
     in
       a
     end
@@ -40,42 +55,88 @@ struct
     ListPair.foldl calculateResponse responseImage (weights, params)
   end
 
-  fun multiscale( 
-    channelA : RealGrayscaleImage.image,
-    textonBase : RealGrayscaleImage.image,
-    weights : real list,
-    bins : int,
-    scale : int,
-    nori : int) : RealGrayscaleImage.image =
+  fun multiscaleChannel ( config : channelConfiguration, 
+                          image : RealGrayscaleImage.image )
+    : RealGrayscaleImage.image =
   let
-    val ( height, width ) = RealGrayscaleImage.dimensions channelA
+    val ( height, width ) = RealGrayscaleImage.dimensions image
 
-    val savgol_A = [(3.0, 3.0 / 4.0), (5.0, 5.0 / 4.0), (10.0, 10.0 / 4.0)]
-    val savgol_T = [(5.0, 5.0 / 4.0), (10.0, 10.0 / 4.0), (20.0, 20.0 / 4.0)]
+    val {
+      weights = weights,
+      savgolFilters = savgolFilters,
+      bins = bins,
+      scale = scale,
+      nori = nori
+    } = config
 
-    val ori = List.tabulate (nori, (fn i => ((real i) * Math.pi) / (real nori)))
+    val ori = List.tabulate 
+      ( nori, ( fn i => ( (real i)*Math.pi)/(real nori)) )
 
     val responses = List.foldl 
-       (fn (x, a) => orientedMultiscale
-                 (channelA, weights, bins, scale, x, savgol_A)::a) [] ori
-
-    val textonImage = Texton.generateTextons(textonBase, 8, 2.0, 32, 500)  
-
-    val responses = responses @ List.foldl 
-       (fn (x, a) => orientedMultiscale
-                 (textonImage, weights, bins, scale, x, savgol_T)::a) [] ori
-    
-    fun maxResponse( y : int, x : int) : real =
-      List.foldl (fn (resp, a) => 
-              Real.max(RealGrayscaleImage.sub(resp, y, x), a)) 0.0 responses
-
-    val responseImage = 
-      RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
-        ( height, width, maxResponse )
+      ( fn ( x, a ) => 
+        orientedMultiscale( image, weights, bins, scale, x, savgolFilters )::a )
+      [] ori
   in
-     responseImage
+     ImageUtil.maxRealGrayscale responses
   end
 
-  
-  
+
+  fun multiscale (
+    configuration : { 
+      channelL : channelConfiguration,
+      channelA : channelConfiguration,
+      channelB : channelConfiguration,
+      channelT : channelConfiguration,
+      texton : textonConfiguration,
+      border : int
+    } )
+    ( image : RealRGBImage.image )
+    : RealGrayscaleImage.image =
+  let
+    val  { 
+      channelL = channelLConfig,
+      channelA = channelAConfig,
+      channelB = channelBConfig,
+      channelT = channelTConfig,
+      texton = 
+        {
+          nori = textonNoriConfig,
+          sigma = textonSigmaConfig,
+          nTextons = textonNTextonsConfig,
+          maxIterations = textonMaxIterationsConfig
+        },
+      border = borderConfig
+    } = configuration
+
+    val extended = RealRGBImage.border 
+                 ( RealRGBImage.MirrorExtension, borderConfig )
+                 ( image )
+
+    val gray = ImageConvert.realRGBtoGray extended
+    val _ = FilterUtil.applyGammaCorrectionRealRGB( extended, 2.5 )
+    val cie = ImageConvert.realRGBToCIELab extended
+    val _ = ImageUtil.normalizeCIELab' cie
+    val aChannelImage = ImageUtil.getAChannel cie
+    val bChannelImage = ImageUtil.getBChannel cie
+    val lChannelImage = ImageUtil.getLChannel cie
+
+    val textonImage = Texton.generateTextons
+      ( gray, 
+        textonNoriConfig, 
+        textonSigmaConfig, 
+        textonNTextonsConfig, 
+        textonMaxIterationsConfig )
+
+    val aMultiscale = multiscaleChannel( channelAConfig, aChannelImage )
+    val bMultiscale = multiscaleChannel( channelBConfig, bChannelImage )
+    val lMultiscale = multiscaleChannel( channelLConfig, lChannelImage )
+    val tMultiscale = multiscaleChannel( channelTConfig, textonImage )
+
+    val all = RealGrayscaleImage.add( aMultiscale, bMultiscale )
+    val _ = RealGrayscaleImage.add'( all, lMultiscale )
+    val _ = RealGrayscaleImage.add'( all, tMultiscale )
+  in
+    all
+  end
+
 end

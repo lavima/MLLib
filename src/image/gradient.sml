@@ -19,13 +19,13 @@ struct
     val quantized = Array2.tabulate Array2.RowMajor (
       height, width, 
       fn( y, x ) => 
-        Real.round((RealGrayscaleImage.sub(image, y, x ) )/binWidth ) )
+        Real.round((RealGrayscaleImage.sub( image, y, x ) )/binWidth ) )
 
     fun countOccurance( i : int, j : int, value : int ) : int = 
       if Array2.sub( quantized, i, j )=value then 
         1 
       else 
-        0;
+        0
 
     fun generateIntegralImage( bin : int ) =
     let
@@ -103,17 +103,13 @@ struct
                           radius : int,
                           ori : real ) =
     let
-      val padded = 
-        RealGrayscaleImage.border 
-          ( RealGrayscaleImage.MirrorExtension, radius*2 ) 
-          image
-      val ( padHeight, padWidth ) = RealGrayscaleImage.dimensions padded
-      val rotated = RealGrayscaleImage.rotate( padded, ori )
+      val ( height, width ) = RealGrayscaleImage.dimensions image
+      val rotated = RealGrayscaleImage.rotate( image, ori )
       val gradientOri = gradient( rotated, bins, radius )
       val gradient = 
-        RealGrayscaleImage.rotateCrop ( gradientOri, ~ori, padHeight, padWidth )
+        RealGrayscaleImage.rotateCrop( gradientOri, ~ori, height, width )
     in
-      RealGrayscaleImage.trim ( radius*2 ) gradient
+      gradient
     end
 end
 

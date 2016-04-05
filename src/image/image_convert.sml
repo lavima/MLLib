@@ -77,4 +77,22 @@ struct
     out
   end
 
+  fun realRGBtoGray( im : RealRGBImage.image ) : RealGrayscaleImage.image =
+  let
+    val ( height, width ) = RealRGBImage.dimensions im
+
+    val out = RealGrayscaleImage.zeroImage( height, width ) 
+
+    val _ = RealRGBImage.appi RealRGBImage.RowMajor
+        ( fn( i, j, ( r, g, b ) ) => 
+          let
+            val grayValue = r*0.29894+g*0.58704+b*0.11402
+          in
+            RealGrayscaleImage.update( out, i, j, grayValue )
+          end )
+        ( RealRGBImage.full im )
+  in
+    out
+  end
+
 end (* structure ImageConvert *)

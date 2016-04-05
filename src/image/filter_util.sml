@@ -305,6 +305,13 @@ struct
     RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
       ( fn ( p ) => Math.pow( p, gamma ) )
       ( image )
+
+  fun applyGammaCorrectionRealRGB( image : RealRGBImage.image, 
+                            gamma : real ) : unit =
+    RealRGBImage.modify RealRGBImage.RowMajor 
+      ( fn ( r, g, b ) => 
+        (Math.pow( r, gamma ), Math.pow( g, gamma ), Math.pow( b, gamma ) ) )
+      ( image )
     
 
 end (* structure FilterUtil *)

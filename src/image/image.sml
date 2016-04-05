@@ -61,6 +61,9 @@ sig
   val subtract : image * image -> image
   val subtract' : image * image -> unit
 
+  val scale : image * real -> image
+  val scale' : image * real -> unit
+
   val app : traversal -> ( pixel -> unit ) -> image -> unit
   val appi : traversal -> ( int * int * pixel -> unit ) -> region -> unit
   val fold : traversal -> ( pixel * 'a -> 'a ) -> 'a -> image -> 'a
@@ -228,6 +231,23 @@ struct
       raise mismatchException
   end
 
+  fun scale( im : image, scalar : real ) : image = 
+  let
+    val ( height, width ) = dimensions im
+    val output = tabulate RowMajor 
+      ( height, width, fn ( i, j ) => pixelScale( sub( im, i, j ), scalar ) )
+  in
+    output
+  end
+
+  fun scale'( im : image, scalar : real ) : unit = 
+  let
+    val ( height, width ) = dimensions im
+    val _ = modifyi RowMajor ( fn ( i, j, p ) => pixelScale( p, scalar ) )
+      ( full im )
+  in
+    ()
+  end
 
   fun toString( im : image ) : string =
   let

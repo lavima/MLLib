@@ -221,6 +221,28 @@ struct
       image    
   end
 
+  (*
+   * Normalize CIELab images according to gPb
+   *)
+  fun normalizeCIELab'( image : RealCIELabImage.image ) 
+    : unit =
+    RealCIELabImage.modify RealCIELabImage.RowMajor
+      ( fn ( a, b, l ) => 
+        let
+          fun crop( v : real ) =
+            Real.max( 0.0, Real.min( 1.0, v ) )
+
+          val abMin = ~73.0
+          val abMax = 95.0
+          val abRange = abMax-abMin
+          val l_val = crop( l/100.0 )
+          val a_val = crop( (a-abMin)/abRange )
+          val b_val = crop( (b-abMin)/abRange )
+        in
+          ( a, b, l )
+        end )
+      ( image )
+
   fun gradientXReal( im : RealGrayscaleImage.image )
       : RealGrayscaleImage.image =
   let
@@ -367,4 +389,46 @@ struct
     else
       false
   end
+
+  fun getAChannel( image : RealCIELabImage.image ) : RealGrayscaleImage.image =
+  let
+    val ( width, height ) = RealCIELabImage.dimensions image
+
+    fun a( y, x ) = #2( RealCIELabImage.sub( image, y, x ) )
+  in
+    RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor ( width, height, a )
+  end
+
+  fun getBChannel( image : RealCIELabImage.image ) : RealGrayscaleImage.image =
+  let
+    val ( width, height ) = RealCIELabImage.dimensions image
+
+    fun b( y, x ) = #3( RealCIELabImage.sub( image, y, x ) )
+  in
+    RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor ( width, height, b )
+  end
+
+  fun getLChannel( image : RealCIELabImage.image ) : RealGrayscaleImage.image =
+  let
+    val ( width, height ) = RealCIELabImage.dimensions image
+
+    fun l( y, x ) = #1( RealCIELabImage.sub( image, y, x ) )
+  in
+    RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor ( width, height, l )
+  end
+
+  fun maxRealGrayscale( images : RealGrayscaleImage.image list )
+    : RealGrayscaleImage.image =
+  let
+    val ( height, width ) = RealGrayscaleImage.dimensions( List.hd images )
+
+    fun maxPixel( y : int, x : int) : real =
+      List.foldl 
+        ( fn (resp, a) => Real.max( RealGrayscaleImage.sub( resp, y, x ), a ) ) 
+        0.0 images
+  in
+    RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
+      ( height, width, maxPixel )
+  end
+
 end (* structure ImageUtil *)
