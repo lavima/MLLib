@@ -66,7 +66,7 @@ val _ =
     genInput = fn() => [ ( 3, 10 ), ( 102, 102 ), ( 32, 9 ) ] ,
     f =
       fn[ i1, i2, i3 ] => [ Util.eqInt i1, Util.eqInt i2, Util.eqInt i3 ] ,
-    evaluate = fn( x, y, z ) => [ not x, y, not x ] ,
+    evaluate = fn[ x, y, z ] => [ not x, y, not x ] ,
     inputToString = fn( x, y ) => 
       "( " ^ 
       Int.toString x ^ ", " ^ 
@@ -81,8 +81,8 @@ val _ =
       fn[ i1, i2, i3 ] =>
       let
         val indices1 = Array.array( i1, 0 )
-        val indices1 = Array.array( i2, 0 )
-        val indices1 = Array.array( i3, 0 )
+        val indices2 = Array.array( i2, 0 )
+        val indices3 = Array.array( i3, 0 )
         val _ = Util.loop ( fn i => Array.update( indices1, i, i ) ) i1
         val _ = Util.loop ( fn i => Array.update( indices2, i, i ) ) i2
         val _ = Util.loop ( fn i => Array.update( indices3, i, i ) ) i3
@@ -137,7 +137,7 @@ val _ =
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.max2 with reals",
-    genInputs = 
+    genInput = 
       fn() => [ ( 3.0, ~4.0 ), ( ~3.0, 4.0 ), ( 3.0, 4.0 ), ( ~3.0, ~4.0 ) ] ,
     f = 
       fn[ i1, i2, i3, i4 ] => [ 
@@ -160,7 +160,7 @@ val _ =
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.max2Int",
-    genInputs = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
+    genInput = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
     f = 
       fn[ i1, i2, i3, i4 ] => 
         [ Util.max2Int i1, Util.max2Int i2, Util.max2Int i3, Util.max2Int i4 ] ,
@@ -174,11 +174,11 @@ val _ =
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.min2Int",
-    genInputs = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
+    genInput = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
     f = 
       fn[ i1, i2, i3, i4 ] => 
         [ Util.min2Int i1, Util.min2Int i2, Util.min2Int i3, Util.min2Int i4 ] ,
-    evaluate = fn[ o1, o2, o3, o4 ] => [ o1=~4, o2=~3, o3=3, o4= ~4 ] ,
+    evaluate = fn[ o1, o2, o3, o4 ] => [ o1= ~4, o2= ~3, o3=3, o4= ~4 ] ,
     inputToString = fn( x, y ) => 
       "( " ^ 
       Int.toString x ^ ", " ^ 
