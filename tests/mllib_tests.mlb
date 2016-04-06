@@ -20,6 +20,8 @@ in
   image/test_image.sml
 end
 
+image/io/test_ppm.sml
+
 image/test_image_threshold.sml
 image/test_image_canny.sml
 image/test_connected_components.sml
