@@ -3,3 +3,4 @@ math_util.sml
 basic_transformations.sml
 complex.sml
 signal_util.sml
+sum_area_table.sml

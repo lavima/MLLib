@@ -1,9 +1,14 @@
+2016-04-06	Marius Geitle <marius.geitle@hiof.no>
+	* Extracted sum area table to make it reusable and individually 
+		testable.
+
 2016-04-06	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Fixed bug in the plainPPM writer (PPM.write).
 
 2016-04-06	Marius Geitle <marius.geitle@hiof.no>
 	* Added the basic grayscale mathematical operations Max, Min, Sum, Mean
 	* Rewrote border extension to use GetValue
+	* Fixed some details in Gradient
 
 2016-04-05	Marius Geitle <marius.geitle@hiof.no>
 	* Added functions to get the channels in a CIELab image as real 
