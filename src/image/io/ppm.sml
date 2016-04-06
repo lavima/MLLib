@@ -31,7 +31,6 @@ struct
 
     val ( format, width, height, maxVal, _ ) = 
       PNMText.parseHeader input
-
     val out = 
       case format of
         plainPPM => 
@@ -68,7 +67,7 @@ struct
     val ( height, width ) = dimensions im
     val _ = 
       ( PNMText.writeHeader( out, ( format, width, height, 3, maxVal, [] ) );
-        if format=plainPGM then
+        if format=plainPPM then
           PNMText.writeColorPixels( out, toList( im, maxVal ) ) 
         else 
           PNMBinary.writeColorPixels( out, maxVal, toList( im, maxVal ) ) )

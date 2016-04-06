@@ -10,7 +10,7 @@ all: src/tags tests/mllib_tests
 src/tags: src/*.sml src/image/*.sml src/ml/*.sml src/math/*.sml
 	ctags-exuberant -f src/tags --tag-relative=yes -R src/*
 
-tests/mllib_tests: tests/mllib_tests.mlb tests/image/*.sml tests/ml/*.sml tests/math/*.sml tests/*.sml src/mllib.mlb src/*.sml src/image/mllib_image.mlb src/image/*.sml src/image/io/mllib_image_io.mlb src/image/io/*.sml src/test/mllib_test.mlb src/test/*.sml src/ml/mllib_ml.mlb src/ml/*.sml $(BSDS_OBJECTS) $(C_FILES)
+tests/mllib_tests: tests/mllib_tests.mlb tests/image/*.sml tests/image/io/*.sml tests/ml/*.sml tests/math/*.sml tests/*.sml src/mllib.mlb src/*.sml src/image/mllib_image.mlb src/image/*.sml src/image/io/mllib_image_io.mlb src/image/io/*.sml src/test/mllib_test.mlb src/test/*.sml src/ml/mllib_ml.mlb src/ml/*.sml $(BSDS_OBJECTS) $(C_FILES)
 	mlton -link-opt '-lstdc++' tests/mllib_tests.mlb $(C_FILES) $(BSDS_OBJECTS) 
 
 $(BSDS_OBJECTS): %.o: %.cc 
