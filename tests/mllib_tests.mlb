@@ -30,6 +30,7 @@ image/test_filter_util.sml
 image/test_gradient.sml
 image/test_multiscale_cue.sml
 image/test_texton.sml
+image/io/test_ppm.sml
 
 ml/test_k_means.sml
 
