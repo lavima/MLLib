@@ -1,3 +1,7 @@
+2016-04-06	Marius Geitle <marius.geitle@hiof.no>
+	* Added the basic grayscale mathematical operations Max, Min, Sum, Mean
+	* Rewrote border extension to use GetValue
+
 2016-04-05	Marius Geitle <marius.geitle@hiof.no>
 	* Added functions to get the channels in a CIELab image as real 
 		grayscale images.

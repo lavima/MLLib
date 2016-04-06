@@ -19,7 +19,7 @@ val _ = UnitTest.test( "Generating 1D gaussian filter created using the gPb type
 
 val _ = UnitTest.test( "Generating 2D gaussian filter created using the gPb type",
   fn() => 
-    FilterUtil.createGaussianMaskGPB2D 2 (3.0, 3.0, 3.0, 1.0, false, 0.3),
+    FilterUtil.createGaussianMaskGPB2D 0 (3.0, 9.0, 9.0, 3.0, false, 0.3),
   fn X =>
   let
     val norm = ImageUtil.normalizeReal'' X 

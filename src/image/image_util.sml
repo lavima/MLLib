@@ -23,7 +23,6 @@ struct
             else
               () )
         ( RealGrayscaleImage.full im )
-
   in
     out
   end
@@ -103,14 +102,7 @@ struct
 
     val normalized = RealGrayscaleImage.zeroImage( height, width )
 
-    val max = RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
-      ( fn( x, max ) => 
-          if x>max then
-            x
-          else
-            max )
-      0.0 
-      im
+    val max = GrayscaleMath.maxReal im
 
     val _ = 
       if max>0.0 then
@@ -141,8 +133,8 @@ struct
 
     val _ = 
       if max>0.0 then
-        RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
-          ( fn x => x/max )
+        RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+        ( fn x => x/max )
           im
       else
         ()
@@ -161,24 +153,14 @@ struct
 
     val normalized = RealGrayscaleImage.zeroImage( height, width )    
 
-    val max = 
-      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
-        Real.max 
-        Real.negInf 
-        im
-    val min = 
-      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
-        Real.min 
-        Real.posInf 
-        im
+    val max = GrayscaleMath.maxReal im
+    val min = GrayscaleMath.minReal im
+    val range = max-min 
 
     val _ = 
       RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
         ( fn( i, j, x ) =>
-          RealGrayscaleImage.update( 
-            normalized, 
-            i, j, 
-            ( x-min)/( max-min ) ) )
+          RealGrayscaleImage.update( normalized, i, j, (x-min)/range ) )
         ( RealGrayscaleImage.full im )
   in
     normalized
@@ -188,19 +170,9 @@ struct
    * Normalize an image by making it zero mean and l1 norm
    *)
   fun makeRealZeroMean'( image : RealGrayscaleImage.image )
-       : unit =
+    : unit =
   let
-
-    val ( height, width ) = RealGrayscaleImage.dimensions image
-
-    val mean = 
-      ( RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
-          ( fn ( x, a ) => x+a ) 
-          0.0 
-          image ) 
-      / 
-      ( real( width*height ) )
-
+    val mean = GrayscaleMath.meanReal image
   in
      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
       ( fn x => x-mean ) 

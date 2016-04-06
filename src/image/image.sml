@@ -502,6 +502,22 @@ struct
       out
     end
 
+  fun border( borderExtension : borderExtension, border : int ) 
+            ( img : image ) 
+    : image =
+  let
+    val ( height, width ) = dimensions img
+
+    val getValue = getValue ( img, borderExtension )
+
+    val newImg = tabulate RowMajor ( 
+      height + 2 * border, width + 2 * border, 
+      fn ( y, x ) => getValue( x-border, y-border ) )
+  in
+    newImg
+  end
+
+
   end (* local *)
 
 
@@ -589,52 +605,6 @@ struct
         abs((real width) * Math.sin(by) + (real height) * Math.cos(by))));
   in
      rotateCrop( img, by, newHeight, newWidth )
-  end
-
-  fun border( borderExtension : borderExtension, border : int ) 
-            ( img : image ) 
-      : image =
-  let
-    val ( height, width ) = dimensions img
-
-    val newImg = zeroImage( height + 2*border, width + 2*border )
-
-    fun mirrorBorder( x, y ) =
-      if (x < border) then (* TL  *)
-        if (y < border) then 
-          sub(img, border - y, border - x) 
-        else if (y > height + border - 1) then  (* BL *)
-          sub(img, height - (y - height - border) - 1, border - x )
-        else 
-          sub(img, y - border, border - x)
-      else if (x > width + border - 1) then
-        if (y < border) then (* TR *)
-          sub(img, border - y, width - (x - width - border) - 1)
-        else if (y > height + border - 1) then (* BR *)
-           sub(img, height - (y - height - border) - 1, width -(x-width-border)-1)
-        else sub(img, y - border, width - (x - width - border) - 1)
-      else if (y < border) then
-        sub(img, border - y, x - border)
-      else sub(img, height - (y - height - border) - 1, x - border)
-
-    val borderExt = 
-      case borderExtension of
-        ZeroExtension => ( fn( x, y ) => Spec.zeroPixel )
-      | MirrorExtension => mirrorBorder
-
-    val newImg = 
-      tabulate RowMajor ( 
-        height + 2 * border, width + 2 * border, 
-        ( fn( y, x ) => 
-          if ( x < border ) orelse 
-             ( y < border ) orelse 
-             ( x > border+width-1 ) orelse 
-             (y > border+height-1 ) then 
-            borderExt( x, y )
-          else 
-            sub( img, y-border, x-border ) ) )
-  in
-    newImg
   end
 
   fun trim ( border : int ) ( img : image ) : image =

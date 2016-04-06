@@ -77,7 +77,8 @@ struct
         orientedMultiscale( image, weights, bins, scale, x, savgolFilters )::a )
       [] ori
   in
-     ImageUtil.maxRealGrayscale responses
+    List.hd responses
+    (*ImageUtil.maxRealGrayscale responses *)
   end
 
 
@@ -132,11 +133,16 @@ struct
     val lMultiscale = multiscaleChannel( channelLConfig, lChannelImage )
     val tMultiscale = multiscaleChannel( channelTConfig, textonImage )
 
+    val _ = RealPGM.write(ImageUtil.normalizeReal'' aMultiscale, "output/aMultiscale.pgm" )
+    val _ = RealPGM.write(ImageUtil.normalizeReal'' bMultiscale, "output/bMultiscale.pgm" )
+    val _ = RealPGM.write(ImageUtil.normalizeReal'' lMultiscale, "output/lMultiscale.pgm" )
+    val _ = RealPGM.write(ImageUtil.normalizeReal'' tMultiscale, "output/tMultiscale.pgm" )
+
     val all = RealGrayscaleImage.add( aMultiscale, bMultiscale )
     val _ = RealGrayscaleImage.add'( all, lMultiscale )
     val _ = RealGrayscaleImage.add'( all, tMultiscale )
   in
-    all
+    ImageUtil.normalizeReal'' all
   end
 
 end

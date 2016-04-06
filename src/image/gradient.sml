@@ -50,8 +50,8 @@ struct
 
     fun count(intImage, i, j, height, width) : int =
        Array2.sub(intImage, i, j) + 
-       Array2.sub(intImage, i+width, j+width) - 
-       Array2.sub(intImage, i+width, j) - 
+       Array2.sub(intImage, i+height, j+width) - 
+       Array2.sub(intImage, i+height, j) - 
        Array2.sub(intImage, i, j + width)
 
     val border =  2 * radius

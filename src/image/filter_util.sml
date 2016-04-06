@@ -122,7 +122,7 @@ struct
       abs(supportX * Math.sin(ori) + supportY * Math.cos(ori))));
 
     val gausX = createGaussianMaskgPb deri ( sigmaX, corSupportX )
-    val gausY = createGaussianMaskgPb 0 (sigmaY, corSupportY)
+    val gausY = createGaussianMaskgPb 0 ( sigmaY, corSupportY)
 
     val _ = 
       if hilbert then
@@ -138,7 +138,7 @@ struct
 
     val filter = 
       RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
-        ( RealGrayscaleImage.nRows gausX, 
+        ( RealGrayscaleImage.nCols gausX, 
           RealGrayscaleImage.nCols gausY, 
           fn( y, x ) => 
             RealGrayscaleImage.sub( gausX, 0, x ) 

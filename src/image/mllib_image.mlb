@@ -14,6 +14,7 @@ histogram.sml
 grayscale_histogram.sml
 threshold.sml
 grayscale_threshold.sml
+grayscale_math.sml
 image_util.sml
 image_convert.sml
 filter_util.sml
@@ -28,5 +29,14 @@ end
 probability_rand_index.sml
 texton.sml
 gradient.sml
+
+io/image_io.sml
+io/pnm.sml
+io/pnm_text.sml
+io/pnm_binary.sml
+io/pbm.sml
+io/pgm.sml
+io/ppm.sml
+
 multiscale_cue.sml
 connected_components.sml
