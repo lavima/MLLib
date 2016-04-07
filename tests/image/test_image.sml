@@ -19,8 +19,10 @@ val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y )
 
 val _ = print"\n\n********** Image Tests **********\n"
 
-val _ = UnitTest.test( "Loading PGM image as GrayscaleImageWord8.image",
-  fn() => Option.valOf( Word8PGM.read("simple.plain.pgm") ),
+val _ = SimpleTest.test' ( CommandLine.arguments() ) {
+  group="Word8PGM", what="Loading PGM image as GrayscaleImageWord8.image",
+  genInput= fn() => [ "simple.plain.pgm" ] ,
+  f= fn[ i1 ] => Option.valOf( Word8PGM.read i1 ),
   fn im => 
     if Word8GrayscaleImage.sub( im, 0, 0 )=0w0 andalso
        Word8GrayscaleImage.sub( im, 0, 1 )=0w64 andalso
@@ -30,7 +32,8 @@ val _ = UnitTest.test( "Loading PGM image as GrayscaleImageWord8.image",
     else
       false )
 
-val _ = UnitTest.test( "Loading PGM image as GrayscaleImageReal.image",
+val _ = SimpleTest.test' ( CommandLine.arguments() ) {
+  group="RealPGM", what="Loading PGM image as GrayscaleImageReal.image",
   fn() => Option.valOf( RealPGM.read("simple.plain.pgm") ),
   fn im => 
     if Real.==( RealGrayscaleImage.sub( im, 0, 0 ), 0.0 ) andalso
@@ -41,7 +44,8 @@ val _ = UnitTest.test( "Loading PGM image as GrayscaleImageReal.image",
     else
       false )
 
-val _ = UnitTest.test( "Loading simple RAW PGM image as GrayscaleImageReal.image",
+val _ = SimpleTest.test' ( CommandLine.arguments() ) {
+  group="RealPGM", what="Loading simple RAW PGM image as GrayscaleImageReal.image",
   fn() => Option.valOf( RealPGM.read("simple.raw.pgm") ),
   fn im => 
     if Real.==( RealGrayscaleImage.sub( im, 0, 0 ), 0.0 ) andalso
@@ -52,7 +56,8 @@ val _ = UnitTest.test( "Loading simple RAW PGM image as GrayscaleImageReal.image
     else
       false )
 
-val _ = UnitTest.test( "Loading proper PGM image as GrayscaleImageReal.image",
+val _ = SimpleTest.test' ( CommandLine.arguments() ) {
+  group="RealPGM", what="Loading proper PGM image as GrayscaleImageReal.image",
   fn() => Option.valOf( RealPGM.read("proper.plain.pgm") ),
   fn im => 
   let
@@ -71,7 +76,8 @@ val _ = UnitTest.test( "Loading proper PGM image as GrayscaleImageReal.image",
   end )
 
 val _ =
-  UnitTest.test( "Loading a simple PBM",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="BooleanPBM", what="Loading a simple PBM",
     fn() =>
       Option.valOf( BooleanPBM.read( "simple.plain.pbm" ) ) ,
     fn x =>
@@ -84,7 +90,8 @@ val _ =
         false )
 
 val _ =
-  UnitTest.test( "Loading a simple RAW PBM",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="BooleanPBM", what="Loading a simple RAW PBM",
     fn() =>
       Option.valOf( BooleanPBM.read( "simple.raw.pbm" ) ) ,
     fn x =>
@@ -96,12 +103,14 @@ val _ =
       else
         false )
 
-val _ = UnitTest.test( "Loading proper RAW PBM image as BooleanImage.image",
+val _ = SimpleTest.test' ( CommandLine.arguments() ) {
+  group="BooleanPBM", what="Loading proper RAW PBM image as BooleanImage.image",
   fn() => Option.valOf( BooleanPBM.read("proper.raw.pbm") ),
   fn x => true )
 
 val _ = 
-  UnitTest.test( "Loading, saving, and reloading PGM image as GrayscaleImageWord8.image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Loading, saving, and reloading PGM image as GrayscaleImageWord8.image",
     fn () => 
       let
         val im = Option.valOf( Word8PGM.read("simple.plain.pgm") )
@@ -120,7 +129,8 @@ val _ =
         false )
 
 val _ = 
-  UnitTest.test( "Loading, saving, and reloading PGM image as GrayscaleImageReal.image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Loading, saving, and reloading PGM image as GrayscaleImageReal.image",
     fn() => 
       let
         val im = Option.valOf( RealPGM.read("simple.plain.pgm") )
@@ -138,7 +148,8 @@ val _ =
         false )
 
 val _ =
-  UnitTest.test( "Loading, saving and reloading PBM image as Boolean.image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Loading, saving and reloading PBM image as Boolean.image",
     fn() =>
       let
         val im = Option.valOf( BooleanPBM.read("simple.raw.pbm") )
@@ -156,7 +167,8 @@ val _ =
         false )
 
 val _ =
-  UnitTest.test( "Saving and reloading a simple binary image using RAW PBM",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Saving and reloading a simple binary image using RAW PBM",
     fn() =>
       let
         val im = BooleanImage.fromList'( 2, 2, [ true, false, true, false ] )
@@ -174,7 +186,8 @@ val _ =
         false )
 
 val _ = 
-  UnitTest.test( "Testing histogram on small generated image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing histogram on small generated image",
     fn() => 
       let
         val im = 
@@ -200,7 +213,8 @@ val _ =
     end )
 
 val _ =
-  UnitTest.test( "Testing histogram on proper grayscale image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing histogram on proper grayscale image",
     fn() =>
     let
       val im = Option.valOf( RealPGM.read "proper.plain.pgm" )
@@ -232,7 +246,8 @@ val _ =
     end )
 
 val _ = 
-  UnitTest.test( "Testing GrayscaleImageReal.correlate",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing GrayscaleImageReal.correlate",
     fn() =>
     let
       val im = 
@@ -255,7 +270,8 @@ val _ =
     end )
 
 val _ = 
-  UnitTest.test( "Testing GrayscaleImageReal.convolve",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing GrayscaleImageReal.convolve",
     fn() =>
     let
       val im1 = 
@@ -306,7 +322,8 @@ val _ =
     end )
 
 val _ =
-  UnitTest.test( "Testing Berkeley FMeasure",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing Berkeley FMeasure",
     fn() => 
       let
 
@@ -365,7 +382,8 @@ val _ =
       )
 
 val _ = 
-  UnitTest.test( "Testing morphological thinning",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Testing morphological thinning",
     fn() =>
     let
       val t = true
@@ -397,7 +415,8 @@ val _ =
 
 
 val _ = 
-  UnitTest.test( "Rotating a image as GrayscaleImageReal.image",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Rotating a image as GrayscaleImageReal.image",
     fn() => 
       let
         val Image = Option.valOf( RealPGM.read("test2.pgm") )
@@ -412,7 +431,8 @@ val _ =
 
 
 val _ = 
-  UnitTest.test( "Adding border using borderextension.mirror",
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Word8PGM", what="Adding border using borderextension.mirror",
     fn() => 
       let
         val image = Option.valOf( RealPGM.read("test2.pgm") )
@@ -428,15 +448,15 @@ val _ =
       RealGrayscaleImage.nCols extended = 322 )
 
 val _ =
-  RandomTest.runTest(
+  DifferentialTest.test' ( CommandLine.arguments() ) 
    {group = "Image", 
     what = "Rotate image",
-    numberOfTests = 10,
-    testGenerator = 
+    num = 10,
+    genInput = 
       fn () => 
          (RandomArgumentUtilities.randomBSRImage (), 
           RandomArgumentUtilities.randomDecimal(0.0, Math.pi * 2.0)),
-    implementations = [
+    fs = [
       fn (imageFile, rad) => 
       let
         val image = Option.valOf( RealPGM.read imageFile )
@@ -486,6 +506,6 @@ val _ =
         dest
       end
     ],
-    compareResult = RealGrayscaleImage.equal,
-    argsToString = fn( file, rand ) => file
-  } )
+    compare = RealGrayscaleImage.equal,
+    inputToString = fn( file, rand ) => file
+  } 
