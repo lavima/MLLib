@@ -1,4 +1,10 @@
 2016-04-07	Marius Geitle <marius.geitle@hiof.no>
+	* Added conversion from grayscale int to grayscale real
+	* Added smoothing of histograms to gradient calculations
+	* Added support for multiple filter sets with different sigma
+		 for  texon generation
+
+2016-04-07	Marius Geitle <marius.geitle@hiof.no>
 	* Reorganized Gradient and Multiscale to fix a bug related to 
 		gradients from textons
 	* Added min, max and sum for integer grayscale images

@@ -95,4 +95,15 @@ struct
     out
   end
 
+  fun realGrayscaleIntToGrayscaleReal( im : IntGrayscaleImage.image )
+    : RealGrayscaleImage.image =
+  let
+    val ( height, width ) = IntGrayscaleImage.dimensions im  
+  in
+    RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor
+    ( height, width,  
+      fn ( y, x ) => ( real ( IntGrayscaleImage.sub( im, y, x ) ) ) / 255.0 )
+  end
+
+
 end (* structure ImageConvert *)

@@ -12,13 +12,18 @@ struct
   
   fun gradientQuantized( image : IntGrayscaleImage.image, 
                          bins : int, 
-                         radius : int )
+                         radius : int,
+                         histSmoothSigma : real )
     : RealGrayscaleImage.image =
   let
     val ( height, width ) = IntGrayscaleImage.dimensions image
 
-    val max = GrayscaleMath.maxInt image
-    val min = GrayscaleMath.minInt image
+    val smoothKernel = 
+      if Real.==( histSmoothSigma, 0.0 ) then 
+        RealGrayscaleImage.fromList [ [ 0.0 ] ]
+      else
+        FilterUtil.createGaussianMaskgPb 0
+        ( histSmoothSigma*(real bins), Real.ceil( histSmoothSigma*3.0 ) )
 
     fun generateIntegralImage( bin : int ) =
       IntSumAreaTable.buildTable
@@ -56,14 +61,28 @@ struct
         val normBot = List.foldl 
           ( fn (x, a) => ((real x) / (real bsum)) :: a ) [] bot
 
-        fun element(t, b, a) = a +
-          (if (t + b < 0.000000001) then 0.0
-          else (Math.pow(t - b, 2.0)) / (t + b))
+        val topHist = RealGrayscaleImage.fromList [ normTop ]
+        val botHist = RealGrayscaleImage.fromList [ normBot ]
+   
+        fun smooth(hist) = RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.ZeroExtension, RealGrayscaleImage.FullSize )
+          ( hist, smoothKernel )
+        
+        val ( smoothedTop, smoothedBot ) = 
+          if Real.==( histSmoothSigma, 0.0 ) then ( topHist, botHist )
+          else ( smooth topHist, smooth botHist )
 
-        val sum = 0.5 * (ListPair.foldl element 0.0 (normTop, normBot))
+        fun element(t, b, a) = a+( if (t+b<0.000000001) then 0.0
+                                   else ( Math.pow(t-b, 2.0))/(t+b) )
+        
+        val sum = RealGrayscaleImage.foldi RealGrayscaleImage.RowMajor
+                  ( fn ( i, j, x, a ) =>
+                    element(x, RealGrayscaleImage.sub( smoothedBot, i, j ), a) )
+                  ( 0.0 )
+                  ( RealGrayscaleImage.full smoothedTop )
          
       in
-        sum 
+        0.5 * sum 
       end
       
       val gradient = 
@@ -75,8 +94,10 @@ struct
 
   fun gradient( image : RealGrayscaleImage.image, 
                 bins : int,
-                radius : int ) =
-    gradientQuantized( ImageUtil.quantizeImage( image, bins ), bins, radius )
+                radius : int,
+                histSmoothSigma : real ) =
+    gradientQuantized
+      ( ImageUtil.quantizeImage( image, bins ), bins, radius, histSmoothSigma )
 
   local
 
@@ -97,11 +118,12 @@ struct
                               bins : int,
                               radius : int,
                               ori : real,
-                              savgol : real * real ) =
+                              savgol : real * real,
+                              histSmoothSigma : real ) =
     let
       val dim = RealGrayscaleImage.dimensions image
       val rotated = RealGrayscaleImage.rotate( image, ori )
-      val gradient = gradient( rotated, bins, radius )
+      val gradient = gradient( rotated, bins, radius, histSmoothSigma )
     in
       postProcessGradient( dim, gradient, ori, savgol )
     end
@@ -110,11 +132,12 @@ struct
                              bins : int,
                              radius : int,
                              ori : real,
-                             savgol : real * real  ) =
+                             savgol : real * real,
+                             histSmoothSigma : real ) =
     let
       val dim = IntGrayscaleImage.dimensions image
       val rotated = IntGrayscaleImage.rotate( image, ori )
-      val gradient = gradientQuantized( rotated, bins, radius )
+      val gradient = gradientQuantized( rotated, bins, radius, histSmoothSigma )
     in
       postProcessGradient( dim, gradient, ori, savgol )      
     end

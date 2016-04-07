@@ -50,14 +50,16 @@ struct
 
     fun generateTextons( image : RealGrayscaleImage.image, 
                          nori : int, 
-                         sigma : real,
+                         sigma : real list,
                          k: int,
                          maxIterations: int ) 
         : IntGrayscaleImage.image =
     let
       val ( height, width ) = RealGrayscaleImage.dimensions image
 
-      val filters = createTextonFilters(nori, sigma);
+      val filters = List.foldl 
+        ( fn ( x, a ) => a @ createTextonFilters( nori, x ) ) [] sigma
+
       val convolveFun = 
         RealGrayscaleImage.convolve
           ( RealGrayscaleImage.ZeroExtension, RealGrayscaleImage.OriginalSize )

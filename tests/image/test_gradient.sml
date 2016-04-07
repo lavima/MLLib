@@ -11,7 +11,7 @@ val _ = UnitTest.test( "Gradient",
   fn() => 
      let
         val img = Option.valOf(RealPGM.read("proper.plain.pgm"))
-        val grad = Gradient.gradient(img, 32, 7)
+        val grad = Gradient.gradient(img, 32, 7, 0.1)
      in
         grad
      end,
@@ -28,7 +28,7 @@ val _ = UnitTest.test( "Oriented gradient",
   fn() => 
   let
     val img = Option.valOf(RealPGM.read("proper.plain.pgm"))
-    val grad = Gradient.orientedGradientReal(img, 32, 20, 0.6, ( 5.0, 5.0/4.0 ))
+    val grad = Gradient.orientedGradientReal(img, 32, 20, 0.6, ( 5.0, 5.0/4.0 ), 0.1)
   in
     grad
   end ,

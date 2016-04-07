@@ -16,13 +16,14 @@ struct
       savgolFilters : ( real * real ) list,
       bins : int,
       scale : int,
-      nori : int
+      nori : int,
+      histogramSmoothSigma : real
     }
 
   type textonConfiguration =
     {
       nori : int,
-      sigma : real,
+      sigma : real list,
       nTextons : int,
       maxIterations : int
     }
@@ -31,12 +32,14 @@ struct
     height : int, 
     width : int,
     image : 'a,
-    gradFun : 'a * int * int * real * (real * real) ->RealGrayscaleImage.image,
+    gradFun : 
+      'a * int * int * real * (real * real) * real -> RealGrayscaleImage.image,
     weights : real list,
     bins : int,
     scale : int, 
     ori : real,
-    savgolFilters : (real * real) list) =
+    savgolFilters : (real * real) list,
+    histSmoothSigma : real ) =
   let
     val responseImage = RealGrayscaleImage.zeroImage( height, width )
 
@@ -46,7 +49,7 @@ struct
 
     fun calculateResponse( w, ( s, savgol ), a ) =
     let
-      val grad = gradFun( image, bins, s, ori, savgol )
+      val grad = gradFun( image, bins, s, ori, savgol, histSmoothSigma )
       val gradScaled = RealGrayscaleImage.scale( grad, w )
       val newA = RealGrayscaleImage.add( a, grad )
     in
@@ -61,7 +64,8 @@ struct
     height : int, 
     width : int,
     image : 'a,
-    gradFun : 'a * int * int * real * (real * real) ->RealGrayscaleImage.image )
+    gradFun : 
+      'a * int * int * real * (real * real) * real -> RealGrayscaleImage.image )
     : RealGrayscaleImage.image =
   let
 
@@ -70,7 +74,8 @@ struct
       savgolFilters = savgolFilters,
       scale = scale,
       bins = bins,
-      nori = nori
+      nori = nori,
+      histogramSmoothSigma = histogramSmoothSigma
     } = config
 
     val ori = List.tabulate 
@@ -90,7 +95,8 @@ struct
           bins, 
           scale, 
           x, 
-          savgolFilters )::a
+          savgolFilters,
+          histogramSmoothSigma )::a
         end )
       [] ori
   in
@@ -152,12 +158,22 @@ struct
 
     fun intMultiscaleChan( config, channel ) =
        multiscaleChannel( config, height, width, channel, gradInt )
+
+    val normTexton = ImageUtil.normalizeReal''( 
+                ImageConvert.realGrayscaleIntToGrayscaleReal textonImage )
     
+    val max = GrayscaleMath.maxInt textonImage
+    val min = GrayscaleMath.minInt textonImage
+    val _ = print ( "Max=" ^ ( Int.toString max ) ^ " Min=" ^ ( Int.toString min ) ^ "\n" )
+
+    val _ = RealPGM.write(normTexton, "output/textonImage.pgm" )
+
     val aMultiscale = realMultiscaleChan( channelAConfig, aChannelImage )
     val bMultiscale = realMultiscaleChan( channelBConfig, bChannelImage )
     val lMultiscale = realMultiscaleChan( channelLConfig, lChannelImage )
     val tMultiscale = intMultiscaleChan( channelTConfig, textonImage )
 
+    val _ = RealPGM.write(ImageUtil.normalizeReal'' aMultiscale, "output/aMultiscale.pgm" )
     val _ = RealPGM.write(ImageUtil.normalizeReal'' bMultiscale, "output/bMultiscale.pgm" )
     val _ = RealPGM.write(ImageUtil.normalizeReal'' lMultiscale, "output/lMultiscale.pgm" )
     val _ = RealPGM.write(ImageUtil.normalizeReal'' tMultiscale, "output/tMultiscale.pgm" )

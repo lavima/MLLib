@@ -30,7 +30,7 @@ val _ = UnitTest.test( "Generate textons",
       let
           val image = Option.valOf(RealPGM.read("test2.pgm"))
       in
-         Texton.generateTextons(image, 8, 2.0, 32, 10)
+         Texton.generateTextons(image, 8, [ 2.0 ], 32, 10)
       end,
   fn x : IntGrayscaleImage.image =>
      let

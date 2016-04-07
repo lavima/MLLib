@@ -15,7 +15,7 @@ val _ = UnitTest.test( "Generate oriented multiscale cue response",
       val (height, width) = RealGrayscaleImage.dimensions img
       val weights = [ 1.0, 1.0, 1.0 ]
       val grad = MultiscaleCue.orientedMultiscale
-         ( height, width, img, Gradient.orientedGradientReal, weights, 32, 10, Math.pi/4.0, savgol_A )
+         ( height, width, img, Gradient.orientedGradientReal, weights, 32, 10, Math.pi/4.0, savgol_A, 0.1 )
     in
       grad
     end,
@@ -35,6 +35,7 @@ val _ = UnitTest.test( "Generate multiscale cue response",
           weights = [ 0.0146, 0.0145, 0.0163 ],
           savgolFilters = 
             [ ( 3.0, 3.0/4.0), ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ) ],
+          histogramSmoothSigma = 0.1,
           bins = 25,
           scale = 5,
           nori = 8
@@ -43,6 +44,7 @@ val _ = UnitTest.test( "Generate multiscale cue response",
           weights = [ 0.0210, 0.0243, 0.0287 ],
           savgolFilters = 
             [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
+          histogramSmoothSigma = 0.05,
           bins = 25,
           scale = 10,
           nori = 8
@@ -51,6 +53,7 @@ val _ = UnitTest.test( "Generate multiscale cue response",
           weights = [ 0.0166, 0.0185, 0.0204 ],
           savgolFilters = 
             [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
+          histogramSmoothSigma = 0.05,
           bins = 25,
           scale = 10,
           nori = 8
@@ -59,15 +62,16 @@ val _ = UnitTest.test( "Generate multiscale cue response",
           weights = [ 0.0101, 0.0111, 0.0141 ],
           savgolFilters = 
             [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
+          histogramSmoothSigma = 0.0,
           bins = 32,
           scale = 10,
           nori = 8
         },
         texton = {
           nori = 8,
-          sigma = 2.0,
+          sigma = [ 2.0, 2.0 * ( Math.sqrt 2.0 ) ],
           nTextons = 32,
-          maxIterations = 200
+          maxIterations = 500
         },
         border = 30
       }
