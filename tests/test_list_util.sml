@@ -8,21 +8,53 @@
 
 val _ = print"\n\n************** ListUtil Tests **************\n"
 
-val _ = UnitTest.test( "Testing ListUtil.equal",
-  fn() => 
-    ( ListUtil.equal Util.eqInt ( [], [] ),
-      ListUtil.equal Util.eqInt ( [ 1, 2 ], [ 1, 2 ] ),
-      ListUtil.equal Util.eqInt ( [ 3, 2 ], [ 2, 3 ] ),
-      ListUtil.equal Util.eqInt ( [ 3, 2 ], [ 3 ] ) ),
-  fn( X, Y, Z, W ) => X andalso Y andalso not Z andalso not W )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="ListUtil", what="Testing ListUtil.equal",
+    genInput = 
+      fn() => [ 
+        ( [], [] ), 
+        ( [ 1, 2 ], [ 1, 2 ] ),
+        ( [ 3, 2 ], [ 2, 3 ] ),
+        ( [ 3, 2 ], [ 3 ] ) ] ,
+    f = 
+      fn[ i1, i2, i3, i4 ] => [ 
+        ListUtil.equal Util.eqInt i1,
+        ListUtil.equal Util.eqInt i2,
+        ListUtil.equal Util.eqInt i3,
+        ListUtil.equal Util.eqInt i4 ] ,
+    evaluate = fn[ o1, o2, o3, o4 ] => [ o1, o2, not o3, not o4 ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      ListUtil.toString Int.toString x ^ ", " ^ 
+      ListUtil.toString Int.toString y ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing ListUtil.fromToInt",
-  fn() => ListUtil.fromToInt( ~5, 5 ),
-  fn Xs =>
-    ListUtil.equal Util.eqInt 
-      ( Xs, [ ~5, ~4, ~3, ~2, ~1, 0, 1, 2, 3, 4, 5 ] ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="ListUtil", what="Testing ListUtil.fromToInt",
+    genInput = fn() => [ ( ~5, 5 ) ] ,
+    f = fn[ i1 ] => [ ListUtil.fromToInt i1 ] ,
+    evaluate = 
+      fn[ o1 ] => [
+        ListUtil.equal Util.eqInt 
+          ( o1, [ ~5, ~4, ~3, ~2, ~1, 0, 1, 2, 3, 4, 5 ] ) ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Int.toString x ^ ", " ^ 
+      Int.toString y ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing ListUtil.fromToReal",
-  fn() => ListUtil.fromToReal( ~1.5, 2.5 ),
-  fn Xs =>
-    ListUtil.equal Real.== ( Xs, [ ~1.5, ~0.5, 0.5, 1.5, 2.5 ] ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="ListUtil", what="Testing ListUtil.fromToReal",
+    genInput = fn() => [ ( ~1.5, 2.5 ) ] ,
+    f = fn[ i1 ] => [ ListUtil.fromToReal i1 ] ,
+    evaluate = 
+      fn[ o1 ] =>
+        [ ListUtil.equal Real.== ( o1, [ ~1.5, ~0.5, 0.5, 1.5, 2.5 ] ) ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ 
+      " )" }
