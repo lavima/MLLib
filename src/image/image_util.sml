@@ -122,14 +122,7 @@ struct
 
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val max = RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
-      ( fn( x, max ) => 
-          if x>max then
-            x
-          else
-            max )
-      0.0 
-      im
+    val max = GrayscaleMath.maxReal im
 
     val _ = 
       if max>0.0 then
@@ -199,10 +192,9 @@ struct
   fun normalizeCIELab'( image : RealCIELabImage.image ) 
     : unit =
     RealCIELabImage.modify RealCIELabImage.RowMajor
-      ( fn ( a, b, l ) => 
+      ( fn ( l, a, b ) => 
         let
-          fun crop( v : real ) =
-            Real.max( 0.0, Real.min( 1.0, v ) )
+          fun crop( v : real ) = Real.max( 0.0, Real.min( 1.0, v ) )
 
           val abMin = ~73.0
           val abMax = 95.0
@@ -211,7 +203,7 @@ struct
           val a_val = crop( (a-abMin)/abRange )
           val b_val = crop( (b-abMin)/abRange )
         in
-          ( a, b, l )
+          ( l_val, a_val, b_val )
         end )
       ( image )
 
@@ -401,6 +393,25 @@ struct
   in
     RealGrayscaleImage.tabulate RealGrayscaleImage.RowMajor 
       ( height, width, maxPixel )
+  end
+
+  fun quantizeImage( im : RealGrayscaleImage.image, bins : int ) 
+    : IntGrayscaleImage.image =
+  let
+    val ( height, width ) = RealGrayscaleImage.dimensions im
+  
+    fun quantizeValue( y, x ) =
+    let
+      val value = RealGrayscaleImage.sub( im, y, x )
+      val bin = Real.floor(value*(real bins))
+    in
+      (* If needed to handle numerical errors caused by 
+       * the real representation *)
+      if bin=bins then bins-1 else bin
+    end
+  in
+    IntGrayscaleImage.tabulate IntGrayscaleImage.RowMajor 
+      ( height, width, quantizeValue )
   end
 
 end (* structure ImageUtil *)

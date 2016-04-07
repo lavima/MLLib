@@ -27,8 +27,6 @@ in
   f_measure.sml
 end
 probability_rand_index.sml
-texton.sml
-gradient.sml
 
 io/image_io.sml
 io/pnm.sml
@@ -37,6 +35,9 @@ io/pnm_binary.sml
 io/pbm.sml
 io/pgm.sml
 io/ppm.sml
+
+texton.sml
+gradient.sml
 
 multiscale_cue.sml
 connected_components.sml

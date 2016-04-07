@@ -36,4 +36,24 @@ struct
     sum / ( real( width*height ) )
   end
 
+  fun maxInt( im : IntGrayscaleImage.image ) : int =
+    IntGrayscaleImage.fold IntGrayscaleImage.RowMajor 
+        ( Int.max )
+        ( Option.valOf Int.minInt )
+        ( im )
+
+
+  fun minInt( im : IntGrayscaleImage.image ) : int =
+    IntGrayscaleImage.fold IntGrayscaleImage.RowMajor 
+        ( Int.min )
+        ( Option.valOf Int.maxInt )
+        ( im )
+
+  fun sumInt( im : IntGrayscaleImage.image ) : int =
+    IntGrayscaleImage.fold IntGrayscaleImage.RowMajor 
+        Int.+
+        0
+        im
+
+
 end

@@ -53,7 +53,7 @@ struct
                          sigma : real,
                          k: int,
                          maxIterations: int ) 
-        : RealGrayscaleImage.image =
+        : IntGrayscaleImage.image =
     let
       val ( height, width ) = RealGrayscaleImage.dimensions image
 
@@ -88,14 +88,10 @@ struct
           responseVectors, 
           maxIterations ) ) )
 
-      val responseImage = RealGrayscaleImage.zeroImage( height, width )
-      val _ = 
-        RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
-          ( fn( i, j, x ) =>
-              real( Array.sub( assignments, i*width+j ) ) ) 
-          ( RealGrayscaleImage.full responseImage )
+      val textonImage = IntGrayscaleImage.tabulate IntGrayscaleImage.RowMajor
+        ( height, width, ( fn( i, j ) => Array.sub( assignments, i*width+j ) ) )
     in
-      responseImage
+      textonImage
     end  
 
 end

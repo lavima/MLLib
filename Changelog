@@ -1,3 +1,10 @@
+2016-04-07	Marius Geitle <marius.geitle@hiof.no>
+	* Reorganized Gradient and Multiscale to fix a bug related to 
+		gradients from textons
+	* Added min, max and sum for integer grayscale images
+	* Fixed bug in CIELAB normalization
+	* Moved image quantization to ImageUtil
+
 2016-04-06	Marius Geitle <marius.geitle@hiof.no>
 	* Extracted sum area table to make it reusable and individually 
 		testable.

@@ -32,11 +32,11 @@ val _ = UnitTest.test( "Generate textons",
       in
          Texton.generateTextons(image, 8, 2.0, 32, 10)
       end,
-  fn x : RealGrayscaleImage.image =>
+  fn x : IntGrayscaleImage.image =>
      let
-        val normalizedImage = ImageUtil.normalizeReal'' x
+        (*val normalizedImage = ImageUtil.normalizeReal'' x*)
         
-        val _ = RealPGM.write(normalizedImage, "output/textons.pgm")
+        val _ = IntPGM.write(x, "output/textons.pgm")
      in
          true
      end 
