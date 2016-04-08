@@ -21,26 +21,6 @@ val _ = print"\n\n********** Image Tests **********\n"
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Loading, saving, and reloading PGM image as GrayscaleImageWord8.image",
-    fn () => 
-      let
-        val im = Option.valOf( Word8PGM.read("simple.plain.pgm") )
-        val _ = Word8PGM.write( im, "output2.pgm" )
-        val loaded = Option.valOf( Word8PGM.read("output2.pgm") )
-      in
-        loaded
-      end ,
-    fn x => 
-      if Word8GrayscaleImage.sub( x, 0, 0 )=0w0 andalso
-         Word8GrayscaleImage.sub( x, 0, 1 )=0w64 andalso
-         Word8GrayscaleImage.sub( x, 1, 0 )=0w128 andalso
-         Word8GrayscaleImage.sub( x, 1, 1 )=0w255 then
-        true
-      else
-        false )
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
     group="Word8PGM", what="Loading, saving, and reloading PGM image as GrayscaleImageReal.image",
     fn() => 
       let
