@@ -23,6 +23,9 @@ end
 
 image/io/test_ppm.sml
 
+ml/test_k_means.sml
+ml/test_pcnn.sml
+
 image/test_image_threshold.sml
 image/test_image_canny.sml
 image/test_connected_components.sml
@@ -34,8 +37,6 @@ image/test_filter_util.sml
 image/test_gradient.sml
 image/test_texton.sml
 image/test_multiscale_cue.sml
-
-ml/test_k_means.sml
 
 test/test_randomTest.sml
 test/test_random_argument_utilities.sml
