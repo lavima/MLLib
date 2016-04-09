@@ -22,10 +22,11 @@ struct
       | buildReservoir( i : int, (e :: elems) : 'a list ) : unit =
     let
       val j = Random.randRange (0, i) randState
+      val _ = if j < k then
+                Array.update( reservoir, j, e )
+              else ()
     in
-      if j < k then
-        Array.update( reservoir, j, e )
-      else ()
+      buildReservoir( i+1, elems )
     end
    
     val _ = buildReservoir( k, List.drop( elements, k )  )
