@@ -1,6 +1,9 @@
 $(SML_LIB)/basis/basis.mlb
+$(SML_LIB)/smlnj-lib/Util/smlnj-lib.mlb
+
 math_util.sml
 basic_transformations.sml
 complex.sml
 signal_util.sml
 sum_area_table.sml
+list_sampling.sml
