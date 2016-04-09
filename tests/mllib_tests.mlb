@@ -24,6 +24,7 @@ end
 
 image/io/test_ppm.sml
 
+ml/test_differential_evolution.sml
 ml/test_k_means.sml
 ml/test_pcnn.sml
 

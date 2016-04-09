@@ -6,4 +6,6 @@ basic_transformations.sml
 complex.sml
 signal_util.sml
 sum_area_table.sml
+random_util.sml
 list_sampling.sml
+vector_math.sml
