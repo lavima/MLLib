@@ -1,3 +1,6 @@
+2016-04-10	Marius Geitle <marius.geitle@hiof.no>
+	* Generalized the DE/rand/n mutation scheme to arbitrary n.
+
 2016-04-09	Marius Geitle <marius.geitle@hiof.no>
 	* Added Differential evolution, no propper testing, more testing is 
 		needed to ensure correctness.
