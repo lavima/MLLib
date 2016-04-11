@@ -1,3 +1,6 @@
+2016-04-11	Marius Geitle <marius.geitle@hiof.no>
+	* Rewrote PCNN to use Array2 internally.
+
 2016-04-10	Marius Geitle <marius.geitle@hiof.no>
 	* Generalized the DE/rand/n mutation scheme to arbitrary n.
 

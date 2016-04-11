@@ -12,10 +12,10 @@ struct
     height : int,
     width : int,
 
-    f : real Array.array,
-    l : real Array.array,
+    f : real Array2.array,
+    l : real Array2.array,
     y : bool Array2.array,
-    t : real Array.array,
+    t : real Array2.array,
 
     feedbackDecay : real,
     linkDecay : real,
@@ -41,10 +41,10 @@ struct
     : pcnn =
     {
        height = height, width = width,
-       f = Array.array( height*width, 0.0 ),    
-       l = Array.array( height*width, 0.0 ),
+       f = Array2.array( height, width, 0.0 ),    
+       l = Array2.array( height, width, 0.0 ),
        y = Array2.array( height, width, false ),
-       t = Array.array( height*width, 0.0 ),
+       t = Array2.array( height, width, 0.0 ),
 
        feedbackDecay = feedbackDecay,
        linkDecay = linkDecay,
@@ -58,43 +58,30 @@ struct
 
   local
     
-    fun calculateDistanceLists ( 
-                                 height : int, 
+    fun calculateDistanceLists ( height : int, 
                                  width : int,
                                  maxDistance : real )
-      : ( int * real ) list list =
+      : ( int * int * real ) list Array2.array =
     let
-      fun index_to_coords( i: int ) : int * int =
-        ( i mod height, i div height )
-
-      fun coord_to_index( y : int, x : int ) : int = x*height+y
-
+      val floor_max = Real.floor maxDistance 
+      fun d( y : int, x : int ) : real = Math.sqrt( real( x*x+y*y ) )
       
-      fun distanceList( x : int, y : int ) : ( int * real ) list =
-        ( ( List.filter ( fn ( i , dist ) => dist<=maxDistance ) ) o
+      fun distanceList( y : int, x : int ) : ( int * int * real ) list =
+        ( ( List.filter ( fn ( i, j , dist ) => dist<=maxDistance ) ) o
         ( List.map Option.valOf ) o
         ( List.filter Option.isSome ) o
         ( List.foldr op@ [] ) )
-        ( let
-            val floor_max = Real.floor maxDistance 
-            fun d(x : int, y : int) : real = Math.sqrt( real( x*x+y*y ) )
-           in
-             List.tabulate
-             ( Int.toInt( floor_max*2+1 ),
-               fn j : int =>
-                 List.tabulate ( floor_max*2+1,
-                 fn i : int =>
-                   if i-floor_max=0 andalso j-floor_max=0 then NONE 
-                   else if i-floor_max+x>=0 andalso i-floor_max+x<width andalso
-                           j-floor_max+y>=0 andalso j-floor_max+y<height then
-                      SOME (
-                        coord_to_index( i-floor_max+x, j-floor_max+y ),
-                        d( i-floor_max, j-floor_max ) )
-                      else
-                      NONE ) )
-          end )
+        ( List.tabulate( floor_max*2+1, fn i : int =>
+          List.tabulate( floor_max*2+1, fn j : int =>
+          let
+            val dy = y+i-( Real.floor maxDistance )
+            val dx = x+j-( Real.floor maxDistance )
+          in
+            if dy<=0 orelse dx<=0 orelse dy>height-1 orelse dx>width-1 then NONE
+            else SOME ( dy, dx, d( dy-y, dx-x ) )
+          end ) ) )
   in
-    List.tabulate( width*height, fn i => distanceList( index_to_coords i ) )
+    Array2.tabulate Array2.RowMajor ( height, width, distanceList )
   end
 
   in
@@ -118,21 +105,9 @@ struct
        linkWeightFun = linkWeightFun
     } = pcnn
 
-    val totalSize = height*width
     val neighbourDistances = 
       calculateDistanceLists( height, width, neighbourhoodSize )
-    val temp = Array.array( totalSize, 0.0 )
-
-    fun index_to_coords( i: int ) : int * int =
-      ( i mod height, i div height )
-
-    fun coord_to_index( y : int, x : int ) : int = x*height+y 
-
-    fun subByIndex( a, i : int ) = 
-      Array2.sub( a, i mod height, i div height )
-
-    fun updateByIndex( a, i : int, v ) : unit =
-      Array2.update( a, i mod height, i div height, v )
+    val temp = Array2.array( height, width, 0.0 )
 
     fun computeFastLinking( maxIterations : int ) : unit =
     let
@@ -144,42 +119,48 @@ struct
           ( 0.0 )
           ( neighbours )
 
-      fun updateTmpYL( i : int, changed : bool ) : bool =
-        if i=totalSize then changed
-        else
-          let
-            val neighbourActivations : ( bool * real ) list = List.map 
-              ( fn ( j, x ) => ( subByIndex( y, j ), x ) )
-              ( List.nth( neighbourDistances, i ) )
+      fun updateTempYL( i : int, j : int, oldY : bool, changed : bool ) : bool =
+      let
+        val neighbourActivations : ( bool * real ) list = List.map 
+          ( fn ( i, j, x ) => ( Array2.sub( y, i, j ), x ) )
+          ( Array2.sub( neighbourDistances, i, j ) )
 
-            val oldY = subByIndex( y, i )
-            val lVal = Array.sub( l, i )
-            val tVal = Array.sub( t, i )
-            val sVal = subByIndex( stimulation, i )
+        val lVal = Array2.sub( l, i, j )
+        val tVal = Array2.sub( t, i, j )
+        val sVal = Array2.sub( stimulation, i, j )
 
-            val newL = linkDecay*lVal+linkNormalization*
-                       ( sum( neighbourActivations, linkWeightFun ) )
-            val u = sVal*( 1.0+beta*newL )
-            val newY = tVal<u
-            val newT = if newY then thresholdDecay*tVal+thresholdNormalization
-                       else thresholdDecay*tVal
+        val newL = linkDecay*lVal+linkNormalization*
+                     ( sum( neighbourActivations, linkWeightFun ) )
+        val u = sVal*( 1.0+beta*newL )
+        val newY = tVal<u
+        val newT = if newY then thresholdDecay*tVal+thresholdNormalization
+                   else thresholdDecay*tVal
 
-            val _ = updateByIndex( y, i, newY )
-            val _ = Array.update( temp, i, newT )
-            val _ = Array.update( l, i, newL )
-          in
-            updateTmpYL( i+1, changed orelse oldY<>newY )
-          end
+        val _ = Array2.update( y, i, j, newY )
+        val _ = Array2.update( temp, i, j, newT )
+        val _ = Array2.update( l, i, j, newL )
+        in
+          changed orelse oldY<>newY
+        end
 
-      fun updateT ( i : int ) = Array.copy { src = temp, dst = t, di = 0 }
+      fun updateT ( i : int ) = 
+        Array2.copy { 
+           src =  
+             { base = temp, row = 0, col = 0, nrows = NONE, ncols = NONE }, 
+           dst = t, 
+           dst_row = 0, dst_col = 0 }
 
-      val changed = updateTmpYL( 0, false )
+      val changed = Array2.foldi Array2.RowMajor updateTempYL false 
+             { base = y, row = 0, col = 0, nrows = NONE, ncols = NONE } 
+
     in
       if changed andalso maxIterations>=1 then
         computeFastLinking( maxIterations-1 )
       else
         updateT 0
     end
+    
+    val _ = computeFastLinking 0
   in
     computeFastLinking maxIterations
   end

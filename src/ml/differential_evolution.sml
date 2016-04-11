@@ -26,11 +26,11 @@ struct
     *   Das, Swagatam, and Ponnuthurai Nagaratnam Suganthan. 
     *   "Differential evolution: a survey of the state-of-the-art." 
     *   Evolutionary Computation, IEEE Transactions on 15.1 (2011): 4-31.
-    *) 
+    *)
 		
    fun optimize( 
        fitness : real vector -> real, 
-       mutate : ( ( real vector -> real) * individual list ) -> individual,
+       mutate : ( ( real vector -> real ) * individual list ) -> individual,
        individualDim : int, 
        populationSize : int, 
        maxGenerations : int,
