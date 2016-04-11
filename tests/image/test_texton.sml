@@ -7,37 +7,32 @@
 
 val _ = print"\n\n********** Texton tests **********\n"
 
-val _ = UnitTest.test( "Generate texton filters",
-  fn() => Texton.createTextonFilters(8, 3.0),
-  fn x =>
-     let
-        val _ = Util.loop (fn i =>
-          let 
-            val normalizedImage = ImageUtil.normalizeReal'' (List.nth (x, i) )
-          in
-            RealPGM.write(
-              normalizedImage, 
-              "output/filter" ^ Int.toString(i) ^ ".pgm" )
-          end
-          ) (List.length x )
-     in
-         17 = List.length x
-     end 
-  )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Texton", what="createTextonFilters",
+    genInput= fn() => [ ( 8, 3.0 ) ] ,
+    f= fn[ i1 ] => [ Texton.createTextonFilters i1 ],
+    evaluate= fn[ o1 ] => [ List.length o1=17 ] ,
+    inputToString= 
+      fn( n, s ) =>
+        "( " ^
+        Int.toString n ^ ", " ^
+        Real.toString s ^ 
+        " )" }
 
-val _ = UnitTest.test( "Generate textons",
-  fn() => 
-      let
-          val image = Option.valOf(RealPGM.read("test2.pgm"))
-      in
-         Texton.generateTextons(image, 8, 2.0, 32, 10)
-      end,
-  fn x : RealGrayscaleImage.image =>
-     let
-        val normalizedImage = ImageUtil.normalizeReal'' x
-        
-        val _ = RealPGM.write(normalizedImage, "output/textons.pgm")
-     in
-         true
-     end 
-  )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Texton", what="generateTextons",
+    genInput= 
+      fn() => [ ( Option.valOf( RealPGM.read "test2.pgm" ), 8, 2.0, 32, 10 ) ] ,
+    f= fn[ i1 ] => [ Texton.generateTextons i1 ] ,
+    evaluate= fn[ o1 ] => [ true ] ,
+    inputToString=
+      fn( im, n, s, k, m ) =>
+        "( " ^
+        RealGrayscaleImage.toString im ^ ", " ^
+        Int.toString n ^ ", " ^
+        Real.toString s ^ ", " ^
+        Int.toString k ^ ", " ^
+        Int.toString m ^
+        " )" }

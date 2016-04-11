@@ -54,12 +54,11 @@ struct
       List.foldl
         ( fn( ( i, r ), s ) => (
             addResult( resultFile, inputToString i, r );
-            print( group ^ ": " ^ what ^ " : " ^ resultToString r );
             s andalso r ) )
         true
         ( ListPair.zip( input, result ) )
 
-    val _ = print (group ^ ": " ^ what ^ " : " ^ resultToString success )
+    val _ = print( group ^ ": " ^ what ^ ": " ^ resultToString success ^ "\n" )
   in
     ()
   end

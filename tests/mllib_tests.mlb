@@ -33,6 +33,6 @@ image/io/test_ppm.sml
 
 ml/test_k_means.sml
 
-test/test_randomTest.sml
+test/test_random_test.sml
 test/test_random_argument_utilities.sml
 

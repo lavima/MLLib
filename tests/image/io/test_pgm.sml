@@ -31,8 +31,8 @@ val _ =
     group="Word8PGM", what="write",
     genInput= 
       fn() => [ 
-        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.plain.pgm" ), 
-        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.raw.pgm" ) ] , 
+        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.plain.pgm" ), 
+        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.raw.pgm" ) ] , 
     f=
       fn[ i1, i2 ] =>
       let
@@ -59,8 +59,7 @@ val _ =
     inputToString= 
       fn( xss, f )=> 
         "( " ^ 
-        ListUtil.toString ListUtil.toString Word8.toString xss ^
-        ", " ^ 
+        ListUtil.toString ( ListUtil.toString Word8.toString ) xss ^ ", " ^ 
         f ^ 
         " )" } 
 
@@ -74,11 +73,11 @@ val _ =
         "proper.plain.pgm",
         "proper.raw.pgm" ] ,
     f= 
-      fn[ i1, i2, i3, i4 ] => [ 
-        Option.valOf( RealPGM.read i1 ), 
-        Option.valOf( RealPGM.read i2 ),
-        Option.valOf( RealPGM.read i3 ),
-        Option.valOf( RealPGM.read i4 ), ] ,
+      fn[ i1, i2, i3, i4 ] => 
+        [ Option.valOf( RealPGM.read i1 ), 
+          Option.valOf( RealPGM.read i2 ),
+          Option.valOf( RealPGM.read i3 ),
+          Option.valOf( RealPGM.read i4 ) ] ,
     evaluate= 
       fn[ o1, o2, o3, o4 ] => 
       let
@@ -86,6 +85,7 @@ val _ =
           RealGrayscaleImage.fromList[ 
             [ 0.0, 64.0/255.0 ], 
             [ 128.0/255.0, 1.0 ] ]
+        val width = RealGrayscaleImage.nCols o3
         val properTruth = 
           Array.fromList( TextFileUtil.readCSReals "proper.real.csv" )
 
@@ -95,7 +95,7 @@ val _ =
                 equal andalso 
                 Util.approxEqReal( x, Array.sub( properTruth, i*width+j ), 3 ) )
             true
-            ( RealGrayscaleImage.full im ),       
+            ( RealGrayscaleImage.full im )       
       in [ 
         RealGrayscaleImage.equal( o1, simpleTruth ),
         RealGrayscaleImage.equal( o2, simpleTruth ),
@@ -109,9 +109,9 @@ val _ =
     group="RealPGM", what="write",
     genInput= 
       fn() => [ 
-        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
+        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
           "output/write.plain.pgm" ), 
-        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
+        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
           "output/write.raw.pgm" ) ] , 
     f=
       fn[ i1, i2 ] =>
@@ -136,5 +136,9 @@ val _ =
         Word8GrayscaleImage.equal( im1, truth ) andalso
         Word8GrayscaleImage.equal( im2, truth ) ]
       end ,
-    inputToString= fn x => x }
+    inputToString= 
+      fn( x, s ) => 
+        "( " ^ 
+        ListUtil.toString ( ListUtil.toString Real.toString ) x ^ ", " ^
+        s }
 
