@@ -1,4 +1,7 @@
 2016-04-11	Marius Geitle <marius.geitle@hiof.no>
+	* Added support for feeding to pcnn
+
+2016-04-11	Marius Geitle <marius.geitle@hiof.no>
 	* Rewrote PCNN to use Array2 internally.
 
 2016-04-10	Marius Geitle <marius.geitle@hiof.no>

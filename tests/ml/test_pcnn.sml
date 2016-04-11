@@ -15,7 +15,19 @@ val _ = UnitTest.test( "Testing PCNN.fastLinkingIterate",
 
     val img = Option.valOf( RealPGM.read "12003.pgm" )
     val ( height, width ) = RealGrayscaleImage.dimensions img
-    val pcnn = PCNN.create(height, width, 0.0, 0.367879, 0.000045, 0.5, 0.0, 1.0, 2.0, gauss )
+    (*val pcnn = PCNN.create(height, width, 0.0, 0.367879, 0.000045, 0.5, 0.0, 1.0, 2.0, gauss ) *)
+    val pcnn = PCNN.create(
+      height, width, 
+      ~0.634852964216, 
+       0.469721425587, 
+      ~0.376009763869, 
+       0.61915438471, 
+       1.11356209154, 
+       0.508864990111, 
+       2.67338210443,
+       gauss, 
+       gauss )
+
     val _ = PCNN.fastLinkingIterate(pcnn, 1.5, 16, img)
     val _ = BooleanPBM.write(#y pcnn, "output/pcnn_1.pbm" )
     val _ = PCNN.fastLinkingIterate(pcnn, 1.5, 16, img)
