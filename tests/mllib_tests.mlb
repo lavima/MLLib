@@ -20,10 +20,9 @@ in
   image/test_image.sml
 end
 
-image/test_image_threshold.sml
-image/test_image_canny.sml
+image/test_threshold.sml
+image/test_canny.sml
 image/test_connected_components.sml
-image/test_filter.sml
 image/test_filter_util.sml
 image/test_gradient.sml
 image/test_multiscale_cue.sml

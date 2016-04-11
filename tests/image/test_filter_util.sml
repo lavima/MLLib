@@ -5,21 +5,34 @@
 * This file contains tests that validate the filter utilities
 *)
 
-val _ = print"\n\n********** Filter utility tests **********\n"
+val _ = print"\n\n********** FilterUtil tests **********\n"
 
-val _ = UnitTest.test( "Generating 1D gaussian filter created using the gPb type",
-  fn() => FilterUtil.createGaussianMaskgPb 0 (3.0, 9) ,
-  fn X =>
-  let
-    val _ = RealPGM.write(X, "output/filterThingy.pgm")
-  in
-    true
-  end )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="FilterUtil", what="createGaussianMaskgPb",
+    genInput= fn() => [ ( 0, ( 3.0, 9 ) ) ] ,
+    f= fn[ i1 ] => [ FilterUtil.createGaussianMaskgPb ( #1 i1 ) ( #2, i1 ) ] ,
+    evaluate= fn[ o1 ] => [ true ] ,
+    inputToString= 
+      fn( o, ( s, t ) ) =>
+        "( " ^ 
+        Int.toString o ^
+        "( " ^ Real.toString s ^ ", " ^ Int.toString t ^ " )" ^
+        " )" }
 
-
-val _ = UnitTest.test( "Generating 2D gaussian filter created using the gPb type",
-  fn() => 
-    FilterUtil.createGaussianMaskGPB2D 2 (3.0, 3.0, 3.0, 1.0, false, 0.3),
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="FilterUtil", what="createGaussianMaskGPB2D",
+    genInput= fn() => [ ( 2, ( 3.0, 3.0, 3.0, 1.0, false, 0.3 ) ) ] ,
+    f= fn[ i1 ] => [ FilterUtil.createGaussianMaskGPB2D ( #1 i1 ) ( #2 i1 ) ] ,
+    evaluate= fn[ o1 ] => [ true ] ,
+    inputToString= 
+      fn( o, ( s, sx, sy, e, h, ori ) ) =>
+        "( " ^ 
+        Int.toString o ^
+          "( " ^ Real.toString s ^ ", " 
+          ^ Int.toString t ^ " )" ^
+        " )" }
   fn X =>
   let
     val norm = ImageUtil.normalizeReal'' X 
@@ -28,7 +41,7 @@ val _ = UnitTest.test( "Generating 2D gaussian filter created using the gPb type
     true
   end )
 
-val _ = UnitTest.test( "Savgol filtering",
+val _ = SimpleTest.test( "Savgol filtering",
   fn() => 
   let
     val img = Option.valOf(RealPGM.read("proper.plain.pgm"))

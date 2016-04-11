@@ -6,36 +6,37 @@
 * 
 *)
 
-val _ = print"\n\n********** Connected components tests **********\n"
+val _ = print"\n\n********** ConnectedComponents Tests **********\n"
 
 
 val _ = 
-  UnitTest.test( "Testing component labeling",
-    fn() =>
-    let
-      val T = true
-      val F = false
-      val image = 
-        BooleanImage.fromList'( 5, 11, 
-          [ T, T, T, F, F, F, F, F, F, F, F, 
-            T, T, T, F, F, F, F, F, F, F, F,
-            T, T, T, F, F, T, T, T, F, F, F,
-            F, F, F, F, F, T, T, T, F, F, F,
-            F, F, F, F, F, T, T, T, F, F, F ] )
-    in
-      ConnectedComponents.labelComponents image
-    end , 
-    fn x => 
-    let
-      val expected = 
-        IntGrayscaleImage.fromList'( 5, 11, 
-          [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-           1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-           1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 
-           0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 
-           0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0 ] ) 
-    in
-      IntGrayscaleImage.equal( x, expected )
-    end )
-
-
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="ConnectedComponents", what="labelComponents",
+    genInput= 
+      fn() =>
+      let
+        val t = true
+        val f = false
+      in
+        [ BooleanImage.fromList[ 
+            [ t, t, t, f, f, f, f, f, f, f, f ], 
+            [ t, t, t, f, f, f, f, f, f, f, f ],
+            [ t, t, t, f, f, t, t, t, f, f, f ],
+            [ f, f, f, f, f, t, t, t, f, f, f ],
+            [ f, f, f, f, f, t, t, t, f, f, f ] ] ]
+      end ,
+    f= fn[ i1 ] => [ ConnectedComponents.labelComponents i1 ] ,
+    evaluate= 
+      fn[ o1 ] =>
+      let
+        val truth = 
+          IntGrayscaleImage.fromList[  
+            [ 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], 
+            [ 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], 
+            [ 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0 ], 
+            [ 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0 ], 
+            [ 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0 ] ]
+      in
+        [ IntGrayscaleImage.equal( o1, truth ) ]
+      end ,
+    inputToString = BooleanImage.toString }

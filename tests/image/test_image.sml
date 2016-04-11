@@ -42,7 +42,61 @@ val _ =
             [ 14.0, 17.0, 18.0 ], 
             [ 23.0, 26.0, 27.0 ] ] 
       in
-        RealGrayscaleImage.equal( o1, truth )
+        [ RealGrayscaleImage.equal( o1, truth ) ]
+      end ,
+    inputToString= 
+      fn( i, m ) => 
+        "( " ^
+        RealGrayscaleImage.toString i ^ ", " ^
+        RealGrayscaleImage.toString m ^ 
+        " )" }
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="RealGrayscaleImage", what="convolve",
+    genInput= 
+      fn() => [
+        ( RealGrayscaleImage.fromList[ 
+            [ 1.0, 2.0, 3.0 ], 
+            [ 4.0, 5.0, 6.0 ], 
+            [ 7.0, 8.0, 9.0 ] ],
+          RealGrayscaleImage.fromList[ [ 1.0, 2.0 ] ] ) ,
+        ( RealGrayscaleImage.fromList[ 
+            [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
+            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
+            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
+            [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
+            [ 21.0, 22.0, 23.0, 24.0, 25.0 ] ],
+          RealGrayscaleImage.fromList[ 
+            [ 10.0, 15.0, 11.0 ],
+            [ 5.0, 3.0, 4.0 ],
+            [ 21.0, 20.0, 19.0 ] ] ) ] ,
+    f= 
+      fn[ i1, i2 ] => [
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( #1 i1, #2 i1 ),
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( #1 i2, #2 i2 ) ] ,
+    evaluate=
+      fn[ o1, o2 ] => 
+      let
+        val truth1 = 
+          RealGrayscaleImage.fromList[ 
+            [ 4.0, 7.0, 9.0 ], 
+            [ 13.0, 16.0, 18.0 ], 
+            [ 22.0, 25.0, 27.0 ] ]
+        val truth2 = 
+          RealGrayscaleImage.fromList(
+            [ [ 324.0, 398.0, 506.0, 614.0, 686.0 ],
+              [ 564.0, 638.0, 746.0, 854.0, 926.0 ],
+              [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
+              [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
+              [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
+      in 
+        [ RealGrayscaleImage.equal( o1, truth1 ), 
+          RealGrayscaleImage.equal( o2, truth2 ) ]
       end ,
     inputToString= 
       fn( i, m ) => 
@@ -54,189 +108,47 @@ val _ =
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing GrayscaleImageReal.convolve",
-    fn() =>
-    let
-      val im1 = 
-        RealGrayscaleImage.fromList'( 3, 3, 
-          [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
-      val filter1 =
-        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
+    group="RealGrayscaleImage", what="border",
+    genInput= 
+      fn() =>
+        [ ( Option.valOf( RealPGM.read("test2.pgm") ),
+            ( RealGrayscaleImage.MirrorExtension, 100 ) ) ] ,
+    f= fn[ i1 ] => [ RealGrayscaleImage.border ( #2 i1 ) ( #1 i1 ) ] ,
+    evaluate=
+      fn[ o1 ] => 
+        [ RealGrayscaleImage.nRows o1 = 482 andalso 
+          RealGrayscaleImage.nCols o1 = 322 ] ,
+    inputToString=
+      fn( i, ( e, n ) ) =>
+        "( " ^
+        RealGrayscaleImage.toString i ^ ", " ^
+        Int.toString n ^ 
+        " )" }
 
-      val im2 = 
-        RealGrayscaleImage.fromList(
-          [ [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
-            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
-            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
-            [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
-            [ 21.0, 22.0, 23.0, 24.0, 25.0 ] ] )
-      val filter2 =
-        RealGrayscaleImage.fromList( 
-          [ [ 10.0, 15.0, 11.0 ],
-            [ 5.0, 3.0, 4.0 ],
-            [ 21.0, 20.0, 19.0 ] ] )
-    in
-      [ 
-        RealGrayscaleImage.convolve 
-          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-          ( im1, filter1 ),
-        RealGrayscaleImage.convolve 
-          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-          ( im2, filter2 )
-          
-        ]
-    end ,
-    fn[ x, y ] => 
-    let
-      val truth1 = 
-        RealGrayscaleImage.fromList'( 3, 3, 
-          [ 4.0, 7.0, 9.0, 13.0, 16.0, 18.0, 22.0, 25.0, 27.0 ] )
-      val truth2 = 
-        RealGrayscaleImage.fromList(
-          [ [ 324.0, 398.0, 506.0, 614.0, 686.0 ],
-            [ 564.0, 638.0, 746.0, 854.0, 926.0 ],
-            [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
-            [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
-            [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
-    in
-      RealGrayscaleImage.equal( x, truth1 )
-      andalso
-      RealGrayscaleImage.equal( y, truth2 )
-    end )
-
+(*
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="RealGrayscaleImage", what="rotate",
+    genInput=
+      fn() => [ ( Option.valOf( RealPGM.read("test2.pgm") ), 1.5708 ) ] ,
+    f= 
+      fn[ i1 ] => [ RealGrayscaleImage.rotate i1 ] ,
+    fn[ o1 ] =>
+      [ RealGrayscaleImage.nRows rotated = 482 andalso 
+        RealGrayscaleImage.nCols rotated = 322 ] ,
+    inputToString=
+      fn( i, a ) =>
+        "( " ^
+        RealGrayscaleImage.toString i ^ ", " ^
+        Real.toString a ^ 
+        " )" }
+*)
 val _ =
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing Berkeley FMeasure",
-    fn() => 
-      let
-
-        (* Test with simple generated image *)
-
-        val im = 
-          BooleanImage.fromList'( 3, 3, 
-            [ true, false, false, false, true, false, false, false, true ] )
-        val truth = 
-          BooleanImage.fromList'( 3, 3, 
-            [ true, false, false, false, true, false, false, true, false ] )
-        val score1 = FMeasureBerkeley.evaluateEdge( im, [ truth ] )
-
-
-        (* Test with proper edge classified image *)
-
-        val edges = 
-            Option.valOf( BooleanPBM.read( "edge_classified.plain.pbm" ) ) 
-        val segs = 
-            Option.valOf( IntPGM.read( "proper2.seg.raw.pgm" ) ) 
-
-        val truths =
-          List.map
-            ( fn Filename => 
-                Option.valOf( BooleanPBM.read Filename ) )
-            [ "edge_truth_1.plain.pbm",
-              "edge_truth_2.plain.pbm",
-              "edge_truth_3.plain.pbm",
-              "edge_truth_4.plain.pbm",
-              "edge_truth_5.plain.pbm",
-              "edge_truth_6.plain.pbm" ]
-
-        val score2 = FMeasureBerkeley.evaluateEdge( edges, truths )
-
-        val score3 = FMeasureBerkeley.evaluateSegmentation( segs, truths )
-
-        (*val _ = print( FMeasureBerkeleyEdge.toString score1 ^ "\n" )*)
-        (*val _ = print( FMeasureBerkeleyEdge.toString score2 ^ "\n" )*)
-      in
-        [ score1, score2, score3 ] 
-      end ,
-    fn[ score1 as ( _, _, _, _, _, _, F1), 
-        score2 as ( _, _, _, _, _, _, F2 ),
-        score3 as ( _, _, _, _, _, _, F3 ) ] => 
-      (* Uncommment for a single evaluation *)
-      Util.approxEqReal( F1, 0.666, 3 ) andalso 
-      Util.approxEqReal( F2, 0.495956270745496, 2 ) andalso
-      (* P = 0.352722029988466
-         R = 0.835059185285489
-         F = 0.495956270745496 *)
-      Util.approxEqReal( F3, 0.767055072099290, 2 ) 
-      (* P = 0.914462944825335
-         R = 0.660573234032950
-         F = 0.767055072099290
-      *)
-      )
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing morphological thinning",
-    fn() =>
-    let
-      val t = true
-      val f = false
-      val im = 
-        BooleanImage.fromList'( 5, 11, 
-          [ t, t, t, t, t, t, t, t, t, t, t, 
-            t, t, t, t, t, t, t, t, t, f, f,
-            t, t, t, t, t, t, t, t, t, f, f,
-            t, t, t, t, t, t, t, t, t, f, f,
-            t, t, t, f, f, t, t, t, t, f, f ] )
-    in
-      Morphology.thin im
-    end , 
-    fn x => 
-    let 
-      val t = true
-      val f = false
-      val truth = 
-        BooleanImage.fromList'( 5, 11, 
-          [ t, f, f, f, f, f, f, f, t, t, t, 
-            t, t, f, f, f, f, f, t, t, f, f, 
-            f, t, t, t, t, t, t, t, f, f, f,
-            t, t, f, f, f, f, f, t, f, f, f,
-            t, f, f, f, f, f, f, t, t, f, f ] )
-    in
-      BooleanImage.equal( x, truth )       
-    end )
-
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Rotating a image as GrayscaleImageReal.image",
-    fn() => 
-      let
-        val Image = Option.valOf( RealPGM.read("test2.pgm") )
-        val newImage = RealGrayscaleImage.rotate (Image, 1.5708) (* 90 deg.  *)
-        val _ = RealPGM.write( newImage, "output/outputRotate1.pgm" )
-      in
-        Option.valOf( RealPGM.read("output/outputRotate1.pgm") )
-      end ,
-    fn( rotated ) =>
-      RealGrayscaleImage.nRows rotated = 482 andalso 
-      RealGrayscaleImage.nCols rotated = 322 )
-
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Adding border using borderextension.mirror",
-    fn() => 
-      let
-        val image = Option.valOf( RealPGM.read("test2.pgm") )
-        val newImage = 
-          RealGrayscaleImage.border 
-            ( RealGrayscaleImage.MirrorExtension, 100 ) 
-            image
-      in
-        newImage
-      end ,
-    fn( extended ) =>
-      RealGrayscaleImage.nRows extended = 482 andalso 
-      RealGrayscaleImage.nCols extended = 322 )
-
-val _ =
-  DifferentialTest.test' ( CommandLine.arguments() ) 
-   {group = "Image", 
-    what = "Rotate image",
+  DifferentialTest.test' ( CommandLine.arguments() ) {
+    group = "RealGrayscaleImage", what = "rotate",
     num = 10,
     genInput = 
-      fn () => 
+      fn _ => 
          (RandomArgumentUtilities.randomBSRImage (), 
           RandomArgumentUtilities.randomDecimal(0.0, Math.pi * 2.0)),
     fs = [
@@ -290,5 +202,4 @@ val _ =
       end
     ],
     compare = RealGrayscaleImage.equal,
-    inputToString = fn( file, rand ) => file
-  } 
+    inputToString = fn( file, rand ) => file } 
