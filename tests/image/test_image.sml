@@ -16,149 +16,41 @@ val rgbreq = rgbeq Real.==
 val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y ) 
 
 
-
 val _ = print"\n\n********** Image Tests **********\n"
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Loading, saving, and reloading PGM image as GrayscaleImageReal.image",
-    fn() => 
+    group="RealGrayscaleImage", what="correlate",
+    genInput= 
+      fn() => [
+        ( RealGrayscaleImage.fromList[ 
+            [ 1.0, 2.0, 3.0 ], 
+            [ 4.0, 5.0, 6.0 ], 
+            [ 7.0, 8.0, 9.0 ] ],
+          RealGrayscaleImage.fromList[ [ 1.0, 2.0 ] ] ) ] ,
+    f= 
+      fn[ i1 ] => [
+        RealGrayscaleImage.correlate 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( #1 i1, #2 i1 ) ] ,
+    evaluate=
+      fn[ o1 ] => 
       let
-        val im = Option.valOf( RealPGM.read("simple.plain.pgm") )
-        val _ = RealPGM.write( im, "output1.pgm" )
+        val truth = 
+          RealGrayscaleImage.fromList[ 
+            [ 5.0, 8.0, 9.0 ], 
+            [ 14.0, 17.0, 18.0 ], 
+            [ 23.0, 26.0, 27.0 ] ] 
       in
-        Option.valOf( RealPGM.read "output1.pgm" )
+        RealGrayscaleImage.equal( o1, truth )
       end ,
-    fn x => 
-      if Real.==( RealGrayscaleImage.sub( x, 0, 0 ), 0.0 ) andalso
-         Real.==( RealGrayscaleImage.sub( x, 0, 1 ), ( 64.0/255.0 ) ) andalso
-         Real.==( RealGrayscaleImage.sub( x, 1, 0 ), ( 128.0/255.0 ) ) andalso
-         Real.==( RealGrayscaleImage.sub( x, 1, 1 ), 1.0 ) then
-        true
-      else
-        false )
+    inputToString= 
+      fn( i, m ) => 
+        "( " ^
+        RealGrayscaleImage.toString i ^ ", " ^
+        RealGrayscaleImage.toString m ^ 
+        " )" }
 
-val _ =
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Loading, saving and reloading PBM image as Boolean.image",
-    fn() =>
-      let
-        val im = Option.valOf( BooleanPBM.read("simple.raw.pbm") )
-        val _ = BooleanPBM.write( im, "output1.pbm" )
-      in
-        Option.valOf( BooleanPBM.read("output1.pbm") )
-      end ,
-    fn x =>
-      if BooleanImage.sub( x, 0, 0 ) andalso
-         not( BooleanImage.sub( x, 0, 1 ) ) andalso
-         BooleanImage.sub( x, 1, 0 ) andalso
-         not( BooleanImage.sub( x, 1, 1 ) ) then
-        true
-      else
-        false )
-
-val _ =
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Saving and reloading a simple binary image using RAW PBM",
-    fn() =>
-      let
-        val im = BooleanImage.fromList'( 2, 2, [ true, false, true, false ] )
-        val _ = BooleanPBM.write' PNM.rawPBM ( im, "output2.pbm" )
-      in
-        Option.valOf( BooleanPBM.read "output2.pbm" )
-      end , 
-    fn x =>
-      if BooleanImage.sub( x, 0, 0 ) andalso
-         not( BooleanImage.sub( x, 0, 1 ) ) andalso
-         BooleanImage.sub( x, 1, 0 ) andalso
-         not( BooleanImage.sub( x, 1, 1 ) ) then
-        true
-      else
-        false )
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing histogram on small generated image",
-    fn() => 
-      let
-        val im = 
-          RealGrayscaleImage.fromList'( 3, 3, 
-            [ 1.0, 0.5, 0.3, 0.54, 0.0, 0.1, 0.65, 0.56, 0.31 ] )
-        val Histogram = RealGrayscaleHistogram.histogram' 4 im
-      in
-        Histogram
-      end ,
-    fn Histogram => 
-    let
-      val truth = 
-        Array.fromList( [ 2, 2, 4, 1 ] )
-    in
-      Array.foldli 
-        ( fn( I, x, t ) => 
-            if t andalso x=Array.sub( truth, I ) then
-              true
-            else
-              false ) 
-        true
-        Histogram
-    end )
-
-val _ =
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing histogram on proper grayscale image",
-    fn() =>
-    let
-      val im = Option.valOf( RealPGM.read "proper.plain.pgm" )
-      val Histogram = RealGrayscaleHistogram.histogram' 64 im
-    in
-      Histogram
-    end ,
-    fn Histogram => 
-    let
-      val truth = 
-        Array.fromList( 
-          [ 2247, 527, 335, 181, 98, 71, 47, 34, 
-            34, 70, 191, 138, 168, 258, 406, 579, 
-            1022, 22820, 39792, 18471, 3054, 727, 819, 1068, 
-            1218, 1567, 1992, 2179, 2368, 2539, 2588, 2532, 
-            2401, 2237, 2067, 1905, 1645, 1491, 1440, 1257, 
-            1067, 833, 876, 617, 510, 475, 392, 378,
-            439, 430, 427, 391, 417, 459, 442, 492, 
-            509, 532, 497, 389, 115, 30, 0, 0 ] ) 
-    in
-      Array.foldli
-        ( fn( I, x, Equal ) =>
-            if Equal andalso x=Array.sub( truth, I ) then
-              true
-            else
-              false )
-        true
-        Histogram
-    end )
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
-    group="Word8PGM", what="Testing GrayscaleImageReal.correlate",
-    fn() =>
-    let
-      val im = 
-        RealGrayscaleImage.fromList'( 3, 3, 
-          [ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 ] )
-      val Filter =
-        RealGrayscaleImage.fromList'( 1, 2, [ 1.0, 2.0 ] )
-    in
-      RealGrayscaleImage.correlate 
-        ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-        ( im, Filter )
-    end ,
-    fn x => 
-    let
-      val truth = 
-        RealGrayscaleImage.fromList'( 3, 3, 
-          [ 5.0, 8.0, 9.0, 14.0, 17.0, 18.0, 23.0, 26.0, 27.0 ] )
-    in
-      RealGrayscaleImage.equal( x, truth )
-    end )
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {

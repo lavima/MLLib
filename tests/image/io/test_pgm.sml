@@ -31,24 +31,38 @@ val _ =
     group="Word8PGM", what="write",
     genInput= 
       fn() => [ 
-        [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], 
-        [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ] ] , 
+        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.plain.pgm" ), 
+        ( [ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ], "output/write.raw.pgm" ) ] , 
     f=
       fn[ i1, i2 ] =>
       let
-        val im1 = Word8GrayscaleImage.fromList i1
-        val im2 = Word8GrayscaleImage.fromList i2
-      in
+        val im1 = Word8GrayscaleImage.fromList ( #1 i1 )
+        val im2 = Word8GrayscaleImage.fromList ( #1 i2 )
 
-      end
-    fn x => 
-      if Word8GrayscaleImage.sub( x, 0, 0 )=0w0 andalso
-         Word8GrayscaleImage.sub( x, 0, 1 )=0w64 andalso
-         Word8GrayscaleImage.sub( x, 1, 0 )=0w128 andalso
-         Word8GrayscaleImage.sub( x, 1, 1 )=0w255 then
-        true
-      else
-        false )
+        val _ = Word8PGM.write( im1, #2 i1 )
+        val _ = Word8PGM.write' ( PNM.rawPGM, 0w255 ) ( im2, #2 i2 )
+      in
+        [ #2 i1, #2 i2 ]
+      end ,
+    evaluate=
+      fn[ o1, o2 ] => 
+      let
+        val im1 = Option.valOf( Word8PGM.read o1 )
+        val im2 = Option.valOf( Word8PGM.read o2 )
+
+        val truth = 
+          Word8GrayscaleImage.fromList[ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ]
+      in [ 
+        Word8GrayscaleImage.equal( im1, truth ) andalso
+        Word8GrayscaleImage.equal( im2, truth ) ]
+      end ,
+    inputToString= 
+      fn( xss, f )=> 
+        "( " ^ 
+        ListUtil.toString ListUtil.toString Word8.toString xss ^
+        ", " ^ 
+        f ^ 
+        " )" } 
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
@@ -87,6 +101,40 @@ val _ =
         RealGrayscaleImage.equal( o2, simpleTruth ),
         equalsProperTruth o3, 
         equalsProperTruth o4 ]
+      end ,
+    inputToString= fn x => x }
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="RealPGM", what="write",
+    genInput= 
+      fn() => [ 
+        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
+          "output/write.plain.pgm" ), 
+        ( [ [ 0.0, 0.64/255.0 ], [ 0.128/255.0, 1.0 ] ], 
+          "output/write.raw.pgm" ) ] , 
+    f=
+      fn[ i1, i2 ] =>
+      let
+        val im1 = RealGrayscaleImage.fromList ( #1 i1 )
+        val im2 = RealGrayscaleImage.fromList ( #1 i2 )
+
+        val _ = RealPGM.write( im1, #2 i1 )
+        val _ = RealPGM.write' ( PNM.rawPGM, 0w255 ) ( im2, #2 i2 )
+      in
+        [ #2 i1, #2 i2 ]
+      end ,
+    evaluate=
+      fn[ o1, o2 ] => 
+      let
+        val im1 = Option.valOf( Word8PGM.read o1 )
+        val im2 = Option.valOf( Word8PGM.read o2 )
+
+        val truth = 
+          Word8GrayscaleImage.fromList[ [ 0w0, 0w64 ], [ 0w128, 0w255 ] ]
+      in [ 
+        Word8GrayscaleImage.equal( im1, truth ) andalso
+        Word8GrayscaleImage.equal( im2, truth ) ]
       end ,
     inputToString= fn x => x }
 

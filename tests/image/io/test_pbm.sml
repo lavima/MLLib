@@ -25,3 +25,41 @@ val _ =
       end ,
     inputToString= fn x => x }
 
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="BooleanPBM", what="write",
+    genInput= 
+      fn() => [ 
+        ( [ [ true, false ], [ true, false ] ], "output/write.plain.pbm" ), 
+        ( [ [ true, false ], [ true, false ] ], "output/write.raw.pbm" ) ] , 
+    f=
+      fn[ i1, i2 ] =>
+      let
+        val im1 = BooleanImage.fromList ( #1 i1 )
+        val im2 = BooleanImage.fromList ( #1 i2 )
+
+        val _ = BooleanPBM.write( im1, #2 i1 )
+        val _ = BooleanPBM.write' PNM.rawPBM ( im2, #2 i2 )
+      in
+        [ #2 i1, #2 i2 ]
+      end ,
+    evaluate=
+      fn[ o1, o2 ] => 
+      let
+        val im1 = Option.valOf( BooleanPBM.read o1 )
+        val im2 = Option.valOf( BooleanPBM.read o2 )
+
+        val truth = 
+          BooleanImage.fromList[ [ true, false ], [ true, false ] ]
+      in [ 
+        BooleanImage.equal( im1, truth ) andalso
+        BooleanImage.equal( im2, truth ) ]
+      end ,
+    inputToString= 
+      fn( xss, f )=> 
+        "( " ^ 
+        ListUtil.toString ListUtil.toString Bool.toString xss ^
+        ", " ^ 
+        f ^
+        " )" } 
+
