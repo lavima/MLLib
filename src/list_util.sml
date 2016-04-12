@@ -58,6 +58,7 @@ struct
 
   (*
   * Determine whether two lists are identical. 
+  * Deprecated: Use ListPair.allEq instead.
   *)
   fun equal ( eq : 'a * 'a -> bool ) ( xs : 'a list, ys : 'a list ) : bool =
   let
@@ -168,7 +169,8 @@ struct
   let
     fun iter( xs : 'a list ) : string list =
       case xs of
-        [ x ] => [ tos x ]
+        [] => []
+      | [ x ] => [ tos x ]
       | x::rxs => ( tos x ^ ", " )::iter rxs
   in
     "[ " ^ String.concat( iter xs ) ^ " ]"

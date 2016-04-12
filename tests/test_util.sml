@@ -120,7 +120,7 @@ val _ =
     genInput = 
       fn() => [
         [ ~1, 2, 3, ~10 ], [ 100, 10, 1 ], [ ~1, ~2, ~3 ] ] ,
-    f = fn[ i1, i2, i3 ] => [ Util.maxInt i1, Util.maxInt i2, Util.maxInt i2 ] ,
+    f = fn[ i1, i2, i3 ] => [ Util.maxInt i1, Util.maxInt i2, Util.maxInt i3 ] ,
     evaluate = fn[ o1, o2, o3 ] => [ o1=3, o2=100, o3= ~1 ] ,
     inputToString = ListUtil.toString Int.toString }
 
