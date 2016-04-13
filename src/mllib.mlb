@@ -1,7 +1,9 @@
 $(SML_LIB)/basis/basis.mlb
 array_util.sml
+array2_util.sml
 util.sml
 list_util.sml
+vector_util.sml
 text_file_util.sml
 tictactimer.sml
 optimize.sml

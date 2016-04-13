@@ -8,48 +8,54 @@
 
 val _ = print"\n\n********** Grayscale math tests **********\n"
 
-val _ = UnitTest.test( "Maximum real value",
-  fn() => 
-  let
-    val im = RealGrayscaleImage.fromList [ [  3.2, 4.3, 1.2 ],
-                                           [ ~3.2, 5.7, 4.7 ],
-                                           [  3.5, 2.3, 5.2 ] ]
-  in
-    GrayscaleMath.maxReal im
-  end,
-  fn x => Real.==( x, 5.7 ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="GrayscaleMath", what="Maximum real value",
+    genInput= 
+      fn() =>
+        [ RealGrayscaleImage.fromList[ 
+            [ 3.2, 4.3, 1.2 ],
+            [ ~3.2, 5.7, 4.7 ],
+            [  3.5, 2.3, 5.2 ] ] ] ,
+    f= fn[ i1 ] => [ GrayscaleMath.maxReal i1 ] ,
+    evaluate= fn[ o1 ] => [ Real.==( o1, 5.7 ) ] ,
+    inputToString = RealGrayscaleImage.toString }
 
-val _ = UnitTest.test( "Minimum real value",
-  fn() => 
-  let
-    val im = RealGrayscaleImage.fromList [ [  3.2, 4.3, 1.2 ],
-                                           [ ~3.2, 5.7, 4.7 ],
-                                           [  3.5, 2.3, 5.2 ] ]
-  in
-    GrayscaleMath.minReal im
-  end,
-  fn x => Real.==( x, ~3.2 ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="GrayscaleMath", what="Minimum real value",
+    genInput= 
+      fn() =>
+        [ RealGrayscaleImage.fromList[ 
+            [ 3.2, 4.3, 1.2 ],
+            [ ~3.2, 5.7, 4.7 ],
+            [  3.5, 2.3, 5.2 ] ] ] ,
+    f= fn[ i1 ] => [ GrayscaleMath.minReal i1 ] ,
+    evaluate=  fn[ o1 ] => [ Real.==( o1, ~3.2 ) ] ,
+    inputToString = RealGrayscaleImage.toString }
 
-val _ = UnitTest.test( "Sum real value",
-  fn() => 
-  let
-    val im = RealGrayscaleImage.fromList [ [  3.2, 4.3, 1.2 ],
-                                           [ ~3.2, 5.7, 4.7 ],
-                                           [  3.5, 2.3, 5.2 ] ]
-  in
-    GrayscaleMath.sumReal im
-  end,
-  fn x => Real.==( x, 26.9) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="GrayscaleMath", what="Sum real value",
+    genInput= 
+      fn() =>
+        [ RealGrayscaleImage.fromList[ 
+            [ 3.2, 4.3, 1.2 ],
+            [ ~3.2, 5.7, 4.7 ],
+            [  3.5, 2.3, 5.2 ] ] ] ,
+    f= fn[ i1 ] => [ GrayscaleMath.sumReal i1 ] ,
+    evaluate=  fn[ o1 ] => [ Real.==( o1, 26.9 ) ] ,
+    inputToString = RealGrayscaleImage.toString }
 
-val _ = UnitTest.test( "Mean real value",
-  fn() => 
-  let
-    val im = RealGrayscaleImage.fromList [ [  3.2, 4.3, 1.2 ],
-                                           [ ~3.2, 5.7, 4.7 ],
-                                           [  3.5, 2.3, 5.2 ] ]
-  in
-    GrayscaleMath.meanReal im
-  end,
-  fn x => Util.approxEqReal( x, 2.9889, 3 ) )
-
-
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="GrayscaleMath", what="Mean real value",
+    genInput= 
+      fn() =>
+        [ RealGrayscaleImage.fromList[ 
+            [ 3.2, 4.3, 1.2 ],
+            [ ~3.2, 5.7, 4.7 ],
+            [  3.5, 2.3, 5.2 ] ] ] ,
+    f= fn[ i1 ] => [ GrayscaleMath.meanReal i1 ] ,
+    evaluate=  fn[ o1 ] => [ Util.approxEqReal( o1, 2.9889, 3 ) ] ,
+    inputToString = RealGrayscaleImage.toString }

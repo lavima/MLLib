@@ -9,101 +9,178 @@
 
 val _ = print"\n\n********** Util Tests **********\n"
 
-val _ = UnitTest.test( "Testing Util.approxEqReal",
-  fn() =>
-    ( Util.approxEqReal( 1.001, 1.002, 2 ),
-      Util.approxEqReal( 1.001, 1.002, 3 ) ),
-  fn( X, Y ) => X andalso not Y )
 
-val _ = UnitTest.test( "Testing Util.approxEqReal'",
-  fn() =>
-    ( Util.approxEqReal'( 1.124546548778789,  1.124546548778788, 15 ),
-      Util.approxEqReal'( 1.124546548778789,  1.124546548778788, 16 ),
-      Util.approxEqReal'( 1.124546548778789,  1.124546548778789, 16 )),
-  fn( X, Y, Z ) => X andalso not Y andalso Z )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.eq with reals",
+    genInput = fn() => [ ( 3.0, 10.0 ), ( 102.0, 102.0 ), ( 32.0, 9.0 ) ] ,
+    f = 
+      fn[ i1, i2, i3 ] => [
+        Util.eq Real.compare i1,
+        Util.eq Real.compare i2,
+        Util.eq Real.compare i3 ] ,
+    evaluate = fn[ x, y, z ] => [ not x, y, not z ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing Util.eq with reals",
-  fn() => 
-    ( Util.eq Real.compare ( 3.0, 10.0 ),
-      Util.eq Real.compare ( 102.0, 102.0 ),
-      Util.eq Real.compare ( 32.0, 9.0 ) ),
-  fn( X, Y, Z ) => not X andalso Y andalso not Z )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.approxEqReal",
+    genInput = fn() => [ ( 1.001, 1.002, 2 ), ( 1.001, 1.002, 3 ) ] ,
+    f = fn [ i1, i2 ]  => [ Util.approxEqReal i1, Util.approxEqReal i2 ] ,
+    evaluate = fn[ x, y ] => [ x, not y ] ,
+    inputToString = fn( x, y, n ) => 
+      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ ", " ^ 
+      Int.toString n ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing Util.eqInt",
-  fn() => 
-    ( Util.eqInt( 3, 10 ),
-      Util.eqInt( 102, 102 ),
-      Util.eqInt( 32, 9 ) ),
-  fn( X, Y, Z ) => not X andalso Y andalso not Z )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.approxEqReal'",
+    genInput = 
+      fn() => [
+        ( 1.124546548778789,  1.124546548778788, 15 ),
+        ( 1.124546548778789,  1.124546548778788, 16 ),
+        ( 1.124546548778789,  1.124546548778789, 16 ) ] ,
+    f = 
+      fn[ i1, i2, i3 ] => [ 
+        Util.approxEqReal' i1,
+        Util.approxEqReal' i2,
+        Util.approxEqReal' i3 ] ,
+    evaluate = fn[ x, y, z ] => [ x, not y, z ] ,
+    inputToString = fn( x, y, n ) => 
+      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ ", " ^ 
+      Int.toString n ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing Util.loop",
-  fn() =>
-  let
-    val Indices = Array.array( 10, 0 )
-    val Outcome = 
-      ( Util.loop ( fn I => Array.update( Indices, I, I ) ) 10;
-        Array.foldli 
-          ( fn( I, I', Correct ) => 
-              if I=I' then
-                Correct
-              else
-                false )
-        true
-        Indices )
-      handle Subscript => false
-  in
-    Outcome
-  end,
-  fn X => X )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.eqInt",
+    genInput = fn() => [ ( 3, 10 ), ( 102, 102 ), ( 32, 9 ) ] ,
+    f =
+      fn[ i1, i2, i3 ] => [ Util.eqInt i1, Util.eqInt i2, Util.eqInt i3 ] ,
+    evaluate = fn[ x, y, z ] => [ not x, y, not x ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Int.toString x ^ ", " ^ 
+      Int.toString y ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing Util.max with reals",
-  fn() => 
-    ( Util.max Real.< [ ~1.0, 2.0, 3.0, ~10.0 ],
-      Util.max Real.< [ 100.0, 10.0, 1.0 ],
-      Util.max Real.< [ ~1.0, ~2.0, ~1.5 ] ),
-  fn( X, Y, Z ) => 
-    Real.==( X, 3.0 ) andalso
-    Real.==( Y, 100.0 ) andalso
-    Real.==( Z, ~1.0 ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.loop",
+    genInput = fn() => [ 10, 100, 10000 ] ,
+    f =
+      fn[ i1, i2, i3 ] =>
+      let
+        val indices1 = Array.array( i1, 0 )
+        val indices2 = Array.array( i2, 0 )
+        val indices3 = Array.array( i3, 0 )
+        val _ = Util.loop ( fn i => Array.update( indices1, i, i ) ) i1
+        val _ = Util.loop ( fn i => Array.update( indices2, i, i ) ) i2
+        val _ = Util.loop ( fn i => Array.update( indices3, i, i ) ) i3
+      in
+        [ indices1, indices2, indices3 ]
+      end ,
+    evaluate =
+      fn[ o1, o2, o3 ] => [
+        Array.foldli ( fn( i, i', t ) => t andalso i=i' ) true o1,
+        Array.foldli ( fn( i, i', t ) => t andalso i=i' ) true o2,
+        Array.foldli ( fn( i, i', t ) => t andalso i=i' ) true o3 ] ,
+    inputToString = fn x => Int.toString x }
 
-val _ = UnitTest.test( "Testing Util.maxInt",
-  fn() => 
-    ( Util.maxInt[ ~1, 2, 3, ~10 ],
-      Util.maxInt[ 100, 10, 1 ],
-      Util.maxInt[ ~1, ~2, ~3 ] ),
-  fn( X, Y, Z ) => X=3 andalso Y=100 andalso Z= ~1 )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.max with reals",
+    genInput = 
+      fn() => [ 
+        [ ~1.0, 2.0, 3.0, ~10.0 ], 
+        [ 100.0, 10.0, 1.0 ], 
+        [ ~1.0, ~2.0, ~1.5 ] ] ,
+    f = 
+      fn[ i1, i2, i3 ] => [
+        Util.max Real.< i1,
+        Util.max Real.< i2,
+        Util.max Real.< i3 ] ,
+    evaluate = 
+      fn[ o1, o2, o3 ] => 
+        [ Real.==( o1, 3.0 ), Real.==( o2, 100.0 ), Real.==( o3, ~1.0 ) ] ,
+    inputToString = ListUtil.toString Real.toString }
 
-val _ = UnitTest.test( "Testing Util.minInt",
-  fn() => 
-    ( Util.minInt[ ~1, 2, 3, ~10 ],
-      Util.minInt[ 100, 10, 1 ],
-      Util.minInt[ ~1, ~2, ~3 ] ),
-  fn( X, Y, Z ) => X= ~10 andalso Y=1 andalso Z= ~3 )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.maxInt",
+    genInput = 
+      fn() => [
+        [ ~1, 2, 3, ~10 ], [ 100, 10, 1 ], [ ~1, ~2, ~3 ] ] ,
+    f = fn[ i1, i2, i3 ] => [ Util.maxInt i1, Util.maxInt i2, Util.maxInt i3 ] ,
+    evaluate = fn[ o1, o2, o3 ] => [ o1=3, o2=100, o3= ~1 ] ,
+    inputToString = ListUtil.toString Int.toString }
 
-val _ = UnitTest.test( "Testing Util.max2 with reals",
-  fn() => 
-    ( Util.max2 Real.< ( 3.0, ~4.0 ),
-      Util.max2 Real.< ( ~3.0, 4.0 ),
-      Util.max2 Real.< ( 3.0, 4.0 ),
-      Util.max2 Real.< ( ~3.0, ~4.0 ) ),
-  fn( X, Y, Z, W ) => 
-    Real.==( X, 3.0 ) andalso
-    Real.==( Y, 4.0 ) andalso
-    Real.==( Z, 4.0 ) andalso
-    Real.==( W, ~3.0 ) )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.minInt",
+    genInput = 
+      fn() => [
+        [ ~1, 2, 3, ~10 ], [ 100, 10, 1 ], [ ~1, ~2, ~3 ] ] ,
+    f = fn[ i1, i2, i3 ] => [ Util.minInt i1, Util.minInt i2, Util.minInt i3 ] ,
+    evaluate = fn[ o1, o2, o3 ] => [ o1= ~10, o2=1, o3= ~3 ] ,
+    inputToString = ListUtil.toString Int.toString }
 
-val _ = UnitTest.test( "Testing Util.max2Int",
-  fn() => 
-    ( Util.max2Int( 3, ~4 ),
-      Util.max2Int( ~3, 4 ),
-      Util.max2Int( 3, 4 ),
-      Util.max2Int( ~3, ~4 ) ),
-  fn( X, Y, Z, W ) => X=3 andalso Y=4 andalso Z=4 andalso W= ~3 )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.max2 with reals",
+    genInput = 
+      fn() => [ ( 3.0, ~4.0 ), ( ~3.0, 4.0 ), ( 3.0, 4.0 ), ( ~3.0, ~4.0 ) ] ,
+    f = 
+      fn[ i1, i2, i3, i4 ] => [ 
+        Util.max2 Real.< i1,
+        Util.max2 Real.< i2,
+        Util.max2 Real.< i3,
+        Util.max2 Real.< i4 ] ,
+    evaluate = 
+      fn[ o1, o2, o3, o4 ] => [ 
+        Real.==( o1, 3.0 ), 
+        Real.==( o2, 4.0 ), 
+        Real.==( o3, 4.0 ),
+        Real.==( o4, ~3.0 ) ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ 
+      " )" }
 
-val _ = UnitTest.test( "Testing Util.min2Int",
-  fn() => 
-    ( Util.min2Int( 3, ~4 ),
-      Util.min2Int( ~3, 4 ),
-      Util.min2Int( 3, 4 ),
-      Util.min2Int( ~3, ~4 ) ),
-  fn( X, Y, Z, W ) => X= ~4 andalso Y= ~3 andalso Z=3 andalso W= ~4 )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.max2Int",
+    genInput = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
+    f = 
+      fn[ i1, i2, i3, i4 ] => 
+        [ Util.max2Int i1, Util.max2Int i2, Util.max2Int i3, Util.max2Int i4 ] ,
+    evaluate = fn[ o1, o2, o3, o4 ] => [ o1=3, o2=4, o3=4, o4= ~3 ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Int.toString x ^ ", " ^ 
+      Int.toString y ^ 
+      " )" }
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) { 
+    group="Util", what="Testing Util.min2Int",
+    genInput = fn() => [ ( 3, ~4 ), ( ~3, 4 ), ( 3, 4 ), ( ~3, ~4 ) ] ,
+    f = 
+      fn[ i1, i2, i3, i4 ] => 
+        [ Util.min2Int i1, Util.min2Int i2, Util.min2Int i3, Util.min2Int i4 ] ,
+    evaluate = fn[ o1, o2, o3, o4 ] => [ o1= ~4, o2= ~3, o3=3, o4= ~4 ] ,
+    inputToString = fn( x, y ) => 
+      "( " ^ 
+      Int.toString x ^ ", " ^ 
+      Int.toString y ^ 
+      " )" }

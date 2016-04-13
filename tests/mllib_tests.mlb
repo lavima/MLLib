@@ -22,24 +22,23 @@ in
   image/test_image.sml
 end
 
+image/io/test_pgm.sml
 image/io/test_ppm.sml
-
-ml/test_differential_evolution.sml
-ml/test_k_means.sml
-ml/test_pcnn.sml
-
-image/test_image_threshold.sml
-image/test_image_canny.sml
-image/test_connected_components.sml
 image/test_image_util.sml
+image/test_connected_components.sml
 image/test_grayscale_math.sml
 image/test_image_convert.sml
-image/test_filter.sml
+image/test_threshold.sml
+image/test_canny.sml
 image/test_filter_util.sml
 image/test_gradient.sml
 image/test_texton.sml
 image/test_multiscale_cue.sml
 
-test/test_randomTest.sml
+ml/test_differential_evolution.sml
+ml/test_k_means.sml
+ml/test_pcnn.sml
+
+test/test_random_test.sml
 test/test_random_argument_utilities.sml
 

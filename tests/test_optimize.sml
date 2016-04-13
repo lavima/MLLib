@@ -7,25 +7,28 @@
 
 val _ = print"\n\n********** Optimize Tests **********\n"
 
-val _ = UnitTest.test( "Testing Optimize.brute",
-  fn() => 
-    Optimize.brute 
-      ( 3, [ Optimize.full 5, Optimize.full 10, Optimize.lessEqual 10 ] ) 
-      ( fn Xs =>
-        let
-          val X1::X2::X3::nil = Xs
-          val _ = 
-            print( "X1: " ^ Real.toString X1 ^ " X2: " ^ Real.toString X2 ^ " X3: " ^ Real.toString X3 ^ "\n" )
-        in
-          X1*X2*X3
-        end ) , 
-  fn Xs => 
-  let
-    val X1::X2::X3::nil = Xs
-    val _ = 
-      print( "X1: " ^ Real.toString X1 ^ " X2: " ^ Real.toString X2 ^ " X3: " ^ Real.toString X3 ^ "\n" )
-  in
-    true
-  end
-  )
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="Optimize", what="Testing Optimize.brute",
+    genInput = 
+      fn() => [ 
+        ( 3, [ Optimize.full 5, Optimize.full 10, Optimize.lessEqual 10 ] ) ] ,
+    f = 
+      fn[ i1 ] => [
+        Optimize.brute i1
+          ( fn xs =>
+            let
+              val x1::x2::x3::nil = xs
+            in
+              x1*x2*x3
+            end ) ] , 
+    evaluate = 
+      fn[ o1 ] => 
+      let
+        val x1::x2::x3::nil = o1
+      in
+        [ true ]
+      end ,
+    inputToString = fn( x, xs ) => Int.toString x }
+
           

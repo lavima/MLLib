@@ -7,16 +7,15 @@
 
 val _ = print"\n\n********** Random Tests tests **********\n"
 
-val _ = RandomTest.runTest(
-  { 
+val _ = DifferentialTest.test' ( CommandLine.arguments() ) { 
   group = "RandomTest",
   what = "Test_sine_no_error",
 
-  numberOfTests = 3,
-  testGenerator = (fn () => 3.3),
+  num = 3,
+  genInput = (fn i => 3.3),
 
-  implementations = [ Math.sin, Math.sin ],
+  fs = [ Math.sin, Math.sin ],
 
-  compareResult = Real.==,
-  argsToString = Real.toString
-})
+  compare = Real.==,
+  inputToString = Real.toString
+}

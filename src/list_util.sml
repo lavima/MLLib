@@ -58,6 +58,7 @@ struct
 
   (*
   * Determine whether two lists are identical. 
+  * Deprecated: Use ListPair.allEq instead.
   *)
   fun equal ( eq : 'a * 'a -> bool ) ( xs : 'a list, ys : 'a list ) : bool =
   let
@@ -157,21 +158,22 @@ struct
       ( [], [] ) => []
     | ( x::xs', y::ys' ) => op'( x, y )::binaryOp op' ( xs', ys' )
 
-  fun toString ( toString : 'a -> string )
-               ( xs : 'a list ) 
-      : string =
-  let
-    fun iter( xs : 'a list ) : string =
-      case xs of
-        [ x ] => toString x
-      | x::rxs => toString x ^ ", " ^ iter rxs 
-  in
-    "[ " ^ iter xs ^ " ]" 
-  end
-
   fun flatMap ( f : 'a -> 'b ) ( xss : 'a list list ) : 'b list =
     case xss of
       [] => []
     | xs::xss' => ( List.map f xs ) @ ( flatMap f xss' )
+
+  fun toString ( tos : 'a -> string )
+               ( xs : 'a list ) 
+      : string =
+  let
+    fun iter( xs : 'a list ) : string list =
+      case xs of
+        [] => []
+      | [ x ] => [ tos x ]
+      | x::rxs => ( tos x ^ ", " )::iter rxs
+  in
+    "[ " ^ String.concat( iter xs ) ^ " ]"
+  end
 
 end (* structure ListUtil *)
