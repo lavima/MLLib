@@ -15,14 +15,14 @@ struct
       : int list * real list list =
   let
     val rand = Random.rand( 31, 29 )
-    val means = Array.array( k, [] )
+    val means = Array.array( k, List.tabulate( numDimensions, fn _ => 0.0 ) )
     val assignment = Array.array( List.length instances, ~1 )
 
     val _ = 
       Array.modify
         ( fn _ => 
-            List.tabulate( numDimensions, fn _ => Random.randReal rand ) )
-        means
+            Random.randRange ( 0, k-1 ) rand )
+        assignment
 
     fun distance( instance : real list, meanIndex : int ) : real = 
       List.foldl
@@ -100,6 +100,7 @@ struct
             false => ()
           | true => ( updateMeans(); iterate( i+1 ) )
 
+    val _ = updateMeans()
     val _ = iterate 0
 
   in
