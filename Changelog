@@ -1,6 +1,7 @@
 2016-04-13	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Refactored test framework. 
 	* All tests must be checked to make sure no errors have been introduced.
+	* Fixed issue #3.
 
 2016-04-11	Marius Geitle <marius.geitle@hiof.no>
 	* Added support for feeding to pcnn
