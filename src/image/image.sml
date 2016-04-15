@@ -428,7 +428,6 @@ struct
       out
     end
 
-
     (* 
     * Convolve an image with a two-dimensional mask 
     *)

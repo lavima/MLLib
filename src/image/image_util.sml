@@ -148,7 +148,7 @@ struct
 
     val max = GrayscaleMath.maxReal im
     val min = GrayscaleMath.minReal im
-    val range = max-min 
+    val range = Real.max(max-min, min+0.0001)
 
     val _ = 
       RealGrayscaleImage.appi RealGrayscaleImage.RowMajor

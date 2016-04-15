@@ -10,49 +10,6 @@ val _ = print"\n\n********** Multiscale cue tests **********\n"
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="MultiscaleCue", what="orientedMultiscale",
-    genInput=
-      fn() =>
-      let
-        val im = Option.valOf( RealPGM.read "proper.plain.pgm" )
-        val ( height, width ) = RealGrayscaleImage.dimensions im
-      in
-        [ ( height, 
-            width,
-            im,
-            Gradient.orientedGradientReal,
-            [ 1.0, 1.0, 1.0 ],
-            32,
-            10,
-            Math.pi/4.0, 
-            [ ( 3.0, 3.0/4.0 ), ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ) ], 
-            0.1 ) ] 
-      end ,
-    f= fn[ i1 ] => [ MultiscaleCue.orientedMultiscale i1 ] ,
-    evaluate= 
-      fn[ o1 ] => 
-      let
-        val o1' = ImageUtil.normalizeReal'' o1
-        val _ = RealPGM.write( o1', "output/OrientedMultiscale.pgm" )
-      in
-        [ true ] 
-      end ,
-    inputToString=
-      fn( _, _, im, _, ws, b, s, ori, savgol, _ ) =>
-        "( " ^ 
-        RealGrayscaleImage.toString im ^ ", " ^
-        ListUtil.toString Real.toString ws ^ ", " ^ 
-        Int.toString b ^ ", " ^
-        Int.toString s ^ ", " ^
-        Real.toString ori ^ ", " ^
-        ListUtil.toString 
-          ( fn( x, y ) => 
-              "( " ^ Real.toString x ^ ", " ^ Real.toString y ^ " )" )
-          savgol ^ 
-        " )" }
-
-val _ = 
-  SimpleTest.test' ( CommandLine.arguments() ) {
     group="MultiscaleCue", what="Generate multiscale cue response",
     genInput=
       fn() =>
@@ -60,7 +17,7 @@ val _ =
               weights = [ 0.0146, 0.0145, 0.0163 ],
               savgolFilters = 
                 [ ( 3.0, 3.0/4.0), ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ) ],
-              histogramSmoothSigma = 0.1,
+              histogramSmoothSigma = SOME( 0.1 ),
               bins = 25,
               scale = 5,
               nori = 8
@@ -69,7 +26,7 @@ val _ =
               weights = [ 0.0210, 0.0243, 0.0287 ],
               savgolFilters = 
                 [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
-              histogramSmoothSigma = 0.05,
+              histogramSmoothSigma = SOME( 0.05 ),
               bins = 25,
               scale = 10,
               nori = 8
@@ -78,7 +35,7 @@ val _ =
               weights = [ 0.0166, 0.0185, 0.0204 ],
               savgolFilters = 
                 [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
-              histogramSmoothSigma = 0.05,
+              histogramSmoothSigma = SOME( 0.05 ),
               bins = 25,
               scale = 10,
               nori = 8
@@ -87,7 +44,7 @@ val _ =
               weights = [ 0.0101, 0.0111, 0.0141 ],
               savgolFilters = 
                 [ ( 5.0, 5.0/4.0 ), ( 10.0, 10.0/4.0 ), ( 20.0, 20.0/4.0 ) ],
-              histogramSmoothSigma = 0.0,
+              histogramSmoothSigma = NONE,
               bins = 32,
               scale = 10,
               nori = 8
@@ -96,17 +53,27 @@ val _ =
               nori = 8,
               sigma = [ 2.0, 2.0 * ( Math.sqrt 2.0 ) ],
               nTextons = 32,
-              maxIterations = 500
+              maxIterations = 200
             },
-            border = 30 },
+            border = 30,
+            gradientQuantized = GradientDisk.gradientQuantized,
+            gradientReal = GradientDisk.gradientReal }, 
           Option.valOf( RealPPM.read "proper2.raw.ppm" ) ) ] ,
     f= fn[ i1 ] => [ MultiscaleCue.multiscale ( #1 i1 ) ( #2 i1 ) ] ,
     evaluate=
-      fn[ o1 ] =>
+      fn[ result ] =>
       let
-        val normalizedImage = ImageUtil.normalizeReal'' o1
-        val _ = RealPGM.write( normalizedImage, "output/Multiscale.pgm" )
+        val comb = #combined result
+        val [ c1, c2, c3, c4, c5, c6, c7, c8 ] = comb
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c1, "output/MutC1.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c2, "output/MutC2.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c3, "output/MutC3.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c4, "output/MutC4.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c5, "output/MutC5.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c6, "output/MutC6.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c7, "output/MutC7.pgm" )
+        val _ = RealPGM.write(ImageUtil.normalizeReal'' c8, "output/MutC8.pgm" )
       in
         [ true ]
       end ,
-    inputToString= fn( c, i ) => RealCIELabImage.toString i }
+    inputToString = fn( c ) => "" (* RealRGBImage.toString i *) }

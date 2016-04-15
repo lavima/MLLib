@@ -1,3 +1,11 @@
+2016-04-15	Marius Geitle <marius.geitle@hiof.no>
+	* Added gradient calculation based on disks. ( for gPb )
+	* Added utility functions for elementwise addition and subtraction of
+		one dimensional arrays.
+	* Fixed problem with division by zero in image normalization
+	* Changed multiscale to return all images produces.
+	* Added utility function for Chi Squared distance
+
 2016-04-13	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Refactored test framework. 
 	* All tests must be checked to make sure no errors have been introduced.
