@@ -117,6 +117,7 @@ struct
 
   val max2Int = max2 Int.<
   val min2Int = max2 Int.>
+  val realMax2 = max2 Real.<
 
   (*
   * Retrieve the largest element in a list.

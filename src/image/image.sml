@@ -73,6 +73,11 @@ sig
   val modifyi : traversal -> ( int * int * pixel -> pixel ) -> region -> unit
   val tabulate : traversal -> ( int * int * ( int * int -> pixel ) )  -> image
 
+  val listFoldl : 
+    traversal -> ( pixel * pixel -> pixel ) -> image -> image list -> image
+  val listFoldr : 
+    traversal -> ( pixel * pixel -> pixel ) -> image -> image list -> image
+
   val fill : image * pixel -> unit
 
   val correlate : borderExtension * outputSize -> image * image -> image
@@ -294,6 +299,35 @@ struct
     else
       false
   end
+
+  fun listFoldl ( tr : traversal )
+                ( f : pixel * pixel -> pixel )
+                ( start : image )
+                ( is : image list )
+      : image =
+    List.foldl 
+      ( fn( im, out ) => (
+          modifyi tr
+            ( fn( i, j, x ) => f( sub( im, i, j ), x ) )
+            ( full out ) ;
+          out ) )
+      start
+      is
+          
+  fun listFoldr ( tr : traversal )
+                ( f : pixel * pixel -> pixel )
+                ( start : image )
+                ( is : image list )
+      : image =
+    List.foldr 
+      ( fn( im, out ) => (
+          modifyi tr
+            ( fn( i, j, x ) => f( sub( im, i, j ), x ) )
+            ( full out ) ;
+          out ) )
+      start
+      is
+          
 
   fun fill( im : image, pix : pixel ) : unit =
     modify RowMajor ( fn _ => pix ) im

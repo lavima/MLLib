@@ -203,3 +203,25 @@ val _ =
     ],
     compare = RealGrayscaleImage.equal,
     inputToString = fn( file, rand ) => file } 
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="RealGrayscaleImage", what="listFoldl",
+    genInput=
+      fn() => 
+        [ [ RealGrayscaleImage.fromList[ [ 0.1, 0.8 ], [ 0.2, 0.9 ] ],
+            RealGrayscaleImage.fromList[ [ 0.2, 0.7 ], [ 0.2, 0.5 ] ] ] ] ,
+    f=
+      fn[ i1 ] => 
+        [ RealGrayscaleImage.listFoldl RealGrayscaleImage.RowMajor
+            Util.realMax2 
+            ( RealGrayscaleImage.zeroImage( 2, 2 ) )
+            i1 ] ,
+    evaluate=
+      fn[ o1 ] =>
+      let
+        val truth = RealGrayscaleImage.fromList[ [ 0.2, 0.8 ], [ 0.2, 0.9 ] ]
+      in
+        [ RealGrayscaleImage.equal( o1, truth ) ]
+      end ,
+    inputToString= ListUtil.toString RealGrayscaleImage.toString }

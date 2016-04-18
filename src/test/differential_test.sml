@@ -76,7 +76,7 @@ struct
 
     val success = iterateTests num
 
-    val _ = print (group ^ ": " ^ what ^ " : " ^ resultToString success )
+    val _ = print (group ^ ": " ^ what ^ " : " ^ resultToString success ^ "\n" )
   in
     ()
   end
