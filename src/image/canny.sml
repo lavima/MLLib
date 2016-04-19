@@ -185,7 +185,10 @@ struct
                   0.0
               end 
             end )
-          ( RealGrayscaleImage.full max )
+          ( RealGrayscaleImage.region( 
+              max, 
+              1, 1, 
+              SOME( height-2 ), SOME( width-2 ) ) )
 
       val ( high, low ) = 
         case options of 

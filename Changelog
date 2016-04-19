@@ -1,3 +1,8 @@
+2016-04-19	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Changed Canny implementation to exclude border edges during non-max
+		suppression. 
+	* Added proper tests for Canny.findEdges.
+
 2016-04-18	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added listFold functions to all images (issue 2).
 

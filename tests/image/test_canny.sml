@@ -29,7 +29,29 @@ val _ =
       fn[ i1, i2 ] => 
         [ Canny.findEdges' ( #1 i1 ) ( #2 i1 ), 
           Canny.findEdges' ( #1 i2 ) ( #2 i2 ) ] ,
-    evaluate= fn[ o1, o2 ] => [ true, true ] ,
+    evaluate= 
+      fn[ o1, o2 ] => 
+      let
+        val t = true
+        val f = false
+
+        val t1 = 
+          BooleanImage.fromList[
+            [ f, f, f, f, f, f, f, f ],
+            [ f, f, t, t, t, f, f, f ],
+            [ f, t, t, f, f, t, f, f ],
+            [ f, t, f, f, f, t, f, f ],
+            [ f, t, f, f, t, f, f, f ],
+            [ f, t, t, t, t, f, f, f ],
+            [ f, f, f, f, f, f, f, f ],
+            [ f, f, f, f, f, f, f, f ] ]
+
+        val _ = BooleanPBM.write( o2, "output/proper2.canny.pbm" )
+
+        val t2 = Option.valOf( BooleanPBM.read"proper2.edge.raw.pbm" )
+      in
+        [ BooleanImage.equal( o1, t1 ), BooleanImage.equal( o2, t2 ) ]
+      end ,
     inputToString=  
       fn( options, i ) =>
         RealGrayscaleImage.toString i }
