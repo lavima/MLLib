@@ -6,5 +6,5 @@ The primary focus of the library is image analysis, but other areas are
 covered as well.
 
 The library has been created as part of a resarch project at Østfold University
-College (HIOF). Contact Lars Vidar Magnusson <lars.v.magnusson@hiof.no> for 
-more information.
+College (HIOF) (see www.it.hiof.no/iaml). Contact Lars Vidar Magnusson 
+<lars.v.magnusson@hiof.no> for more information.
