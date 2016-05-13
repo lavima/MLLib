@@ -51,7 +51,7 @@ val _ =
         RealGrayscaleImage.toString m ^ 
         " )" }
 
-val _ = 
+ val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealGrayscaleImage", what="convolve",
     genInput= 
@@ -70,17 +70,22 @@ val _ =
           RealGrayscaleImage.fromList[ 
             [ 10.0, 15.0, 11.0 ],
             [ 5.0, 3.0, 4.0 ],
-            [ 21.0, 20.0, 19.0 ] ] ) ] ,
+            [ 21.0, 20.0, 19.0 ] ] ), 
+        ( RealGrayscaleImage.fromList[ [ 1.0, 2.0, 3.0 ] ],
+          RealGrayscaleImage.fromList[ [ 15.0, 11.0, 17.0 ] ] ) ] ,
     f= 
-      fn[ i1, i2 ] => [
+      fn[ i1, i2, i3 ] => [
         RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
           ( #1 i1, #2 i1 ),
         RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
-          ( #1 i2, #2 i2 ) ] ,
+          ( #1 i2, #2 i2 ),
+        RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.ZeroExtension, RealGrayscaleImage.OriginalSize )
+          ( #1 i3, #2 i3 ) ] ,
     evaluate=
-      fn[ o1, o2 ] => 
+      fn[ o1, o2, o3 ] => 
       let
         val truth1 = 
           RealGrayscaleImage.fromList[ 
@@ -94,9 +99,12 @@ val _ =
               [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
               [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
               [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
+        val truth3 = 
+          RealGrayscaleImage.fromList[ [ 41.0, 84.0, 67.0 ] ]
       in 
         [ RealGrayscaleImage.equal( o1, truth1 ), 
-          RealGrayscaleImage.equal( o2, truth2 ) ]
+          RealGrayscaleImage.equal( o2, truth2 ),
+          RealGrayscaleImage.equal( o3, truth3 ) ]
       end ,
     inputToString= 
       fn( i, m ) => 

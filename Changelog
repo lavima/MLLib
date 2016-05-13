@@ -1,3 +1,6 @@
+2016-05-13	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Added additional test to Image.convolve.
+
 2016-04-19	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Changed Canny implementation to exclude border edges during non-max
 		suppression. 
