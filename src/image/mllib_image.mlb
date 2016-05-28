@@ -36,10 +36,4 @@ io/pbm.sml
 io/pgm.sml
 io/ppm.sml
 
-texton.sml
-gradient.sml
-gradient_disk.sml
-gradient_square.sml
-
-multiscale_cue.sml
 connected_components.sml

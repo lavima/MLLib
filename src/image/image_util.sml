@@ -354,6 +354,22 @@ struct
       false
   end
 
+  fun realRGBFromChannels( 
+    channelR : RealGrayscaleImage.image,
+    channelG : RealGrayscaleImage.image,
+    channelB : RealGrayscaleImage.image ) : RealRGBImage.image =
+  let
+    val ( width, height ) = RealGrayscaleImage.dimensions channelR
+  in
+    RealRGBImage.tabulate RealRGBImage.RowMajor ( width, height,
+      fn ( y, x ) => 
+        ( 
+          RealGrayscaleImage.sub( channelR, y, x ),
+          RealGrayscaleImage.sub( channelG, y, x ),
+          RealGrayscaleImage.sub( channelB, y, x ) 
+        ) )
+  end
+
   fun getAChannel( image : RealCIELabImage.image ) : RealGrayscaleImage.image =
   let
     val ( width, height ) = RealCIELabImage.dimensions image

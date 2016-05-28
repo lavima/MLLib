@@ -6,7 +6,6 @@
 * 
 *)
 
-
 structure MultiscaleCue =
 struct
 
@@ -15,7 +14,7 @@ struct
       weights : real list,
       savgolFilters : ( real * real ) list,
       bins : int,
-      scale : int,
+      scale : int list,
       nori : int,
       histogramSmoothSigma : real option
     }
@@ -48,9 +47,7 @@ struct
       histogramSmoothSigma = histogramSmoothSigma
     } = config
 
-    val sizes = [ scale div 2, scale, scale*2 ]
-
-    val responses = List.foldl 
+    val responses = List.foldr 
       ( fn ( ( x : int, savgol ), a ) => 
         let
           val _ = print ("Starting Scale:" ^ ( Int.toString x ) ^ "\n" )
@@ -59,14 +56,18 @@ struct
             ( image, bins, nori, x, savgol, histogramSmoothSigma ))::a
         end )
       ( [] )
-      ( ListPair.zip( sizes, savgolFilters ) )
+      ( ListPair.zip( scale, savgolFilters ) )
 
-      val combined = ListPair.foldl
-        ( fn ( images, weight, a ) => 
+      val combined =  ListPair.foldl
+        ( fn ( images, weight, a ) =>
+          let
+            val _ = print( "Weight:" ^ ( Real.toString weight ) )
+          in
           ListPair.map ( fn ( image, a ) =>
             RealGrayscaleImage.add( a,
               RealGrayscaleImage.scale( image, weight ) ) )
-            ( images, a ) )
+            ( images, a )
+          end )
         ( List.tabulate
           ( nori, fn i => RealGrayscaleImage.zeroImage( height, width ) ) )
         ( responses, weights )
@@ -125,9 +126,11 @@ struct
     val _ = FilterUtil.applyGammaCorrectionRealRGB( extended, 2.5 )
     val cie = ImageConvert.realRGBToCIELab extended
     val _ = ImageUtil.normalizeCIELab' cie
+    val lChannelImage = ImageUtil.getLChannel cie
     val aChannelImage = ImageUtil.getAChannel cie
     val bChannelImage = ImageUtil.getBChannel cie
-    val lChannelImage = ImageUtil.getLChannel cie
+    val _ = RealPGM.write(lChannelImage, "lChannel.pgm")
+
     val textonImage = Texton.generateTextons
       ( gray, 
         textonNoriConfig, 
@@ -144,9 +147,9 @@ struct
     fun intMultiscaleChan( config, channel ) =
        multiscaleChannel( config, height, width, channel, gradInt )
 
+    val ( lMult, lComb ) = realMultiscaleChan( channelLConfig, lChannelImage )
     val ( aMult, aComb ) = realMultiscaleChan( channelAConfig, aChannelImage )
     val ( bMult, bComb ) = realMultiscaleChan( channelBConfig, bChannelImage )
-    val ( lMult, lComb ) = realMultiscaleChan( channelLConfig, lChannelImage )
     val ( tMult, tComb ) = intMultiscaleChan( channelTConfig, textonImage )
 
     val trimFun = RealGrayscaleImage.trim borderConfig
@@ -154,7 +157,6 @@ struct
     fun trimChannelImage( channel : RealGrayscaleImage.image list list )
       : RealGrayscaleImage.image list list =
       List.map (fn s => List.map trimFun s ) channel
-
 
     val combined = List.map
       ( fn ( a, ( b, ( l, t ) ) ) => 

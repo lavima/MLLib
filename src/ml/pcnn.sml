@@ -112,10 +112,11 @@ struct
         calculateDistanceLists( height, width, neighbourhoodSize )
       val temp = Array2.array( height, width, 0.0 )
 
-      fun sum ( neighbours : ( bool * real ) list, weightFun : real -> real )
+      fun sum ( stim : real, neighbours : ( bool * real ) list, weightFun : real -> real )
         : real =
         List.foldl 
-          ( fn ( ( act, d ), a ) => if act then ( weightFun d )+a else a )
+          ( fn ( ( act, d ), a ) => if act then ( weightFun d )+a 
+                                    else stim+a )
           ( 0.0 )
           ( neighbours )
 
@@ -138,7 +139,7 @@ struct
           val tVal = Array2.sub( t, i, j )
 
           val newL = linkDecay*lVal+linkNormalization*
-                       ( sum( neighbourActivations, linkWeightFun ) )
+                       ( sum(fVal, neighbourActivations, linkWeightFun ) )
 
           val u = fVal*( 1.0+beta*newL )
           val newY = tVal<u
@@ -169,9 +170,9 @@ struct
 
         val sVal = Array2.sub( stimulation, i, j )   
         val newF = feedingDecay*fVal+feedingNormalization*
-                   ( sum( neighbourActivations, feedingWeightFun ) ) + sVal
+                   ( sum(sVal, neighbourActivations, feedingWeightFun ) ) + sVal
       in
-        newF
+        sVal
       end
 
       val _ = Array2.modifyi Array2.RowMajor updateFeeding 

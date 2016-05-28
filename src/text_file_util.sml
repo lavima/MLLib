@@ -30,7 +30,31 @@ struct
     val xs = read()
 
     val _ = TextIO.closeIn input
+  in
+    xs
+  end
 
+  fun readDSV' ( isDelim : char -> bool ) 
+              ( fromString : string -> 'a ) 
+              ( filename : string )
+      : 'a list list =
+  let
+
+    val input = TextIO.openIn filename
+
+    fun read() : 'a list list = 
+      case TextIO.inputLine input of 
+        NONE => []
+      | SOME line => 
+        let
+          val xs = String.tokens isDelim line
+        in
+          ( List.map fromString xs ) :: read()
+        end
+
+    val xs = read()
+
+    val _ = TextIO.closeIn input
   in
     xs
   end

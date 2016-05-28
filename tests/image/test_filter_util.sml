@@ -10,6 +10,24 @@ val _ = print"\n\n********** FilterUtil tests **********\n"
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="FilterUtil", what="createGaussianMaskgPb",
+    genInput= fn() => [ ( 0, ( 2.5, 8 ) ) ] ,
+    f= fn[ i1 ] => [ FilterUtil.createGaussianMaskgPb ( #1 i1 ) ( #2 i1 ) ] ,
+    evaluate= fn[ o1 ] => 
+    let 
+      val expected = RealGrayscaleImage.fromList [ [ 0.000954227,0.00316815,0.00896337,0.0216098,0.0443959,0.0777226,0.115949,0.147399,0.159676,0.147399,0.115949,0.0777226,0.0443959,0.0216098,0.00896337,0.00316815,0.000954227] ]
+    in
+      [ ImageUtil.approxCompareGrayscaleReal( o1, expected, 5 ) ]
+    end ,
+    inputToString= 
+      fn( ord, ( s, t ) ) =>
+        "( " ^ 
+        Int.toString ord ^
+        "( " ^ Real.toString s ^ ", " ^ Int.toString t ^ " )" ^
+        " )" }
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="FilterUtil", what="createGaussianMaskgPb",
     genInput= fn() => [ ( 0, ( 3.0, 9 ) ) ] ,
     f= fn[ i1 ] => [ FilterUtil.createGaussianMaskgPb ( #1 i1 ) ( #2 i1 ) ] ,
     evaluate= fn[ o1 ] => [ true ] ,

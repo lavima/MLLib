@@ -36,8 +36,8 @@ struct
        maxGenerations : int,
        crossoverFactor : real,
        min : real vector,
-       max : real vector ) 
-       ( rand : Random.rand ) 
+       max : real vector )
+       ( rand : Random.rand )
      : individual = 
    let
      val population = List.tabulate( populationSize, 

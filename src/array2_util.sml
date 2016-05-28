@@ -11,6 +11,10 @@ struct
   
   type 'a array = 'a Array2.array
 
+  fun toFlatList ( xs : 'a array ) : 'a list =
+    List.rev(Array2.fold Array2.RowMajor
+      ( fn (x, a) => x::a ) [] xs )
+
   fun toString ( tos : 'a -> string )
                ( xs : 'a array ) 
       : string =

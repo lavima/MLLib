@@ -98,6 +98,15 @@ struct
       RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor 
         ( fn( _, x, _ ) => elemFunction( real( x-support ) ) ) 
         ( RealGrayscaleImage.full mask )
+
+     val _ = 
+      if derivitive > 0 then
+        ImageUtil.makeRealZeroMean' mask
+      else 
+        ()
+
+    val _ = ImageUtil.makeRealL1Norm' mask
+    
   in
      mask
   end

@@ -163,6 +163,27 @@ struct
       [] => []
     | xs::xss' => ( List.map f xs ) @ ( flatMap f xss' )
 
+  fun nestMap ( f : 'a -> 'b ) ( columns : int, xs : 'a list ) : 'b list list =
+  let
+    fun buildRow( 0, rest : 'a list ) = ( [], rest )
+      | buildRow( remainingColumns : int, elem::rest : 'a list ) = 
+    let
+      val ( row, remainingData ) = buildRow( remainingColumns-1, rest )
+    in
+      ( ( f elem )::row, remainingData )
+    end
+
+    fun buildRows( [] : 'a list ) = []
+      | buildRows( data : 'a list ) =
+    let
+      val ( row, remaining ) = buildRow( columns, data )
+    in
+      row::( buildRows remaining ) 
+    end
+  in
+    buildRows xs
+  end
+
   fun toString ( tos : 'a -> string )
                ( xs : 'a list ) 
       : string =

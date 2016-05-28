@@ -58,3 +58,19 @@ val _ =
       Real.toString x ^ ", " ^ 
       Real.toString y ^ 
       " )" }
+
+val _ = 
+  SimpleTest.test' ( CommandLine.arguments() ) {
+    group="ListUtil", what="Testing ListUtil.nestMap",
+    genInput = fn() => [ [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] ] ,
+    f = fn[ i1 ] => [ ListUtil.nestMap ( fn x=>x ) ( 3, i1 ) ] ,
+    evaluate = 
+      fn[ o1 : int list list ] =>
+        [ ( ListUtil.equal
+            ( ListUtil.equal ( fn ( x : int, y : int ) => x=y ) ) )
+          ( o1, [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ] ] ) ] ,
+    inputToString = fn( x : int list ) => "" 
+(*      "( " ^ 
+      Real.toString x ^ ", " ^ 
+      Real.toString y ^ 
+      " )"*) }

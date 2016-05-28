@@ -4,6 +4,8 @@ $(SML_LIB)/basis/mlton.mlb
 ../mllib_image.mlb
 ../mllib_ml.mlb
 ../mllib_image_io.mlb
+../mllib_gpb.mlb
+
 test_util.sml
 test_list_util.sml
 test_optimize.sml
@@ -31,9 +33,11 @@ image/test_image_convert.sml
 image/test_threshold.sml
 image/test_canny.sml
 image/test_filter_util.sml
-image/test_gradient.sml
-image/test_texton.sml
-image/test_multiscale_cue.sml
+
+image/gPb/test_gradient.sml
+image/gPb/test_gradient_disk.sml
+image/gPb/test_texton.sml
+image/gPb/test_multiscale_cue.sml
 
 ml/test_differential_evolution.sml
 ml/test_k_means.sml

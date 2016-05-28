@@ -23,17 +23,19 @@ struct
     t1*t2*y2
 
   fun chiSquared( histogram1 : real array, histogram2 : real array ) =
-  let
-     fun element( t, b ) = 
-       if (t+b<0.00001) then 0.0
-       else ( Math.pow(t-b, 2.0))/(t+b)
-        
+  let         
      val sum = Array.foldli
-       ( fn ( i, x, a ) => element( x, Array.sub( histogram2, i ) ) + a )
+       ( fn ( i, h1, a ) =>
+         let
+           val h2 = Array.sub( histogram2, i ) 
+         in
+           if Real.==(h1+h2, 0.0) then 0.0
+           else ( Math.pow(h1-h2, 2.0))/(h1+h2)
+         end +a )
        ( 0.0 )
        histogram1
   in
-    0.5*sum
+    sum/2.0
   end
 
 
