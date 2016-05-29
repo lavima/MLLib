@@ -119,13 +119,30 @@ val _ =
     group="RealGrayscaleImage", what="border",
     genInput= 
       fn() =>
-        [ ( Option.valOf( RealPGM.read("test2.pgm") ),
-            ( RealGrayscaleImage.MirrorExtension, 100 ) ) ] ,
+        [ ( RealGrayscaleImage.fromList[ 
+            [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
+            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
+            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
+            [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
+            [ 21.0, 22.0, 23.0, 24.0, 25.0 ] ],
+            ( RealGrayscaleImage.MirrorExtension, 1 ) ) ] ,
     f= fn[ i1 ] => [ RealGrayscaleImage.border ( #2 i1 ) ( #1 i1 ) ] ,
     evaluate=
       fn[ o1 ] => 
-        [ RealGrayscaleImage.nRows o1 = 482 andalso 
-          RealGrayscaleImage.nCols o1 = 322 ] ,
+      let
+        val expected = 
+          RealGrayscaleImage.fromList
+           [ [  7.0,  6.0,  7.0,  8.0,  9.0, 10.0,  9.0 ],
+             [  2.0,  1.0,  2.0,  3.0,  4.0,  5.0,  4.0 ],
+             [  7.0,  6.0,  7.0,  8.0,  9.0, 10.0,  9.0 ],
+             [ 12.0, 11.0, 12.0, 13.0, 14.0, 15.0, 14.0 ],
+             [ 17.0, 16.0, 17.0, 18.0, 19.0, 20.0, 19.0 ],
+             [ 22.0, 21.0, 22.0, 23.0, 24.0, 25.0, 24.0 ],
+             [ 17.0, 16.0, 17.0, 18.0, 19.0, 20.0, 19.0 ] ]
+        val _ = print( RealGrayscaleImage.toString o1 )
+      in 
+        [ RealGrayscaleImage.equal( o1, expected ) ]
+      end ,
     inputToString=
       fn( i, ( e, n ) ) =>
         "( " ^

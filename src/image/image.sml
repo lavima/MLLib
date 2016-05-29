@@ -373,7 +373,7 @@ struct
         else if v<0 then 
           ~( v mod ~max )
         else
-          max-( ( v mod max )+1 )
+          max-( ( v mod max ) )
 
       val value =
         case extension of 
@@ -384,7 +384,8 @@ struct
               zeroPixel
         | CopyExtension => sub( im, copy( y, height ), copy( x, width ) )
         | WrapExtension => sub( im, wrap( y, height ), wrap( x, width ) ) 
-        | MirrorExtension => sub( im, mirror( y, height ), mirror( x, width ) )
+        | MirrorExtension => 
+          sub( im, mirror( y, height-1 ), mirror( x, width-1 ) )
       
     in
       value

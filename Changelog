@@ -1,3 +1,6 @@
+2016-05-29	Marius Geitle <marius.geitle@hiof.no>
+	* Propper test of border extension
+
 2016-05-28	Marius Geitle <marius.geitle@hiof.no>
 	* Added some tests
 	* Reorganized code
