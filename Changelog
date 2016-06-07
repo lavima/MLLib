@@ -1,6 +1,7 @@
 2016-06-06	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added list of segmentations functionality to FMeasureBerkeley. This required
 		some refactoring.
+	* Added two structures Edge and Segmentation.
 
 2016-05-29	Marius Geitle <marius.geitle@hiof.no>
 	* Propper test of border extension
