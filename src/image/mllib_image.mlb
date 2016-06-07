@@ -20,6 +20,8 @@ image_convert.sml
 filter_util.sml
 morphology.sml
 canny.sml
+edge.sml
+segment.sml
 score.sml
 ann
   "allowFFI true"

@@ -166,117 +166,9 @@ struct
   fun evaluateSegmentation( im : segMap,
                             truths : truth list )
       : score =
-  let 
-    val ( height, width ) = IntGrayscaleImage.dimensions im
+    evaluateEdge( Segment.toEdgeMap im, truths )
 
-    val bdry = BooleanImage.zeroImage( height*2+1, width*2+1 )
-    val ( bdryHeight, bdryWidth ) = BooleanImage.dimensions bdry
-
-    val edgelsV = BooleanImage.zeroImage( height, width )
-    val edgelsH = BooleanImage.zeroImage( height, width )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn x => 
-            Util.loopFromToInt 
-              ( fn y => 
-                  BooleanImage.update( 
-                    edgelsH, 
-                    y, x, 
-                    not( 
-                      IntGrayscaleImage.sub( im, y, x )
-                      =
-                      IntGrayscaleImage.sub( im, y, x+1 ) ) ) )
-              ( 0, height-1, 1 ) )
-        ( 0, width-2, 1 )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn y => 
-            Util.loopFromToInt 
-              ( fn x => 
-                  BooleanImage.update( 
-                    edgelsV, 
-                    y, x, 
-                    not( 
-                      IntGrayscaleImage.sub( im, y, x )
-                      =
-                      IntGrayscaleImage.sub( im, y+1, x ) ) ) )
-              ( 0, width-1, 1 ) )
-        ( 0, height-2, 1 )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn x => 
-            Util.loopFromToInt 
-              ( fn y => (
-                  BooleanImage.update( 
-                    bdry, 
-                    y, x+1, 
-                    BooleanImage.sub( edgelsH, y div 2, x div 2 ) );
-                  BooleanImage.update( 
-                    bdry, 
-                    y+1, x,  
-                    BooleanImage.sub( edgelsV, y div 2, x div 2 ) );
-                  if x<bdryWidth-2 andalso y<bdryHeight-2 then
-                    BooleanImage.update( 
-                      bdry, 
-                      y+1, x+1, 
-                      BooleanImage.sub( edgelsH, y div 2, x div 2 ) 
-                      orelse
-                      BooleanImage.sub( edgelsH, ( y div 2 )+1, x div 2 ) 
-                      orelse
-                      BooleanImage.sub( edgelsV, y div 2, x div 2 ) 
-                      orelse
-                      BooleanImage.sub( edgelsV, y div 2, ( x div 2 )+1 ) )
-                  else
-                    () ) )
-              ( 1, bdryHeight-2, 2 ) )
-        ( 1, bdryWidth-2, 2 )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn x => (
-            BooleanImage.update( 
-              bdry, 
-              0, x, 
-              BooleanImage.sub( bdry, 1, x ) ); 
-            BooleanImage.update( 
-              bdry, 
-              bdryHeight-1, x, 
-              BooleanImage.sub( bdry, bdryHeight-2, x ) ) ) )
-        ( 0, bdryWidth-1, 1 )
-
-    val _ = 
-      Util.loopFromToInt
-        ( fn y => (
-            BooleanImage.update( 
-              bdry, 
-              y, 0, 
-              BooleanImage.sub( bdry, y, 1 ) ); 
-            BooleanImage.update( 
-              bdry, 
-              y, bdryWidth-1, 
-              BooleanImage.sub( bdry, y, bdryWidth-2 ) ) ) )
-        ( 0, bdryHeight-1, 1 )
-
-    val out = BooleanImage.zeroImage( height, width )
-    val _ = 
-      Util.loopFromToInt
-        ( fn x => 
-            Util.loopFromToInt 
-              ( fn y => 
-                  BooleanImage.update( 
-                    out, 
-                    ( y-1 ) div 2, ( x-1 ) div 2, 
-                    BooleanImage.sub( bdry, y, x ) ) )
-              ( 2, bdryHeight-1, 2 ) )
-        ( 2, bdryWidth-1, 2 )
-  in
-    evaluateEdge( out, truths )
-  end
-
-  fun evaluateList( evalList : ( edgeMap * truth list ) list ) : score =
+  fun evaluateEdgeList( evalList : ( edgeMap * truth list ) list ) : score =
   let
     fun eval( evalList : ( edgeMap * truth list ) list, accum : score ) : score =
       case evalList of
@@ -293,7 +185,14 @@ struct
     ( cp, sp, cr, sr, p, r, f )
   end
 
-  fun evaluateListAvg( evalList : ( edgeMap * truth list ) list ) : score =
+  fun evaluateSegmentationList( evalList : ( segMap * truth list ) list ) 
+      : score =
+    evaluateEdgeList( 
+      List.map 
+        ( fn( seg, truths ) => ( Segment.toEdgeMap seg, truths ) )
+        evalList )
+
+  fun evaluateEdgeListAvg( evalList : ( edgeMap * truth list ) list ) : score =
   let
     fun eval( evalList : ( edgeMap * truth list ) list, accum : score ) : score =
       case evalList of
@@ -311,176 +210,14 @@ struct
     score
   end
 
-end (* structure FMeasureBerkeley *)
-
-(* 
-* Incomplete SML implementation of the Berkeley edge evaluator 
-*)
-(*
-structure FMeasureEdge : SCORE = 
-struct
-
-  open FMeasureCommon
-  
-  type image = BooleanImage.image
-  type truth = BooleanImage.image
-
-  val defaultMaxDist = 0.0075
-  val defaultOutlierCost = 100.0;
-
-  fun evaluate( image as { width, height, values } : image, 
-                truths : truth list ) 
+  fun evaluateSegmentationListAvg( evalList : ( segMap * truth list ) list ) 
       : score =
-  let
-    val [ truth as { values=TruthPixels, ... } ] = truths
-    val diagonal = Math.sqrt( real width*real width + real height*real height )
-    val MaxDistance = defaultMaxDist*diagonal
-    val Degree = 6
-    val outlierCost = defaultOutlierCost*MaxDistance
-    val Multiplier = 100.0
+    evaluateEdgeListAvg( 
+      List.map 
+        ( fn( seg, truths ) => ( Segment.toEdgeMap seg, truths ) )
+        evalList )
 
-
-    val M1 = Array2D.array( width, height, 0.0 )
-    val M2 = Array2D.array( width, height, 0.0 )
-
-    val match1 = Array2D.array( width, height, ( ~1, ~1 ) )
-    val match2 = Array2D.array( width, height, ( ~1, ~1 ) )
-
-    val r = Real.ceil defaultMaxDist
-
-    val Matchable1 = Array2D.array( width, height, false )
-    val matchable2 = Array2D.array( width, height, false )
-
-    val MaxDistance2 = MaxDistance*MaxDistance
-
-    val RToR = fromToInt( ~r, r )
-    val _ = 
-      BooleanImage.appxy
-        ( fn( X1, Y1, Edge ) =>
-            if Edge then
-              List.app
-                ( fn v => 
-                    List.app
-                      ( fn U => 
-                        let
-                          val D2 = real( U*U+v*v )
-                          val X2 = X1+U
-                          val Y2 = Y1+v
-                        in
-                          if ( D2>MaxDistance2 ) orelse
-                             ( X2<0 orelse X2>=width ) orelse
-                             ( Y2<0 orelse Y2>=height ) orelse
-                             not ( BooleanImage.sub( truth, X2, Y2 ) ) then
-                            ()
-                          else (
-                            Array2D.update( Matchable1, Y1, X1, true );
-                            Array2D.update( matchable2, Y2, X2, true ) )
-                        end )
-                      RToR )
-                RToR
-            else
-              () )
-        image
-
-    val pixToNode1 = Array2D.array( width, height, ~1 )
-    val pixToNode2 = Array2D.array( width, height, ~1 )
-    val ( NumNodes1, NumNodes2, RevNodeToPix1, RevNodeToPix2 ) =
-      BooleanImage.foldlxy
-        ( fn( x, y, _, ( Num1, Num2, Rev1, Rev2 ) ) => 
-          let
-            val ( Num1', Rev1' ) =
-              if Array2D.sub( Matchable1, y, x ) then (
-                Array2D.update( pixToNode1, y, x, Num1 );
-                ( Num1+1, ( x, y )::Rev1 ) )
-              else
-                ( Num1, Rev1 )
-
-            val ( Num2', Rev2' ) =
-              if Array2D.sub( matchable2, y, x ) then (
-                Array2D.update( pixToNode2, y, x, Num2 );
-                ( Num2+1, ( x, y )::Rev2 ) )
-              else
-                ( Num2, Rev2 )
-          in
-            ( Num1', Num2', Rev1', Rev2' )
-          end )
-        ( 0, 0, [], [] )
-        image
-
-    val NodeToPix1 = Array.fromList( List.rev RevNodeToPix1 )
-    val NodeToPix2 = Array.fromList( List.rev RevNodeToPix2 )
-
-    val Edges = Array.fromList(
-      BooleanImage.foldrxy
-        ( fn( X1, Y1, Matchable, Edges ) =>
-            if Matchable then
-              List.foldr
-                ( fn( v, Edges ) => 
-                    List.foldr
-                      ( fn( U, Edges ) => 
-                        let
-                          val D2 = real( U*U+v*v )
-                          val X2 = X1+U
-                          val Y2 = Y1+v
-                        in
-                          if ( D2>MaxDistance2 ) orelse
-                             ( X2<0 orelse X2>=width ) orelse
-                             ( Y2<0 orelse Y2>=height ) orelse
-                             not ( Array2D.sub( matchable2, Y2, X2 ) ) then
-                            Edges 
-                          else (
-                            Array2D.sub( pixToNode1, Y1, X1 ),
-                            Array2D.sub( pixToNode2, Y2, X2 ),
-                            Math.sqrt D2 ) :: Edges
-                        end )
-                        Edges
-                      RToR )
-                Edges 
-                RToR
-            else
-              Edges )
-        []
-        image )
-
-    val N = NumNodes1 + NumNodes2
-    val NMin = minInt [ NumNodes1, NumNodes2 ]
-    val NMax = maxInt [ NumNodes1, NumNodes2 ]
-    
-    val D1 = maxInt [ 0, minInt [ Degree, NumNodes1-1 ] ]
-    val D2 = maxInt [ 0, minInt [ Degree, NumNodes2-1 ] ]
-    val D3 = minInt [ Degree, NumNodes1, NumNodes2 ]
-    val DMax = maxInt [ D1, D2, D3 ]
-
-    val m = Array.length Edges + D1*NumNodes1 + D2*NumNodes2 + D3*NMax + N
-  in
-    if m=0 then
-      ( 0.0, 0.0, 0.0 )
-    else
-      let
-        val OW = Real.ceil( outlierCost*Multiplier )
-        val Outliers = Array.array( DMax, 0 )
-        val IGraph = Array2D.array( m, 3, 0 )
-        val count = ref 0
-        val inc = 
-          fn count => count := ( !count )+1
-
-        val _ = List.app
-          ( fn( I, J, W ) => ( 
-              Array2D.update( IGraph, !count, 0, I );
-              Array2D.update( IGraph, !count, 1, J );
-              Array2D.update( IGraph, !count, 2, 
-                Real.toInt IEEEReal.TO_NEAREST W );
-              inc count
-              ) )
-            
-      in
-        ( 0.0, 0.0, 0.0 )  
-      end
-
-  end 
-
-end (* structure FMeasureEdge *)
-*)
+end (* structure FMeasureBerkeley *)
 
 
 (*

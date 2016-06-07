@@ -12,8 +12,10 @@ sig
   
   val evaluateSegmentation : segMap * truth list -> score
   val evaluateEdge : edgeMap * truth list -> score
-  val evaluateList : ( edgeMap * truth list ) list -> score
-  val evaluateListAvg : ( edgeMap * truth list ) list -> score
+  val evaluateSegmentationList : ( segMap * truth list ) list -> score
+  val evaluateEdgeList : ( edgeMap * truth list ) list -> score
+  val evaluateSegmentationListAvg : ( segMap * truth list ) list -> score
+  val evaluateEdgeListAvg : ( edgeMap * truth list ) list -> score
 
   val toString : score -> string
 
