@@ -1,3 +1,6 @@
+2016-08-11	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Started adding ADATE improved Canny implementation.
+
 2016-06-06	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added list of segmentations functionality to FMeasureBerkeley. This required
 		some refactoring.

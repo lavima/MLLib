@@ -251,6 +251,26 @@ struct
     out
   end
 
+  fun gradientADATEX( im : RealGrayscaleImage.image )
+      : RealGrayscaleImage.image =
+  let
+
+    val sub = RealGrayscaleImage.sub
+    val ( height, width ) = RealGrayscaleImage.dimensions im
+
+    val out = RealGrayscaleImage.zeroImage( height, width )
+    val _ = 
+      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
+        ( fn( y, x, _ ) => 
+            if x=0 orelse x=width-1 then
+              Math.tanh( sub( im, y, x ) )
+            else
+              ( sub( im, y, x+1 )-Math.tanh( sub( im, y, x ) ) )/2.0 )
+        ( RealGrayscaleImage.full out )
+  in
+    out
+  end
+
   fun packBooleanIntoWord8( images : BooleanImage.image list )
     : Word8GrayscaleImage.image * Word.word =
   let 

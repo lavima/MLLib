@@ -28,8 +28,8 @@ struct
   * This function has been implemented according to how a gaussian filter mask 
   * is created in the Canny implementation in Matlab.
   *
-  * Note that the mask is one-dimensional in that the height of the mask is 1 
-  * i.e. the mask must be applied in each direction.
+  * Note that the mask is one-dimensional; the height of the returned filter 
+  * mask is 1.
   *)
   fun createGaussianMask( sigma : real ) : RealGrayscaleImage.image =
   let
@@ -68,6 +68,47 @@ struct
   in
     mask
   end
+
+  fun createADATEMask( sigma : real ) : RealGrayscaleImage.image = 
+  let
+    val l = 10.01*Real.realCeil sigma 
+    val n = ( l-1.0 )/2.0
+    val xs = ListUtil.fromToReal( ~n, n )
+
+    val mask = RealGrayscaleImage.zeroImage( 1, List.length xs )
+
+    val c = 1.0/( Math.sqrt( 2.0*Math.pi )*sigma )
+
+    fun gaussian( x : real ) : real = 
+      c *
+      Math.exp( 
+        ~( ( x*x )/( ( ( x/Math.tanh x )*sigma )+( ( sigma*sigma )-sigma ) ) ) ) 
+
+    val _ = 
+      List.foldl
+        ( fn( x, i ) =>
+          let
+            val _ = RealGrayscaleImage.update( mask, 0, i, gaussian x ) 
+          in
+            i+1
+          end )
+        0
+        xs
+
+    val sum = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        ( fn( x, s ) => s+x ) 
+        0.0 
+        mask
+    val _ = 
+      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
+        ( fn x => x/sum ) 
+        mask
+
+  in
+    mask
+  end
+
 
   (*
    * Create a one dimensional gaussian mask of the required 
@@ -193,44 +234,6 @@ struct
     image
   end
 
-
-  (* 
-  * Create a two dimensional gaussian mask based on the specified standard 
-  * deviation.
-  * The mask equals in height and width which is always odd in number.
-  *
-  * TODO Figure out if the Matlab approach taken in the one-dimensional 
-  * implementation above should be replicated here.
-  *)
-  fun createGaussianMask2( sigma : real ) : RealGrayscaleImage.image =
-  let
-    val maskSize = Real.ceil( sigma*8.0 )+( Real.ceil( sigma*8.0 )+1 ) mod 2
-    val maskCenter = maskSize div 2
-    val mask = RealGrayscaleImage.zeroImage( maskSize, maskSize )
-
-    fun gaussian( x : int, y : int ) : real = 
-      Math.exp( ~0.5*( ( 
-        Math.pow( Real.fromInt x, 2.0 ) + Math.pow( Real.fromInt y, 2.0 ) ) / 
-        Math.pow( sigma, 2.0 ) ) ) 
-
-    val _ = 
-      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
-        ( fn( i, j, _ ) => gaussian( j, i ) )
-        ( RealGrayscaleImage.full mask )
-
-    val sum = 
-      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor
-        ( fn( x, s ) => s+x ) 
-        0.0 
-        mask
-
-    val _ = 
-      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
-        ( fn( x ) => x/sum ) 
-        mask
-  in
-    mask
-  end
 
   (* Savitzky-Golay implementation that handles borders 
    * better than using a convolving filter, but the borders
