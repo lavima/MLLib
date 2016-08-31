@@ -69,46 +69,6 @@ struct
     mask
   end
 
-  fun createADATEMask( sigma : real ) : RealGrayscaleImage.image = 
-  let
-    val l = 10.01*Real.realCeil sigma 
-    val n = ( l-1.0 )/2.0
-    val xs = ListUtil.fromToReal( ~n, n )
-
-    val mask = RealGrayscaleImage.zeroImage( 1, List.length xs )
-
-    val c = 1.0/( Math.sqrt( 2.0*Math.pi )*sigma )
-
-    fun gaussian( x : real ) : real = 
-      c *
-      Math.exp( 
-        ~( ( x*x )/( ( ( x/Math.tanh x )*sigma )+( ( sigma*sigma )-sigma ) ) ) ) 
-
-    val _ = 
-      List.foldl
-        ( fn( x, i ) =>
-          let
-            val _ = RealGrayscaleImage.update( mask, 0, i, gaussian x ) 
-          in
-            i+1
-          end )
-        0
-        xs
-
-    val sum = 
-      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
-        ( fn( x, s ) => s+x ) 
-        0.0 
-        mask
-    val _ = 
-      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor 
-        ( fn x => x/sum ) 
-        mask
-
-  in
-    mask
-  end
-
 
   (*
    * Create a one dimensional gaussian mask of the required 
