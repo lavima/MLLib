@@ -162,6 +162,7 @@ struct
 
       val normalizedMagnitude = ImageUtil.normalizeReal magnitude
 
+      val improve = member( nonMaxSuppression, improvements )
       val max = RealGrayscaleImage.zeroImage( height, width )
       val _ = 
         RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
@@ -174,7 +175,10 @@ struct
               if ( dy<=0.0 andalso dx>( ~dy ) ) orelse 
                  ( dy>=0.0 andalso dx<( ~dy ) ) then
               let
-                val t = Real.abs( dy/dx )
+                val t = 
+                  case improve of 
+                    false => Real.abs( dy/dx )
+                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
                 val m1 = 
                   MathUtil.lerp( 
                     sub( normalizedMagnitude, y, capX( x+1 ) ),
@@ -187,14 +191,19 @@ struct
                     t )
               in
                 if m>=m1 andalso m>=m2 then
-                  m
+                  case improve of
+                    false => m
+                  | true => Real.abs( m/Math.tanh( m/dx ) )
                 else
                   0.0
               end 
               else if ( dx>0.0 andalso ~dy>=dx ) orelse 
                       ( dx<0.0 andalso ~dy<=dx ) then 
               let
-                val t = Real.abs( dx/dy )
+                val t = 
+                  case improve of 
+                    false => Real.abs( dx/dy )
+                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
                 val m1 = 
                   MathUtil.lerp( 
                     sub( normalizedMagnitude, capY( y-1 ), x ),
@@ -207,14 +216,19 @@ struct
                     t )
               in
                 if m>=m1 andalso m>=m2 then
-                  m
+                  case improve of
+                    false => m
+                  | true => Real.abs( m/Math.tanh( m/dy ) )
                 else
                   0.0
               end 
               else if ( dx<=0.0 andalso dx>dy ) orelse 
                       ( dx>=0.0 andalso dx<dy ) then 
               let
-                val t = Real.abs( dx/dy )
+                val t =
+                  case improve of 
+                    false => Real.abs( dx/dy )
+                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
                 val m1 = 
                   MathUtil.lerp( 
                     sub( normalizedMagnitude, capY( y-1 ), x ),
@@ -227,13 +241,18 @@ struct
                     t )
               in
                 if m>=m1 andalso m>=m2 then
-                  m
+                  case improve of
+                    false => m
+                  | true => Real.abs( m/Math.tanh( m/dy ) )
                 else
                   0.0
               end 
               else 
               let
-                val t = Real.abs( dy/dx )
+                val t = 
+                  case improve of 
+                    false => Real.abs( dy/dx )
+                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
                 val m1 = 
                   MathUtil.lerp( 
                     sub( normalizedMagnitude, y, capX( x-1 ) ),
@@ -246,7 +265,9 @@ struct
                     t )
               in
                 if m>=m1 andalso m>=m2 then
-                  m
+                  case improve of
+                    false => m
+                  | true => Real.abs( m/Math.tanh( m/dx ) )
                 else
                   0.0
               end 
