@@ -41,7 +41,7 @@ struct
       
     fun createGaussianMask( sigma : real ) : RealGrayscaleImage.image = 
     let
-      val l = 10.01*Real.realCeil sigma 
+      val l = Real.realRound( 10.01*Real.realCeil sigma )
       val n = ( l-1.0 )/2.0
       val xs = ListUtil.fromToReal( ~n, n )
 
@@ -90,8 +90,10 @@ struct
       val _ = 
         RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
           ( fn( y, x, _ ) => 
-              if x=0 orelse x=width-1 then
-                Math.tanh( sub( im, y, x ) )
+              if x=0 then 
+                Math.tanh( 0.0-sub( im, y, x ) )
+              else if x=width-1 then
+                Math.tanh( 0.0-sub( im, y, x-1 ) )
               else
                 ( sub( im, y, x+1 )-Math.tanh( sub( im, y, x ) ) )/2.0 )
           ( RealGrayscaleImage.full out )
@@ -249,10 +251,7 @@ struct
                   0.0
               end 
             end )
-          ( RealGrayscaleImage.region( 
-              max, 
-              1, 1, 
-              SOME( height-2 ), SOME( width-2 ) ) )
+          ( RealGrayscaleImage.full max )
 
       val ( high, low ) = 
         case options of 

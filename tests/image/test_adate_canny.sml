@@ -21,12 +21,9 @@ val _ =
     evaluate=
       fn[ o1 ] =>
       let
-
-        val _ = BooleanPBM.write( o1, "output/proper3.canny_mask.output.pbm" )
         val t1 = 
           Option.valOf( 
             BooleanPBM.read( "resources/proper3.canny_mask.truth.pbm" ) )
-
       in
         [ BooleanImage.equal( o1, t1 ) ]
       end ,

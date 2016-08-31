@@ -14,7 +14,8 @@ struct
   val zeroPixel = false 
 
   fun pixelAdd( x : bool, y : bool ) : bool = ( x orelse y )
-  fun pixelSub( x : bool, y : bool ) : bool = ( x andalso not y ) 
+  fun pixelSub( x : bool, y : bool ) : bool = 
+    ( ( x andalso not y ) orelse ( not x andalso y )  ) 
   fun pixelMul( x : bool, y : bool ) : bool = ( x andalso y )
   fun pixelScale( x : bool, y : real) : bool = x
   fun pixelEqual( x : pixel, y : pixel ) : bool = x=y
