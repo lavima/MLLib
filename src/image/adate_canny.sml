@@ -168,9 +168,12 @@ struct
         RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor
           ( fn( y, x, _ ) => 
             let
-              val dx = sub( gradX, y, x )
-              val dy = sub( gradY, y, x )
-              val m = sub( normalizedMagnitude, y, x )
+              fun sub'( im, y, x ) = 0.5*sub( im, y, x )
+              fun cvt x = 2.0*x
+
+              val dx = sub'( gradX, y, x )
+              val dy = sub'( gradY, y, x )
+              val m = sub'( normalizedMagnitude, y, x )
             in
               if ( dy<=0.0 andalso dx>( ~dy ) ) orelse 
                  ( dy>=0.0 andalso dx<( ~dy ) ) then
@@ -178,22 +181,22 @@ struct
                 val t = 
                   case improve of 
                     false => Real.abs( dy/dx )
-                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
+                  | true => sub'( normalizedMagnitude, y, capX( x-1 ) )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, y, capX( x+1 ) ),
-                    sub( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
+                    sub'( normalizedMagnitude, y, capX( x+1 ) ),
+                    sub'( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, y, capX( x-1 ) ),
-                    sub( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ), 
+                    sub'( normalizedMagnitude, y, capX( x-1 ) ),
+                    sub'( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ), 
                     t )
               in
                 if m>=m1 andalso m>=m2 then
                   case improve of
-                    false => m
-                  | true => Real.abs( m/Math.tanh( m/dx ) )
+                    false => cvt m
+                  | true => cvt( Real.abs( m/Math.tanh( m/dx ) ) )
                 else
                   0.0
               end 
@@ -203,22 +206,22 @@ struct
                 val t = 
                   case improve of 
                     false => Real.abs( dx/dy )
-                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
+                  | true => sub'( normalizedMagnitude, capY( y+1 ), x )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capY( y-1 ), x ),
-                    sub( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
+                    sub'( normalizedMagnitude, capY( y-1 ), x ),
+                    sub'( normalizedMagnitude, capY( y-1 ), capX( x+1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capY( y+1 ), x ),
-                    sub( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ),
+                    sub'( normalizedMagnitude, capY( y+1 ), x ),
+                    sub'( normalizedMagnitude, capY( y+1 ), capX( x-1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
                   case improve of
-                    false => m
-                  | true => Real.abs( m/Math.tanh( m/dy ) )
+                    false => cvt m
+                  | true => cvt( Real.abs( m/Math.tanh( m/dy ) ) )
                 else
                   0.0
               end 
@@ -228,22 +231,22 @@ struct
                 val t =
                   case improve of 
                     false => Real.abs( dx/dy )
-                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
+                  | true => sub'( normalizedMagnitude, capY( y+1 ), x )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capY( y-1 ), x ),
-                    sub( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
+                    sub'( normalizedMagnitude, capY( y-1 ), x ),
+                    sub'( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, capY( y+1 ), x ),
-                    sub( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
+                    sub'( normalizedMagnitude, capY( y+1 ), x ),
+                    sub'( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
                   case improve of
-                    false => m
-                  | true => Real.abs( m/Math.tanh( m/dy ) )
+                    false => cvt m
+                  | true => cvt( Real.abs( m/Math.tanh( m/dy ) ) )
                 else
                   0.0
               end 
@@ -252,22 +255,22 @@ struct
                 val t = 
                   case improve of 
                     false => Real.abs( dy/dx )
-                  | true => sub( normalizedMagnitude, y, capX( x-1 ) )
+                  | true => sub'( normalizedMagnitude, y, capX( x+1 ) )
                 val m1 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, y, capX( x-1 ) ),
-                    sub( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
+                    sub'( normalizedMagnitude, y, capX( x-1 ) ),
+                    sub'( normalizedMagnitude, capY( y-1 ), capX( x-1 ) ),
                     t )
                 val m2 = 
                   MathUtil.lerp( 
-                    sub( normalizedMagnitude, y, capX( x+1 ) ),
-                    sub( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
+                    sub'( normalizedMagnitude, y, capX( x+1 ) ),
+                    sub'( normalizedMagnitude, capY( y+1 ), capX( x+1 ) ),
                     t )
               in
                 if m>=m1 andalso m>=m2 then
                   case improve of
-                    false => m
-                  | true => Real.abs( m/Math.tanh( m/dx ) )
+                    false => cvt m
+                  | true => cvt( Real.abs( m/Math.tanh( m/dx ) ) )
                 else
                   0.0
               end 
