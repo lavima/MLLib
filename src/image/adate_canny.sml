@@ -300,10 +300,19 @@ struct
           end
 
       val edge = BooleanImage.zeroImage( height, width )
+      val edgeTemp = BooleanImage.zeroImage( height, width )
       val _ = 
         RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
           ( fn( y, x, m ) =>
             let
+
+              fun updateAndClear( e, et, us ) =
+                case us of
+                  [] => ()
+                | ( y, x )::us' => (                  
+                    BooleanImage.update( e, y, x, true );
+                    BooleanImage.update( et, y, x, false );
+                    updateAndClear( e, et, us' ) )
 
               fun check( x : int, y : int ) : bool =
                 if x=( capX x ) andalso y=( capY y ) then 
