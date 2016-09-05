@@ -7,9 +7,6 @@
 *)
 
 
-val _ = print"\n\n********** Util Tests **********\n"
-
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) { 
     group="Util", what="Testing Util.eq with reals",

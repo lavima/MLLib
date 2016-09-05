@@ -5,8 +5,6 @@
 * This file contains tests that validate the image utility functionality.
 *)
 
-val _ = print"\n\n********** ImageUtil tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="ImageUtil", what="Approximate real grayscale image comparison",

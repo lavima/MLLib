@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** Basic transformations tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) { 
     group="BasicTransformations", what="range to range",

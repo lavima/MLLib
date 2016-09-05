@@ -6,8 +6,6 @@
 * operations
 *)
 
-val _ = print"\n\n********** Grayscale math tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="GrayscaleMath", what="Maximum real value",

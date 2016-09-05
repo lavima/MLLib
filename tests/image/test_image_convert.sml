@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** Image conversion tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="ImageConvert", what="Convert real RGB image to grayscale",

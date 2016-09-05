@@ -5,8 +5,6 @@
 * This file contains tests that validate the PPM implementation.
 *)
 
-val _ = print"\n\n********** PPM Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealPPM", what="read",

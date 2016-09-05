@@ -6,8 +6,6 @@
 * structure.
 *)
 
-val _ = print"\n\n********** Testing KMeans **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="KMeans", what="cluster",

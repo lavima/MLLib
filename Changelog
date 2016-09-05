@@ -1,6 +1,11 @@
 2016-09-35	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* The ADATE improved Canny implementation is finished. See ADATECanny for 
 		details. 
+	* Removed ListUtil.equal 
+	* Added ArrayUtil.allEq
+	* Added ListSort and ArraySort to provide implementations for sorting 
+		algorithms for lists and arrays respectively.
+	* Fixed bug in ArrayUtil.toString
 
 2016-08-31	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Started adding ADATE improved Canny implementation.

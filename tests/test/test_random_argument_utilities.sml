@@ -5,9 +5,6 @@
 * This file contains code to test the random argument utilities
 *)
 
-
-val _ = print"\n\n********** Random argument utilities tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RandomArgumentUtilities", what="randomBSRImage",

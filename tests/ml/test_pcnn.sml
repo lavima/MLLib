@@ -5,8 +5,6 @@
 * This file validates the PCNN functionality.
 *)
 
-val _ = print "\n\n********** Testing PCNN **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="PCNN", what="Testing PCNN.fastLinkingIterate",

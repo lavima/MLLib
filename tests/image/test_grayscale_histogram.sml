@@ -6,8 +6,6 @@
 * implementation.
 *)
 
-val _ = print"\n\n********** GrayscaleHistogram Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealGrayscaleHistogram", what="histogram",

@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** Sum area table tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="IntSumAreaTable", what="Building sum area table with integers",

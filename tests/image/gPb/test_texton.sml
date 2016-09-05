@@ -5,8 +5,6 @@
 * This file contains tests for validating texton generation
 *)
 
-val _ = print"\n\n********** Texton tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Texton", what="createTextonFilters",

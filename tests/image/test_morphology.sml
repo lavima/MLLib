@@ -5,8 +5,6 @@
 * This file contains tests that validate the Morphology structure.
 *)
 
-val _ = print"\n\n********** Morphology Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Morphology", what="thin",

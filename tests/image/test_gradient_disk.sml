@@ -5,8 +5,6 @@
 * This file contains tests that validate the gradient using disks
 *)
 
-val _ = print"\n\n********** Gradient tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Gradient disk", what="buildOrientationSliceMap",

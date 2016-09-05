@@ -6,8 +6,6 @@
 * library.
 *)
 
-val _ = print"\n\n********** Threshold Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealGrayscaleThreshold", what="percentage",

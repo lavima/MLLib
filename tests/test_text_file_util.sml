@@ -5,8 +5,6 @@
 * This file contains tests that validate the TextFileUtil structure
 *)
 
-val _ = print"\n\n********** TextFileUtil Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="TextFileUtil", what="Testing TextFileUtil.writeDSV",

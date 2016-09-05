@@ -5,8 +5,6 @@
 * This file contains tests that validate the filter utilities
 *)
 
-val _ = print"\n\n********** FilterUtil tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="FilterUtil", what="createGaussianMaskgPb",

@@ -6,8 +6,6 @@
 * library.
 *)
 
-val _ = print"\n\n********** Canny Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Canny", what="findEdges",

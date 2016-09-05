@@ -6,8 +6,6 @@
 * library.
 *)
 
-val _ = print"\n\n********** ADATECanny Tests **********\n"
-
 val _ =
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="ADATECanny", what="findEdges'",

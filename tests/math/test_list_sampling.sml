@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** List sampling tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="ListSampling", what="Sample k items",

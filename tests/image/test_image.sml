@@ -16,8 +16,6 @@ val rgbreq = rgbeq Real.==
 val rgbweq = rgbeq ( fn( x : Word8.word, y : Word8.word ) => x=y ) 
 
 
-val _ = print"\n\n********** Image Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealGrayscaleImage", what="correlate",

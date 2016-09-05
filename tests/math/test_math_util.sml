@@ -5,8 +5,6 @@
 * This file contains tests that validate the MathUtil structure.
 *)
 
-val _ = print"\n\n********** MathUtil Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="MathUtil", what="Testing MathUtil.blerp",
@@ -23,7 +21,6 @@ val _ =
         Real.toString v ^ ", " ^ 
         Real.toString w ^ 
         " )" }
-
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {

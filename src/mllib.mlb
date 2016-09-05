@@ -1,8 +1,10 @@
 $(SML_LIB)/basis/basis.mlb
-array_util.sml
-array2_util.sml
 util.sml
+array_util.sml
+array_sort.sml
+array2_util.sml
 list_util.sml
+list_sort.sml
 vector_util.sml
 text_file_util.sml
 tictactimer.sml

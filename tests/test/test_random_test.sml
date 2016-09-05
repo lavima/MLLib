@@ -5,8 +5,6 @@
 * Some
 *)
 
-val _ = print"\n\n********** Random Tests tests **********\n"
-
 val _ = DifferentialTest.test' ( CommandLine.arguments() ) { 
   group = "RandomTest",
   what = "Test_sine_no_error",

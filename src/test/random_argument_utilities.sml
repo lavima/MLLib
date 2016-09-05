@@ -5,16 +5,17 @@
 * This file contains helper functions for generating random arguments.
 *)
 
-val randomArgSeed = Random.rand(746773, 882377)
 
 structure RandomArgumentUtilities =
 struct
-  fun randomInteger(low : int, high : int) =
-    Random.randRange (low, high) randomArgSeed
+  val rand = Random.rand(746773, 882377)
+
+  fun randomInteger( low : int, high : int ) =
+    Random.randRange ( low, high ) rand
 
   fun randomDecimal(low : real, high : real) =
   let 
-    val num = Random.randReal randomArgSeed
+    val num = Random.randReal rand
   in
     BasicTransformations.rangeToRange ((0.0,1.0), (low, high)) num
   end

@@ -5,9 +5,6 @@
 * This file contains tests for validating texton generation
 *)
 
-val _ = print"\n\n********** Multiscale cue tests **********\n"
-
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="MultiscaleCue", what="Generate multiscale cue response",

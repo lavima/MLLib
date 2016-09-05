@@ -5,8 +5,6 @@
 * This file contains tests that validate the PBM implementations.
 *)
 
-val _ = print"\n\n********** PBM Tests **********\n"
-
 val _ =
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="BooleanPBM", what="read",

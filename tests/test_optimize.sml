@@ -5,8 +5,6 @@
 * This file contains tests that validate the Optimize structure
 *)
 
-val _ = print"\n\n********** Optimize Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Optimize", what="Testing Optimize.brute",

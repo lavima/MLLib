@@ -5,8 +5,6 @@
 * This file validates the differential evolution implementation.
 *)
 
-val _ = print"\n\n********** Differential evolution tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="DifferentialEvolution", what="Optimize sphere function items",

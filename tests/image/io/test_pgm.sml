@@ -5,8 +5,6 @@
 * This file contains tests that validate the PGM implementations.
 *)
 
-val _ = print"\n\n********** PGM Tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Word8PGM", what="read",

@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** Complex number tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Complex", what="negative",

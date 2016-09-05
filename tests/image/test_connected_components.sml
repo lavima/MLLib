@@ -6,9 +6,6 @@
 * 
 *)
 
-val _ = print"\n\n********** ConnectedComponents Tests **********\n"
-
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="ConnectedComponents", what="labelComponents",

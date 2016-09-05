@@ -6,8 +6,6 @@
 *)
 
 
-val _ = print"\n\n********** signal utilities tests **********\n"
-
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="SignalUtil", what="dft",

@@ -57,20 +57,6 @@ struct
           rxs
 
   (*
-  * Determine whether two lists are identical. 
-  * Deprecated: Use ListPair.allEq instead.
-  *)
-  fun equal ( eq : 'a * 'a -> bool ) ( xs : 'a list, ys : 'a list ) : bool =
-  let
-    fun equal'( [], [] ) = true
-      | equal'( [], _ ) = false
-      | equal'( _, [] ) = false
-      | equal'( x::xs', y::ys' ) = eq( x, y ) andalso equal'( xs', ys' )
-  in
-    equal'( xs, ys )
-  end
-  
-  (*
   * Determine whether an item is part of a list or not.
   *)
   fun member( eq : 'a * 'a -> bool ) ( y : 'a, xs : 'a list ) : bool =
