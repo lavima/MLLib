@@ -374,55 +374,55 @@ struct
                       BooleanImage.update( edgeTemp, y, x, false );
                       updateAndClear(  us' ) )
 
-fun f( h, l, p, m ) =
-  let
-    fun follow( fp, us ) =
-      let
-        fun follow'( ps, us' ) =
-          case ps of
-            [] => us'
-          | p::ps' =>
-          case checkUpdate( edge, edgeTemp, p, l, us ) 
-            of ( u', us'' ) =>
-          case u' of
-            false => (
-              case nav( p, downLeft ) of
-                invalid => us
-              | valid _ => follow'( ps', us' )
-              )
-          | true => follow( p, follow'( ps, us'' ) )
-      in
-        follow'(
-          let
-            fun filter ns =
-              case ns of
-                [] => []
-              | n::ns' =>
-              case nav( fp, n ) of
-                invalid => []
-              | valid p => p::filter ns'
-          in
-            filter[
-              downRight, upRight, right, 
-              downLeft, down, upLeft, 
-              left, upLeft, up ]
-          end ,
-          follow'( [ p ], us ) )
-      end 
-  in
-    case h<m of
-      false => []
-    | true =>
-    case
-      checkUpdate(
-        edge,
-        edge,
-        p,
-        Math.tanh( h )*h,
-        f( l, m, p, h ) )  
-          of ( _, us ) => 
-        follow( p, us )
-  end
+                fun f( h, l, p, m ) =
+                let
+                  fun follow( fp, us ) =
+                    let
+                      fun follow'( ps, us' ) =
+                        case ps of
+                          [] => us'
+                        | p::ps' =>
+                        case checkUpdate( edge, edgeTemp, p, l, us ) 
+                          of ( u', us'' ) =>
+                        case u' of
+                          false => (
+                            case nav( p, downLeft ) of
+                              invalid => us
+                            | valid _ => follow'( ps', us' )
+                            )
+                        | true => follow( p, follow'( ps, us'' ) )
+                    in
+                      follow'(
+                        let
+                          fun filter ns =
+                            case ns of
+                              [] => []
+                            | n::ns' =>
+                            case nav( fp, n ) of
+                              invalid => []
+                            | valid p => p::filter ns'
+                        in
+                          filter[
+                            downRight, upRight, right, 
+                            downLeft, down, upLeft, 
+                            left, upLeft, up ]
+                        end ,
+                        follow'( [ p ], us ) )
+                    end 
+                in
+                  case h<m of
+                    false => []
+                  | true =>
+                  case
+                    checkUpdate(
+                      edge,
+                      edge,
+                      p,
+                      Math.tanh( h )*h,
+                      f( l, m, p, h ) )  
+                        of ( _, us ) => 
+                      follow( p, us )
+                end
               in
                 updateAndClear( f( high, low, pos( x, y ), m ) )
               end )
