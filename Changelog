@@ -1,3 +1,7 @@
+2016-09-35	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* The ADATE improved Canny implementation is finished. See ADATECanny for 
+		details. 
+
 2016-08-31	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Started adding ADATE improved Canny implementation.
 	* Fixed bug in BooleanImage.subtract. 

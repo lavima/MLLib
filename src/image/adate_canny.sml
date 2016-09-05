@@ -316,6 +316,14 @@ struct
       val improve = member( hysteresisThresholding, improvements )
       val _ = 
         if improve then
+        let
+          val high = high-0.5
+          val low = low-0.5
+          val _ = 
+            RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
+              ( fn m => m-0.5 ) 
+              max
+        in
           RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
             ( fn( y, x, m ) =>
               let
@@ -369,10 +377,10 @@ struct
                 fun updateAndClear( us ) =
                   case us of
                     [] => ()
-                  | pos( x, y )::us' => (                  
-                      BooleanImage.update( edge, y, x, true );
-                      BooleanImage.update( edgeTemp, y, x, false );
-                      updateAndClear(  us' ) )
+                  | p::us' => (                  
+                      eup( edge, p, true );
+                      eup( edgeTemp, p, false );
+                      updateAndClear us' )
 
                 fun f( h, l, p, m ) =
                 let
@@ -400,7 +408,7 @@ struct
                             | n::ns' =>
                             case nav( fp, n ) of
                               invalid => []
-                            | valid p => p::filter ns'
+                            | valid vp => vp::filter ns'
                         in
                           filter[
                             downRight, upRight, right, 
@@ -427,6 +435,7 @@ struct
                 updateAndClear( f( high, low, pos( x, y ), m ) )
               end )
           ( RealGrayscaleImage.full max )
+        end
         else
           RealGrayscaleImage.appi RealGrayscaleImage.RowMajor
             ( fn( y, x, m ) =>

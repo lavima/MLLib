@@ -39,9 +39,6 @@ val _ =
         val t3 = 
           Option.valOf( 
             BooleanPBM.read( "resources/proper3.canny_hysteresis.truth.pbm" ) )
-
-        val _ = 
-          BooleanPBM.write( BooleanImage.subtract( o3, t3 ), "output/proper3.canny_hysteresis.output.pbm" )
       in
         [ BooleanImage.equal( o1, t1 ),
           BooleanImage.equal( o2, t2 ),
