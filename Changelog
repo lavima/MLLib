@@ -1,4 +1,8 @@
-2016-09-35	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+2016-09-05	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Added disjoint set (union find) functionality in the DisjointSet structure.
+		Needs testing.
+
+2016-09-05	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* The ADATE improved Canny implementation is finished. See ADATECanny for 
 		details. 
 	* Removed ListUtil.equal 

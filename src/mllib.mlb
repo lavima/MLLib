@@ -1,4 +1,5 @@
 $(SML_LIB)/basis/basis.mlb
+disjoint_set.sml
 util.sml
 array_util.sml
 array_sort.sml
