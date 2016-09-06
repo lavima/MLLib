@@ -1,6 +1,8 @@
-2016-09-05	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+2016-09-06	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added disjoint set (union find) functionality in the DisjointSet structure.
 		Needs testing.
+	* Started implementing the graph-based image segmentation algorithm introduced
+		by Felzenszwalb & Huttenlocher in the FH structure.
 
 2016-09-05	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* The ADATE improved Canny implementation is finished. See ADATECanny for 

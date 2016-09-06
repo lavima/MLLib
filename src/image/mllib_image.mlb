@@ -21,6 +21,7 @@ filter_util.sml
 morphology.sml
 canny.sml
 adate_canny.sml
+fh.sml
 edge.sml
 segment.sml
 score.sml

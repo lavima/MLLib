@@ -5,6 +5,10 @@
 * This file contains a structure with different array sorting algorithms.
 *)
 
+(* 
+* TODO investigate whether this is needed, considering that an implementation 
+* exists in the SML/NJ library
+*)
 structure ArraySort =
 struct
 
