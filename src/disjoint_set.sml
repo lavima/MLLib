@@ -50,4 +50,11 @@ struct
     Array.sub( ds, find' i )
   end
 
+  fun update( ds : 'a set, i : int, x : 'a ) : unit =
+  let
+    val ( p, r, s, _ ) = find( ds, i )
+  in
+    Array.update( ds, p, ( p, r, s, x ) )
+  end
+
 end (* structure DisjointSet *)

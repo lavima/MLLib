@@ -29,7 +29,7 @@ struct
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
     fun diff( m : real, x : int, y : int ) : real = 
-      Real.abs( m-sub( im, y, x ) )
+      ( m-sub( im, y, x ) )
   in
     foldi 
       ( fn( y, x, m, edges ) =>
@@ -59,10 +59,31 @@ struct
   fun segment( im : image, sigma : real, c : real ) 
       : IntGrayscaleImage.image = 
   let
+    val ( height, width ) = RealGrayscaleImage.dimensions im
+
     val gaussian = FilterUtil.createGaussianMask sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
 
     val edges = sort( Array.fromList( build smooth ) )
+
+    val ds = DisjointSet.init( width*height, c )
+    val _ = 
+      Array.appi
+        ( fn( i, ( f, t, d ) ) =>
+          let
+            val ( i1, _, _, t1 ) = DisjointSet.find( ds, f ) 
+            val ( i2, _, _, t2 ) = DisjointSet.find( ds, t ) 
+          in
+            if not( i1=i2 ) then
+              if d<=t1 andalso d<=t2 then (
+                DisjointSet.union( ds, i1, i2 );
+                DisjointSet.update( ds, i1, d+c/1.0 ) ) 
+              else
+                ()
+            else
+              ()
+          end )
+        edges
   in
     IntGrayscaleImage.zeroImage( 0, 0 )   
   end
