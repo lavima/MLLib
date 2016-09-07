@@ -35,6 +35,7 @@ image/test_image_convert.sml
 image/test_threshold.sml
 image/test_canny.sml
 image/test_adate_canny.sml
+image/test_fh.sml
 image/test_filter_util.sml
 
 image/gPb/test_gradient.sml

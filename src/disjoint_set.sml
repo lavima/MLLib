@@ -22,7 +22,9 @@ struct
     val ( p1, r1, s1, x1 ) = Array.sub( ds, i1 )
     val ( p2, r2, s2, x2 ) = Array.sub( ds, i2 )
   in
-    if r1<r2 then (
+    if p1=p2 then
+      ()
+    else if r1<r2 then (
       Array.update( ds, i1, ( i2, r1, s1, x1 ) );
       Array.update( ds, i2, ( p2, r2, s2+s1, x2 ) ) )
     else (
@@ -50,11 +52,11 @@ struct
     Array.sub( ds, find' i )
   end
 
-  fun update( ds : 'a set, i : int, x : 'a ) : unit =
+  fun update( ds : 'a set, i : int, f : ( int * int * real * 'a ) -> 'a ) : unit =
   let
-    val ( p, r, s, _ ) = find( ds, i )
+    val ( p, r, s, x ) = find( ds, i )
   in
-    Array.update( ds, p, ( p, r, s, x ) )
+    Array.update( ds, p, ( p, r, s, f( p, r, s, x ) ) )
   end
 
 end (* structure DisjointSet *)
