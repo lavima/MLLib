@@ -28,7 +28,7 @@ val _ =
       let
         val ds = DisjointSet.init( 5, 1 ) 
       in
-        [ ( ds, 1, 2 ), ( ds, 3, 4 ), ( ds, 2, 0 ) ]
+        [ ( ds, 1, 2 ), ( ds, 3, 4 ), ( ds, 1, 0 ) ]
       end ,
     f= 
       fn[ i1, i2, i3 ] => 
