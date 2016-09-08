@@ -7,6 +7,7 @@ $(SML_LIB)/basis/mlton.mlb
 ../mllib_gpb.mlb
 
 test_util.sml
+test_disjoint_set.sml
 test_array_util.sml
 test_array_sort.sml
 test_list_util.sml
