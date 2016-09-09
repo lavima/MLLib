@@ -10,6 +10,15 @@ boolean_image.sml
 grayscale_image.sml
 rgb_image.sml
 cielab_image.sml
+
+io/image_io.sml
+io/pnm.sml
+io/pnm_text.sml
+io/pnm_binary.sml
+io/pbm.sml
+io/pgm.sml
+io/ppm.sml
+
 histogram.sml
 grayscale_histogram.sml
 threshold.sml
@@ -31,13 +40,5 @@ in
   f_measure.sml
 end
 probability_rand_index.sml
-
-io/image_io.sml
-io/pnm.sml
-io/pnm_text.sml
-io/pnm_binary.sml
-io/pbm.sml
-io/pgm.sml
-io/ppm.sml
 
 connected_components.sml
