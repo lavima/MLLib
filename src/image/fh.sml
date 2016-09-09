@@ -66,7 +66,6 @@ struct
     val edges = sort( Array.fromList( build smooth ) )
 
     val ds = DisjointSet.init( width*height, c )
-    (*
     val _ = 
       Array.appi
         ( fn( i, ( f, t, d ) ) =>
@@ -98,7 +97,6 @@ struct
               ()
           end )
         edges
-    *)
 
     val out = IntGrayscaleImage.zeroImage( height, width )   
     val _ = 
