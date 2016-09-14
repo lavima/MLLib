@@ -1,3 +1,7 @@
+2016-09-14	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Finished the FH implementation. Needs proper testing.
+	* Added tests for DisjointSet.
+
 2016-09-06	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Added disjoint set (union find) functionality in the DisjointSet structure.
 		Needs testing.

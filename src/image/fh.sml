@@ -29,24 +29,24 @@ struct
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
     fun diff( m : real, x : int, y : int ) : real = 
-      ( m-sub( im, y, x ) )
+      Real.abs( m-sub( im, y, x ) )
   in
     foldi 
       ( fn( y, x, m, edges ) =>
-          if x<width-1 then
-            if y<height-1 then
-              if y>0 then
-                ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
-                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
-                ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
-                ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
-              else
-                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
-                ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
-                ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
-            else
-              ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
-              ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::edges
+          if x<width-1 andalso y<height-1 andalso y>0 then
+            ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
+            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+            ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
+            ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
+          else if x<width-1 andalso y<height-1 then
+            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+            ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
+            ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
+          else if x<width-1 andalso y>0 then
+            ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
+            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::edges
+          else if x<width-1 then
+            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::edges
           else if y<height-1 then
             ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
           else
@@ -77,8 +77,8 @@ struct
               DisjointSet.union( ds, i1, i2 );
               DisjointSet.update( ds, i1, fn( _, _, s, _ ) => d+c/s ) ) 
             else
-              ()
-          end )
+              () 
+            end )
         edges
 
     val _ = 

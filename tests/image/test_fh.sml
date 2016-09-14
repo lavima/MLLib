@@ -12,7 +12,7 @@ val _ =
     genInput=
       fn() => [ 
         ( Option.valOf( RealPGM.read"resources/proper3.raw.pgm" ), 
-          3.5, 1000.0, 20.0 ) ] ,
+          2.5, 3.0, 20.0 ) ] ,
     f= fn[ i1 ] => [ FH.segment i1 ] ,
     evaluate= 
       fn[ o1 ] =>
