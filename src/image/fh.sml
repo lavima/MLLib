@@ -80,7 +80,6 @@ struct
 
     val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
-    val _ = RealPGM.write( smooth, "output/proper3.fh.smooth.pgm" )
 
     val edges = sort( Array.fromList( build smooth ) )
 
