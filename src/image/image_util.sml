@@ -93,6 +93,8 @@ struct
   (*
   * Normalize an image of reals to the interval [0.0 1.0]. Note that all pixels 
   * are assumed to be equal to or larger than 0.0.
+  * TODO This should be removed in favor of the in-place variant, or 
+  * alternatively rename to make it clear that a new image is created..
   *)
   fun normalizeReal( im : RealGrayscaleImage.image )
       : RealGrayscaleImage.image =
@@ -157,6 +159,22 @@ struct
         ( RealGrayscaleImage.full im )
   in
     normalized
+  end
+
+  (*
+  * Normalize a RealGrayscaleImage.image so that it sums to 1.
+  *)
+  fun normalizeSumReal( im : RealGrayscaleImage.image ) : unit =
+  let
+    val sum = 
+      RealGrayscaleImage.fold RealGrayscaleImage.RowMajor 
+        ( fn( x, sum ) => x+sum )
+        0.0
+        im
+  in
+    RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
+      ( fn x => x/sum )
+      im
   end
 
   (*

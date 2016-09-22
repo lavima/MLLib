@@ -24,6 +24,24 @@ struct
   val sort = 
     ArraySort.quick ( fn( ( _, _, d1 ), ( _, _, d2 ) ) => d1<d2 )
 
+  fun createGaussian( sigma : real ) : image = 
+  let 
+    val size = Real.ceil( sigma*8.0 ) + 1
+    val filter = RealGrayscaleImage.zeroImage( 1, size )
+    val _ = 
+      RealGrayscaleImage.modifyi RealGrayscaleImage.RowMajor 
+        ( fn( _, x, _ ) => 
+          let
+            val xOverSigma = real( x-( size div 2 ) )/sigma
+          in
+            Math.exp(~0.5*( xOverSigma*xOverSigma ) )
+          end )
+        ( RealGrayscaleImage.full filter )
+    val _ = ImageUtil.normalizeSumReal filter
+  in
+    filter 
+  end
+
   fun build( im : image ) : edge list =
   let
     val ( height, width ) = RealGrayscaleImage.dimensions im
@@ -60,8 +78,9 @@ struct
   let
     val ( height, width ) = RealGrayscaleImage.dimensions im
 
-    val gaussian = FilterUtil.createGaussianMask sigma 
+    val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
+    val _ = RealPGM.write( smooth, "output/proper3.fh.smooth.pgm" )
 
     val edges = sort( Array.fromList( build smooth ) )
 
