@@ -31,11 +31,11 @@ struct
         case j<r-1 of
           false => i+1
         | true =>
-            if less( x, Array.sub( xs, j ) ) then
-              iter( i, j+1 )
-            else (
+            if less( Array.sub( xs, j ), x ) then (
               xch( i+1, j );
               iter( i+1, j+1 ) )
+            else 
+              iter( i, j+1 )
       
       val i = iter( p-1, p )
       val _ = xch( i, r-1 )

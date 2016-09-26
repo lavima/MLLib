@@ -1,3 +1,6 @@
+2016-09-26	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+ 	* Working on the FH implementation and testing.
+
 2016-09-14	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Finished the FH implementation. Needs proper testing.
 	* Added tests for DisjointSet.
