@@ -19,14 +19,24 @@ val _ =
     evaluate= 
       fn[ o1, o2 ] =>
       let
-        val _ = IntPGM.write( o1, "output/proper3.fh.output.pgm" ) 
-        val _ = IntPGM.write( o2, "output/proper3.sub.fh.output.pgm" ) 
+        val _ = 
+          IntPGM.write' 
+            ( PNM.plainPGM, 0w65535 ) 
+            ( o1, "output/proper3.fh.output.pgm" ) 
+        val _ = 
+          IntPGM.write' 
+            ( PNM.plainPGM, 0w65535 ) 
+            ( o2, "output/proper3.sub.fh.output.pgm" ) 
         val t1 = Option.valOf( IntPGM.read"resources/proper3.fh.truth.pgm" )
+        val t2 = Option.valOf( IntPGM.read"resources/proper3.sub.fh.truth.pgm" )
 
-        val score = 
+        val score1 = 
           FMeasureBerkeley.evaluateSegmentation( o1, [ Segment.toEdgeMap t1 ] )
+        val score2 = 
+          FMeasureBerkeley.evaluateSegmentation( o2, [ Segment.toEdgeMap t2 ] )
 
-        val _ = print( FMeasureBerkeley.toString score ^ "\n" )
+        val _ = print( FMeasureBerkeley.toString score1 ^ "\n" )
+        val _ = print( FMeasureBerkeley.toString score2 ^ "\n" )
       in
         [ true ]
       end ,
