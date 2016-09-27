@@ -17,6 +17,22 @@ struct
   fun init( n : int, x : 'a ) : 'a set = 
     Array.tabulate( n, fn i => ( i, 0, 1.0, x ) )
 
+  fun union( ds : 'a set, i1 : int, i2 : int ) : unit = 
+  let
+    val ( p1, r1, s1, x1 ) = Array.sub( ds, i1 )
+    val ( p2, r2, s2, x2 ) = Array.sub( ds, i2 )
+  in
+    if r1<r2 then (
+      Array.update( ds, i1, ( i2, r1, s1, x1 ) );
+      Array.update( ds, i2, ( p2, r2, s2+s1, x2 ) ) )
+    else (
+      Array.update( ds, i2, ( i1, r2, s2, x2 ) );
+      if r1=r2 then
+        Array.update( ds, i1, ( p1, r1+1, s1+s2, x1 ) )
+      else
+        Array.update( ds, i1, ( p1, r1, s1+s2, x1 ) ) )
+  end
+
   fun find( ds: 'a set, i : int ) : 'a element = 
   let
     fun find'( i' : int ) : int =
@@ -34,25 +50,7 @@ struct
     Array.sub( ds, find' i )
   end
 
-  fun union( ds : 'a set, i1 : int, i2 : int ) : unit = 
-  let
-    val ( p1, r1, s1, x1 ) = find( ds, i1 )
-    val ( p2, r2, s2, x2 ) = find( ds, i2 )
-  in
-    if p1=p2 then
-      ()
-    else if r1<r2 then (
-      Array.update( ds, i1, ( i2, r1, s1, x1 ) );
-      Array.update( ds, i2, ( p2, r2, s1+s2, x2 ) ) )
-    else (
-      Array.update( ds, i2, ( i1, r2, s2, x2 ) );
-      if r1=r2 then
-        Array.update( ds, i1, ( p1, r1+1, s1+s2, x1 ) )
-      else
-        Array.update( ds, i1, ( p1, r1, s1+s2, x1 ) ) )
-  end
-
-  fun update( ds : 'a set, i : int, f : ( int * int * real * 'a ) -> 'a ) : unit =
+  fun update( ds : 'a set, i : int, f : int * int * real * 'a -> 'a ) : unit =
   let
     val ( p, r, s, x ) = find( ds, i )
   in

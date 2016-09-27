@@ -48,7 +48,44 @@ struct
 
     fun diff( m : real, x : int, y : int ) : real = 
       Real.abs( m-sub( im, y, x ) )
+
+    fun build'( y, x ) =
+      case y<height of
+        false => []
+      | true =>
+          case x<width of 
+            false => build'( y+1, 0 )
+          | true =>
+            let
+              val m = RealGrayscaleImage.sub( im, y, x )
+            in
+              if x<width-1 andalso y<height-1 andalso y>0 then
+                ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
+                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+                ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
+                ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::
+                build'( y, x+1 )
+              else if x<width-1 andalso y<height-1 then
+                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+                ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
+                ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::
+                build'( y, x+1 )
+              else if x<width-1 andalso y>0 then
+                ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
+                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+                build'( y, x+1 )
+              else if x<width-1 then
+                ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
+                build'( y, x+1 )
+              else if y<height-1 then
+                ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::
+                build'( y, x+1 )
+              else
+                build'( y, x+1 )
+            end
   in
+    build'( 0, 0 )
+    (*
     foldi 
       ( fn( y, x, m, edges ) =>
           if x<width-1 andalso y<height-1 andalso y>0 then
@@ -71,6 +108,7 @@ struct
             edges )
       []
       ( RealGrayscaleImage.full im )
+    *)
   end
 
   fun segment( im : image, sigma : real, c : real, min : real ) 
@@ -82,6 +120,7 @@ struct
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
 
     val edges = sort( Array.fromList( build smooth ) )
+    val _ = print( "Length " ^ Int.toString( Array.length edges ) ^ "\n" )
 
     val ds = DisjointSet.init( width*height, c )
     val _ = 
@@ -90,6 +129,7 @@ struct
           let
             val ( i1, _, _, t1 ) = DisjointSet.find( ds, f ) 
             val ( i2, _, _, t2 ) = DisjointSet.find( ds, t ) 
+            val _ = print( "edge " ^ Int.toString i1 ^ " " ^ Int.toString i2 ^ " " ^ Real.toString d ^ " " ^ Real.toString t1 ^ " " ^ Real.toString t2 ^ "\n" )
           in
             if not( i1=i2 ) andalso ( d<=t1 andalso d<=t2 ) then (
               DisjointSet.union( ds, i1, i2 );
