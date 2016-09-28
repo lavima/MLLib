@@ -115,6 +115,11 @@ struct
       : IntGrayscaleImage.image = 
   let
     val ( height, width ) = RealGrayscaleImage.dimensions im
+    val _ = 
+      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
+        ( fn x => x*255.0 )
+        im
+
 
     val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
@@ -129,7 +134,7 @@ struct
           let
             val ( i1, _, _, t1 ) = DisjointSet.find( ds, f ) 
             val ( i2, _, _, t2 ) = DisjointSet.find( ds, t ) 
-            val _ = print( "edge " ^ Int.toString i1 ^ " " ^ Int.toString i2 ^ " " ^ Real.toString d ^ " " ^ Real.toString t1 ^ " " ^ Real.toString t2 ^ "\n" )
+            val _ = print( "edge " ^ Int.toString i1 ^ " " ^ Int.toString i2 ^ " " ^ Real.toString( d ) ^ " " ^ Real.toString( t1 ) ^ " " ^ Real.toString( t2 ) ^ "\n" )
           in
             if not( i1=i2 ) andalso ( d<=t1 andalso d<=t2 ) then (
               DisjointSet.union( ds, i1, i2 );

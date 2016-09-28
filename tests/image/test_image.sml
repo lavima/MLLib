@@ -61,6 +61,13 @@ val _ =
           RealGrayscaleImage.fromList[ [ 1.0, 2.0 ] ] ) ,
         ( RealGrayscaleImage.fromList[ 
             [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
+            [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
+            [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
+            [ 21.0, 22.0, 23.0, 24.0, 25.0 ],
+            [ 16.0, 17.0, 18.0, 19.0, 20.0 ] ],
+          RealGrayscaleImage.fromList[ [ 1.0, 5.0, 2.0 ] ] ),
+        ( RealGrayscaleImage.fromList[ 
+            [ 1.0, 2.0, 3.0, 4.0, 5.0 ],
             [ 6.0, 7.0, 8.0, 9.0, 10.0 ],
             [ 11.0, 12.0, 13.0, 14.0, 15.0 ],
             [ 16.0, 17.0, 18.0, 19.0, 20.0 ],
@@ -72,7 +79,7 @@ val _ =
         ( RealGrayscaleImage.fromList[ [ 1.0, 2.0, 3.0 ] ],
           RealGrayscaleImage.fromList[ [ 15.0, 11.0, 17.0 ] ] ) ] ,
     f= 
-      fn[ i1, i2, i3 ] => [
+      fn[ i1, i2, i3, i4 ] => [
         RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
           ( #1 i1, #2 i1 ),
@@ -80,10 +87,13 @@ val _ =
           ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
           ( #1 i2, #2 i2 ),
         RealGrayscaleImage.convolve 
+          ( RealGrayscaleImage.CopyExtension, RealGrayscaleImage.OriginalSize )
+          ( #1 i3, #2 i3 ),
+        RealGrayscaleImage.convolve 
           ( RealGrayscaleImage.ZeroExtension, RealGrayscaleImage.OriginalSize )
-          ( #1 i3, #2 i3 ) ] ,
+          ( #1 i4, #2 i4 ) ] ,
     evaluate=
-      fn[ o1, o2, o3 ] => 
+      fn[ o1, o2, o3, o4 ] => 
       let
         val truth1 = 
           RealGrayscaleImage.fromList[ 
@@ -91,18 +101,26 @@ val _ =
             [ 13.0, 16.0, 18.0 ], 
             [ 22.0, 25.0, 27.0 ] ]
         val truth2 = 
+          RealGrayscaleImage.fromList[ 
+            [ 9.0, 15.0, 23.0, 31.0, 38.0 ],
+            [ 89.0, 95.0, 103.0, 111.0, 118.0 ],
+            [ 49.0, 55.0, 63.0, 71.0, 78.0 ],
+            [ 169.0, 175.0, 183.0, 191.0, 198.0 ],
+            [ 129.0, 135.0, 143.0, 151.0, 158.0 ] ]
+        val truth3 = 
           RealGrayscaleImage.fromList(
             [ [ 324.0, 398.0, 506.0, 614.0, 686.0 ],
               [ 564.0, 638.0, 746.0, 854.0, 926.0 ],
               [ 1104.0, 1178.0, 1286.0, 1394.0, 1466.0 ],
               [ 1644.0, 1718.0, 1826.0, 1934.0, 2006.0 ],
               [ 2004.0, 2078.0, 2186.0, 2294.0, 2366.0 ] ] )
-        val truth3 = 
+        val truth4 = 
           RealGrayscaleImage.fromList[ [ 41.0, 84.0, 67.0 ] ]
       in 
         [ RealGrayscaleImage.equal( o1, truth1 ), 
           RealGrayscaleImage.equal( o2, truth2 ),
-          RealGrayscaleImage.equal( o3, truth3 ) ]
+          RealGrayscaleImage.equal( o3, truth3 ),
+          RealGrayscaleImage.equal( o4, truth4 ) ]
       end ,
     inputToString= 
       fn( i, m ) => 

@@ -13,8 +13,8 @@ val _ =
       fn() => [ 
         ( Option.valOf( RealPGM.read"resources/proper3.raw.pgm" ), 
           1.0, 2.0, 20.0 ),
-        ( Option.valOf( RealPGM.read"resources/proper3.sub.raw.pgm" ), 
-          1.0, 2.0, 20.0 ) ] ,
+        ( Option.valOf( RealPGM.read"resources/simple.segment.raw.pgm" ), 
+          1.0, 1.0, 1.0 ) ] ,
     f= fn[ i1, i2 ] => [ FH.segment i1, FH.segment i2 ] ,
     evaluate= 
       fn[ o1, o2 ] =>
@@ -25,10 +25,10 @@ val _ =
             ( o1, "output/proper3.fh.output.pgm" ) 
         val _ = 
           IntPGM.write' 
-            ( PNM.plainPGM, 0w65535 ) 
-            ( o2, "output/proper3.sub.fh.output.pgm" ) 
+            ( PNM.plainPGM, 0w255 ) 
+            ( o2, "output/simple.segment.fh.output.pgm" ) 
         val t1 = Option.valOf( IntPGM.read"resources/proper3.fh.truth.pgm" )
-        val t2 = Option.valOf( IntPGM.read"resources/proper3.sub.fh.truth.pgm" )
+        val t2 = Option.valOf( IntPGM.read"resources/simple.segment.fh.truth.pgm" )
 
         val score1 = 
           FMeasureBerkeley.evaluateSegmentation( o1, [ Segment.toEdgeMap t1 ] )
