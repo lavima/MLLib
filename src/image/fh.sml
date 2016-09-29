@@ -119,10 +119,12 @@ struct
       RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
         ( fn x => x*255.0 )
         im
+    val c = c*255.0
 
 
     val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
+    val _ = print( RealGrayscaleImage.toString smooth ^ "\n" ) 
 
     val edges = sort( Array.fromList( build smooth ) )
     val _ = print( "Length " ^ Int.toString( Array.length edges ) ^ "\n" )
