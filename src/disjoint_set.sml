@@ -22,9 +22,9 @@ struct
     val ( p1, r1, s1, x1 ) = Array.sub( ds, i1 )
     val ( p2, r2, s2, x2 ) = Array.sub( ds, i2 )
   in
-    if r1<r2 then (
-      Array.update( ds, i1, ( i2, r1, s1, x1 ) );
-      Array.update( ds, i2, ( p2, r2, s2+s1, x2 ) ) )
+    if r1>r2 then (
+      Array.update( ds, i2, ( i1, r2, s2, x2 ) );
+      Array.update( ds, i1, ( p1, r1, s1+s2, x1 ) ) )
     else (
       Array.update( ds, i1, ( i2, r1, s1, x1 ) );
       if r1=r2 then
