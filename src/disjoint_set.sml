@@ -26,11 +26,11 @@ struct
       Array.update( ds, i1, ( i2, r1, s1, x1 ) );
       Array.update( ds, i2, ( p2, r2, s2+s1, x2 ) ) )
     else (
-      Array.update( ds, i2, ( i1, r2, s2, x2 ) );
+      Array.update( ds, i1, ( i2, r1, s1, x1 ) );
       if r1=r2 then
-        Array.update( ds, i1, ( p1, r1+1, s1+s2, x1 ) )
+        Array.update( ds, i2, ( p2, r2+1, s1+s2, x2 ) )
       else
-        Array.update( ds, i1, ( p1, r1, s1+s2, x1 ) ) )
+        Array.update( ds, i2, ( p2, r2, s1+s2, x2 ) ) )
   end
 
   fun find( ds: 'a set, i : int ) : 'a element = 
