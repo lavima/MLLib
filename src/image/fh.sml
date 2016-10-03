@@ -126,7 +126,6 @@ struct
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
 
     val edges = sort( Array.fromList( build smooth ) )
-    val _ = print( "Length " ^ Int.toString( Array.length edges ) ^ "\n" )
 
     val ds = DisjointSet.init( width*height, c )
     val _ = 
@@ -135,14 +134,12 @@ struct
           let
             val ( i1, _, _, t1 ) = DisjointSet.find( ds, f ) 
             val ( i2, _, _, t2 ) = DisjointSet.find( ds, t ) 
-            val _ = print( "edge " ^ Int.toString i1 ^ " " ^ Int.toString i2 ^ " " ^ Real.fmt ( StringCvt.FIX( SOME 6 ) ) d ^ " " ^ Real.fmt ( StringCvt.FIX( SOME 6 ) ) t1 ^ " " ^ Real.fmt ( StringCvt.FIX( SOME 6 ) ) t2 ^ " " )
           in
             if not( i1=i2 ) andalso ( d<=t1 andalso d<=t2 ) then (
-              print"merge\n";
               DisjointSet.union( ds, i1, i2 );
               DisjointSet.update( ds, i1, fn( _, _, s, _ ) => d+c/s ) ) 
             else
-              print"\n" 
+              () 
             end )
         edges
 

@@ -1,3 +1,7 @@
+2016-10-03	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* The FH implementation produces identical results as the original for 
+		grayscale images.
+
 2016-09-26	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
  	* Working on the FH implementation and testing.
 
