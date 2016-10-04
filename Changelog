@@ -1,3 +1,6 @@
+2016-10-04	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Refactoring the FH structure to allow RGB images
+
 2016-10-03	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* The FH implementation produces identical results as the original for 
 		grayscale images.

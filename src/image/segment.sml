@@ -8,10 +8,10 @@
 structure Segment =
 struct
 
-  type segMap = IntGrayscaleImage.image
-  type edgeMap = BooleanImage.image
+  type segmap = IntGrayscaleImage.image
+  type edgemap = BooleanImage.image
 
-  fun toEdgeMap( seg : segMap ) : edgeMap =
+  fun toEdgeMap( seg : segmap ) : edgemap =
   let
     val ( height, width ) = IntGrayscaleImage.dimensions seg
 

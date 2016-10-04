@@ -7,10 +7,28 @@
 * Felzenszwalb & Huttenlocher.
 *)
 
-structure FH = 
+signature FH =
+sig
+  type image
+  type segmap
+
+  val segment : real * real * int -> image -> segmap
+end
+
+signature FH_SPEC =
+sig
+  type image 
+
+  val convolve : image * image -> image
+  val diff : image * real * int * int -> real
+end
+
+functor FHFun( Spec : FH_SPEC ) : FH = 
 struct
 
-  type image = RealGrayscaleImage.image
+  type image = Spec.image
+  type segmap = IntGrayscaleImage.image
+
   type edge = int * int * real
 
 
@@ -85,34 +103,9 @@ struct
             end
   in
     build'( 0, 0 )
-    (*
-    foldi 
-      ( fn( y, x, m, edges ) =>
-          if x<width-1 andalso y<height-1 andalso y>0 then
-            ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
-            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
-            ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
-            ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
-          else if x<width-1 andalso y<height-1 then
-            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::
-            ( x+y*width, x+1+( y+1 )*width, diff( m, x+1, y+1 ) )::
-            ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
-          else if x<width-1 andalso y>0 then
-            ( x+y*width, x+1+( y-1 )*width, diff( m, x+1, y-1 ) )::
-            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::edges
-          else if x<width-1 then
-            ( x+y*width, x+1+y*width, diff( m, x+1, y ) )::edges
-          else if y<height-1 then
-            ( x+y*width, x+( y+1 )*width, diff( m, x, y+1 ) )::edges
-          else
-            edges )
-      []
-      ( RealGrayscaleImage.full im )
-    *)
   end
 
-  fun segment( im : image, sigma : real, c : real, min : real ) 
-      : IntGrayscaleImage.image = 
+  fun segment( sigma : real, c : real, min : real ) ( im : image ) : segmap = 
   let
     val ( height, width ) = RealGrayscaleImage.dimensions im
     val _ = 
