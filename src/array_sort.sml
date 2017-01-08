@@ -12,6 +12,31 @@
 structure ArraySort =
 struct
 
+  fun insertion ( less : 'a * 'a -> bool ) ( xs : 'a array ) : 'a array =
+  let
+    fun loop( i : int ) : 'a array = 
+      case i<Array.length xs of
+        false => xs
+      | true =>
+        let
+          fun insert( j : int ) : unit =
+            case j>0 andalso less( Array.sub( xs, j ), Array.sub( xs, j-1 ) ) of
+              false => ()
+            | true => 
+              let
+                val t = Array.sub( xs, j )
+                val _ = Array.update( xs, j, Array.sub( xs, j-1 ) )
+                val _ = Array.update( xs, j-1, t ) 
+              in
+                insert( j-1 )
+              end
+        in
+          ( insert i; loop( i+1 ) )
+        end
+  in
+    loop 1
+  end
+
   fun quick ( less : 'a * 'a -> bool ) ( xs : 'a array ) : 'a array =
   let
       

@@ -87,8 +87,11 @@ struct
   type segmap = IntGrayscaleImage.image
   type edge = int * int * real
 
+  (* val sort = 
+    ArraySort.quick ( fn( ( _, _, d1 ), ( _, _, d2 ) ) => d1<d2 ) *)
   val sort = 
-    ArraySort.quick ( fn( ( _, _, d1 ), ( _, _, d2 ) ) => d1<d2 )
+    ArrayQSort.sort 
+      ( fn( ( _, _, d1 ), ( _, _, d2 ) ) => Real.compare( d1, d2 ) )
 
   fun build( im : image ) : edge list =
   let
@@ -145,7 +148,9 @@ struct
     val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
 
-    val edges = sort( Array.fromList( build smooth ) )
+    val graph = build smooth
+    val graphArr = Array.fromList graph
+    val _ = sort( graphArr )
 
     val ds = DisjointSet.init( width*height, c )
     val _ = 
@@ -161,7 +166,7 @@ struct
             else
               () 
             end )
-        edges
+        graphArr
 
     val _ = 
       Array.app
@@ -175,7 +180,7 @@ struct
             else 
               ()
           end )
-        edges
+        graphArr
 
     val out = IntGrayscaleImage.zeroImage( height, width )   
     val _ = 

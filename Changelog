@@ -1,3 +1,6 @@
+2017-01-09	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Added ArraySort.insertion
+
 2016-10-04	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Refactoring the FH structure to allow RGB images. The result is a FHFun 
 		functor and two structures RealGrayscaleFH and RealRGBFH.
