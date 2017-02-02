@@ -7,12 +7,23 @@
 * Robert E. Tarjan
 *)
 
-structure DisjointSet =
+signature DISJOINT_SET =
+sig
+
+  type 'a element = int * int * real * 'a
+  type 'a set = 'a element Array.array
+
+  val init : int * 'a -> 'a set
+  val find : 'a set * int -> 'a element
+  val update : 'a set * int * ( ( int * int * real * 'a ) -> 'a ) -> unit
+
+end (* signature DISJOINT_SET *)
+
+structure DisjointSet : DISJOINT_SET =
 struct
   
   type 'a element = int * int * real * 'a
   type 'a set = 'a element Array.array
-
 
   fun init( n : int, x : 'a ) : 'a set = 
     Array.tabulate( n, fn i => ( i, 0, 1.0, x ) )

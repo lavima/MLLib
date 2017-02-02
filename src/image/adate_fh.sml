@@ -74,11 +74,6 @@ struct
   fun segment( sigma : real, c : real, min : int ) ( im : image ) : segmap = 
   let
     val ( height, width ) = dimensions im
-    (*val _ = 
-      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
-        ( fn x => x*255.0 )
-        im
-    val c = c*255.0*)
 
 
     val gaussian = createGaussian sigma 
@@ -87,22 +82,40 @@ struct
     val graph = build smooth
     val graphArr = Array.fromList graph
     val _ = sort( graphArr )
+    val sortedGraph = Array.foldr ( fn( e, es ) => e::es ) [] graphArray
 
     val ds = DisjointSet.init( width*height, c )
-    val _ = 
-      Array.app
-        ( fn( ( f, t, d ) ) =>
-          let
-            val ( i1, _, _, t1 ) = DisjointSet.find( ds, f ) 
-            val ( i2, _, _, t2 ) = DisjointSet.find( ds, t ) 
-          in
-            if not( i1=i2 ) andalso ( d<=t1 andalso d<=t2 ) then (
-              DisjointSet.union( ds, i1, i2 );
-              DisjointSet.update( ds, i1, fn( _, _, s, _ ) => d+c/s ) ) 
+    local
+      fun f( edges, c' ) =
+        case edges of
+          [] => ()
+        | ( a, b, w )::edges' =>
+        let
+          val ( compA, threshA ) = DisjointSet.find( ds, a )
+          val ( compB, threshB ) = DisjointSet.find( ds, b )
+        in
+          if differentComp( compA, compB ) then
+            if w<threshA andalso w<threshB then
+            let
+              val _ = updateThresholdValue( 
+                compB, 
+                w+c'/getComponentSize(
+                  if c'<threshA then compB else compA ),
+                DisjointSet.union( ds, compA, compB ) )
+            in
+              f( edges', c' )
+            end
+            else if w>threshA andalso w>threshB then
+              f( edges', getComponentSize( compB ) )
             else
-              () 
-            end )
-        graphArr
+              f( edges', c' )
+          else
+            f( edges', c' )
+        end
+    in
+      f( sortedGraph, c )
+    end
+
 
     val _ = 
       Array.app
