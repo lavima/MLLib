@@ -31,6 +31,7 @@ morphology.sml
 canny.sml
 adate_canny.sml
 fh.sml
+adate_fh.sml
 edge.sml
 segment.sml
 score.sml

@@ -15,6 +15,7 @@ sig
 
   val init : int * 'a -> 'a set
   val find : 'a set * int -> 'a element
+  val union : 'a set * int * int -> unit
   val update : 'a set * int * ( ( int * int * real * 'a ) -> 'a ) -> unit
 
 end (* signature DISJOINT_SET *)

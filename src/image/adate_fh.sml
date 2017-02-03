@@ -82,40 +82,38 @@ struct
     val graph = build smooth
     val graphArr = Array.fromList graph
     val _ = sort( graphArr )
-    val sortedGraph = Array.foldr ( fn( e, es ) => e::es ) [] graphArray
+    val sortedGraph = Array.foldr ( fn( e, es ) => e::es ) [] graphArr
 
     val ds = DisjointSet.init( width*height, c )
-    local
-      fun f( edges, c' ) =
-        case edges of
-          [] => ()
-        | ( a, b, w )::edges' =>
-        let
-          val ( compA, threshA ) = DisjointSet.find( ds, a )
-          val ( compB, threshB ) = DisjointSet.find( ds, b )
-        in
-          if differentComp( compA, compB ) then
-            if w<threshA andalso w<threshB then
-            let
-              val _ = updateThresholdValue( 
-                compB, 
-                w+c'/getComponentSize(
-                  if c'<threshA then compB else compA ),
-                DisjointSet.union( ds, compA, compB ) )
-            in
-              f( edges', c' )
-            end
-            else if w>threshA andalso w>threshB then
-              f( edges', getComponentSize( compB ) )
-            else
-              f( edges', c' )
+
+    fun f( edges, c' ) =
+      case edges of
+        [] => ()
+      | ( a, b, w )::edges' =>
+      let
+        val ( iA, pA, sA, threshA ) = DisjointSet.find( ds, a )
+        val ( iB, pB, sB, threshB ) = DisjointSet.find( ds, b )
+      in
+        if not( pA=pB ) then
+          if w<threshA andalso w<threshB then
+          let
+            val _ = DisjointSet.union( ds, pA, pB )
+            val _ = DisjointSet.update( 
+              ds, 
+              iB, 
+              ( fn( _, _, _, _ ) => w+c'/( if c'<threshA then sB else sA ) ) )
+          in
+            f( edges', c' )
+          end
+          else if w>threshA andalso w>threshB then
+            f( edges', sB )
           else
             f( edges', c' )
-        end
-    in
-      f( sortedGraph, c )
-    end
-
+        else
+          f( edges', c' )
+      end
+      
+    val _ = f( sortedGraph, c )
 
     val _ = 
       Array.app
