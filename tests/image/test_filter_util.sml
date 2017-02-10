@@ -74,7 +74,7 @@ val _ =
     group="FilterUtil", what="savgol",
     genInput= 
       fn() => 
-        [ ( Option.valOf( RealPGM.read "proper.plain.pgm" ), 3.0, 1.0, 0.6 ) ] ,
+        [ ( Option.valOf( RealPGM.read "resources/proper.plain.pgm" ), 3.0, 1.0, 0.6 ) ] ,
     f= fn[ i1 ] => [ FilterUtil.savgol i1 ] ,
     evaluate= 
       fn[ o1 ] =>

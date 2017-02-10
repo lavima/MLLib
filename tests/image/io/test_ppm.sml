@@ -8,7 +8,7 @@
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealPPM", what="read",
-    genInput= fn() => [ "proper2.raw.ppm", "proper2.plain.ppm" ] ,
+    genInput= fn() => [ "resources/proper2.raw.ppm", "resources/proper2.plain.ppm" ] ,
     f= 
       fn[ i1, i2 ] => 
         [ Option.valOf( RealPPM.read i1 ), Option.valOf( RealPPM.read i2 ) ] ,
@@ -17,7 +17,7 @@ val _ =
       let
         val ( height, width ) = RealRGBImage.dimensions o1
         val truth1 = 
-          Array.fromList( TextFileUtil.readCSReals "proper2.real_rgb.csv" )
+          Array.fromList( TextFileUtil.readCSReals "resources/proper2.real_rgb.csv" )
 
         fun equal( truth : real Array.array, im : RealRGBImage.image ) : bool = 
           RealRGBImage.foldi RealRGBImage.RowMajor
@@ -48,7 +48,7 @@ val _ =
     genInput=
       fn() =>
       let
-        val im = Option.valOf( RealPPM.read "proper2.raw.ppm" )
+        val im = Option.valOf( RealPPM.read "resources/proper2.raw.ppm" )
       in
         [ ( ( PNM.plainPPM, 0w255 ), ( im, "output/output.plain.ppm" ) ),
           ( ( PNM.rawPPM, 0w255 ), ( im, "output/output.raw.ppm" ) ) ]
@@ -68,7 +68,7 @@ val _ =
         val out2 = Option.valOf( RealPPM.read "output/output.raw.ppm" )
         val ( height, width ) = RealRGBImage.dimensions out1
         val truth1 = 
-          Array.fromList( TextFileUtil.readCSReals "proper2.real_rgb.csv" )
+          Array.fromList( TextFileUtil.readCSReals "resources/proper2.real_rgb.csv" )
         fun equal( truth, im ) =
           RealRGBImage.foldi RealRGBImage.RowMajor
             ( fn( i, j, ( r, g, b ), equal ) =>

@@ -14,7 +14,7 @@ val _ =
         ( 4, 
           RealGrayscaleImage.fromList'( 3, 3, 
           [ 1.0, 0.5, 0.3, 0.54, 0.0, 0.1, 0.65, 0.56, 0.31 ] ) ),
-        ( 64, Option.valOf( RealPGM.read "proper.plain.pgm" ) ) ] ,
+        ( 64, Option.valOf( RealPGM.read "resources/proper.plain.pgm" ) ) ] ,
     f= 
       fn[ i1, i2 ] => [ 
         RealGrayscaleHistogram.histogram' ( #1 i1 ) ( #2 i1 ),

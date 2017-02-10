@@ -10,7 +10,7 @@ val _ =
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="RealGrayscaleThreshold", what="percentage",
     genInput= 
-      fn() => [ ( Option.valOf( RealPGM.read("simple.plain.pgm") ), 4, 0.5 ) ] ,
+      fn() => [ ( Option.valOf( RealPGM.read("resources/simple.plain.pgm") ), 4, 0.5 ) ] ,
     f= fn[ i1 ] => [ RealGrayscaleThreshold.percentage i1 ] ,
     evaluate= fn[ o1 ] => [ Real.==( o1, 0.75 ) ] ,
     inputToString=
@@ -26,8 +26,8 @@ val _ =
     group="RealGrayscaleThreshold", what= "otsu",
     genInput=
       fn() =>
-        [ ( Option.valOf( RealPGM.read("simple.plain.pgm") ), 256 ),
-          ( Option.valOf( RealPGM.read("proper.raw.pgm") ), 256 ) ] ,
+        [ ( Option.valOf( RealPGM.read("resources/simple.plain.pgm") ), 256 ),
+          ( Option.valOf( RealPGM.read("resources/proper.raw.pgm") ), 256 ) ] ,
     f= 
       fn[ i1, i2 ] => 
         [ RealGrayscaleThreshold.otsu i1, RealGrayscaleThreshold.otsu i2 ] ,

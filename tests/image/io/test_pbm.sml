@@ -8,7 +8,7 @@
 val _ =
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="BooleanPBM", what="read",
-    genInput= fn() => [ "simple.plain.pbm", "simple.raw.pbm" ] ,
+    genInput= fn() => [ "resources/simple.plain.pbm", "resources/simple.raw.pbm" ] ,
     f= 
       fn[ i1, i2 ] => [
         Option.valOf( BooleanPBM.read i1 ) ,

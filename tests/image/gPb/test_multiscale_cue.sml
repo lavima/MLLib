@@ -55,7 +55,7 @@ val _ =
             border = 30,
             gradientQuantized = GradientDisk.gradientQuantized,
             gradientReal = GradientDisk.gradientReal }, 
-          Option.valOf( RealPPM.read "proper2.raw.ppm" ) ) ] ,
+          Option.valOf( RealPPM.read "resources/proper2.raw.ppm" ) ) ] ,
     f= fn[ i1 ] => [ MultiscaleCue.multiscale ( #1 i1 ) ( #2 i1 ) ] ,
     evaluate=
       fn[ result ] =>

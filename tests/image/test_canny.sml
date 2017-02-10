@@ -22,7 +22,7 @@ val _ =
               [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0 ],
               [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] ] ),
           ( ( Math.sqrt 2.0, Canny.highLow( 0.5, 0.3 ) ), 
-            Option.valOf( RealPGM.read("proper2.raw.pgm") ) ) ] , 
+            Option.valOf( RealPGM.read("resources/proper2.raw.pgm") ) ) ] , 
     f= 
       fn[ i1, i2 ] => 
         [ Canny.findEdges' ( #1 i1 ) ( #2 i1 ), 
@@ -46,7 +46,7 @@ val _ =
 
         val _ = BooleanPBM.write( o2, "output/proper2.canny.pbm" )
 
-        val t2 = Option.valOf( BooleanPBM.read"proper2.edge.raw.pbm" )
+        val t2 = Option.valOf( BooleanPBM.read"resources/proper2.edge.raw.pbm" )
       in
         [ BooleanImage.equal( o1, t1 ), BooleanImage.equal( o2, t2 ) ]
       end ,

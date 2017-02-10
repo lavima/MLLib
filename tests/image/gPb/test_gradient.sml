@@ -10,7 +10,7 @@ val _ =
     group="Gradient", what="Oriented gradient",
     genInput=
       fn() => 
-        [ ( Option.valOf(RealPGM.read "proper.plain.pgm" ), 
+        [ ( Option.valOf(RealPGM.read "resources/proper.plain.pgm" ), 
             32, 
             8, 
             16, 

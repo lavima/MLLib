@@ -55,7 +55,7 @@ val _ =
     group="FMeasureBerkeley", what="evaluateSegmentation",
     genInput=
       fn() => [
-        ( Option.valOf( IntPGM.read( "proper2.seg.raw.pgm" ) ),
+        ( Option.valOf( IntPGM.read( "resources/proper2.seg.raw.pgm" ) ),
           List.map
             ( fn Filename => 
                 Option.valOf( BooleanPBM.read Filename ) )

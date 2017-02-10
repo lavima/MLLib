@@ -8,7 +8,8 @@
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
     group="Word8PGM", what="read",
-    genInput= fn() => [ "simple.plain.pgm", "simple.raw.pgm" ] ,
+    genInput= 
+      fn() => [ "resources/simple.plain.pgm", "resources/simple.raw.pgm" ] ,
     f= 
       fn[ i1, i2 ] => [ 
         Option.valOf( Word8PGM.read i1 ), 
@@ -66,10 +67,10 @@ val _ =
     group="RealPGM", what="read",
     genInput= 
       fn() => [ 
-        "simple.plain.pgm", 
-        "simple.raw.pgm", 
-        "proper.plain.pgm",
-        "proper.raw.pgm" ] ,
+        "resources/simple.plain.pgm", 
+        "resources/simple.raw.pgm", 
+        "resources/proper.plain.pgm",
+        "resources/proper.raw.pgm" ] ,
     f= 
       fn[ i1, i2, i3, i4 ] => 
         [ Option.valOf( RealPGM.read i1 ), 
@@ -85,7 +86,7 @@ val _ =
             [ 128.0/255.0, 1.0 ] ]
         val width = RealGrayscaleImage.nCols o3
         val properTruth = 
-          Array.fromList( TextFileUtil.readCSReals "proper.real.csv" )
+          Array.fromList( TextFileUtil.readCSReals "resources/proper.real.csv" )
 
         fun equalsProperTruth im = 
           RealGrayscaleImage.foldi RealGrayscaleImage.RowMajor
