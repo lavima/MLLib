@@ -10,24 +10,24 @@
 signature DISJOINT_SET =
 sig
 
-  type 'a element = int * int * real * 'a
+  type 'a element = int * int * int * 'a
   type 'a set = 'a element Array.array
 
   val init : int * 'a -> 'a set
   val find : 'a set * int -> 'a element
   val union : 'a set * int * int -> unit
-  val update : 'a set * int * ( ( int * int * real * 'a ) -> 'a ) -> unit
+  val update : 'a set * int * ( ( int * int * int * 'a ) -> 'a ) -> unit
 
 end (* signature DISJOINT_SET *)
 
 structure DisjointSet : DISJOINT_SET =
 struct
   
-  type 'a element = int * int * real * 'a
+  type 'a element = int * int * int * 'a
   type 'a set = 'a element Array.array
 
   fun init( n : int, x : 'a ) : 'a set = 
-    Array.tabulate( n, fn i => ( i, 0, 1.0, x ) )
+    Array.tabulate( n, fn i => ( i, 0, 1, x ) )
 
   fun union( ds : 'a set, i1 : int, i2 : int ) : unit = 
   let
@@ -62,7 +62,7 @@ struct
     Array.sub( ds, find' i )
   end
 
-  fun update( ds : 'a set, i : int, f : int * int * real * 'a -> 'a ) : unit =
+  fun update( ds : 'a set, i : int, f : int * int * int * 'a -> 'a ) : unit =
   let
     val ( p, r, s, x ) = find( ds, i )
   in

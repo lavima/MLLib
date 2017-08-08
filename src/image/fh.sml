@@ -138,12 +138,6 @@ struct
   fun segment( sigma : real, c : real, min : int ) ( im : image ) : segmap = 
   let
     val ( height, width ) = dimensions im
-    (*val _ = 
-      RealGrayscaleImage.modify RealGrayscaleImage.RowMajor
-        ( fn x => x*255.0 )
-        im
-    val c = c*255.0*)
-
 
     val gaussian = createGaussian sigma 
     val smooth = convolve( convolve( im, gaussian ), transposed gaussian )
@@ -162,7 +156,7 @@ struct
           in
             if not( i1=i2 ) andalso ( d<=t1 andalso d<=t2 ) then (
               DisjointSet.union( ds, i1, i2 );
-              DisjointSet.update( ds, i1, fn( _, _, s, _ ) => d+c/s ) ) 
+              DisjointSet.update( ds, i1, fn( _, _, s, _ ) => d+c/real s ) ) 
             else
               () 
             end )
@@ -175,7 +169,7 @@ struct
             val ( i1, _, s1, _ ) = DisjointSet.find( ds, f ) 
             val ( i2, _, s2, _ ) = DisjointSet.find( ds, t ) 
           in
-            if not( i1=i2 ) andalso ( s1<real min orelse s2<real min ) then
+            if not( i1=i2 ) andalso ( s1<min orelse s2<min ) then
               DisjointSet.union( ds, i1, i2 )
             else 
               ()
@@ -191,7 +185,7 @@ struct
     out
   end
 
-end (* struct FH *)
+end (* functor FHFun *)
 
 local
 

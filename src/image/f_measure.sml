@@ -166,7 +166,7 @@ struct
   fun evaluateSegmentation( im : segMap,
                             truths : truth list )
       : score =
-    evaluateEdge( Segment.toEdgeMap im, truths )
+    evaluateEdge( Morphology.thin( Segment.toEdgeMap im ), truths )
 
   fun evaluateEdgeList( evalList : ( edgeMap * truth list ) list ) : score =
   let
@@ -189,7 +189,8 @@ struct
       : score =
     evaluateEdgeList( 
       List.map 
-        ( fn( seg, truths ) => ( Segment.toEdgeMap seg, truths ) )
+        ( fn( seg, truths ) => 
+            ( Morphology.thin( Segment.toEdgeMap seg ), truths ) )
         evalList )
 
   fun evaluateEdgeListAvg( evalList : ( edgeMap * truth list ) list ) : score =

@@ -48,11 +48,7 @@ val _ =
         val ( p3, r3, s3, x3 ) = DisjointSet.find( o1, 3 )
         val ( p4, r4, s4, x4 ) = DisjointSet.find( o1, 4 )
       in 
-        [ p0=p1 andalso 
-          p1=p2 andalso 
-          Real.==( s0, 3.0 ) andalso 
-          Real.==( s1, 3.0 ) andalso 
-          Real.==( s2, 3.0 ) ]
+        [ p0=p1 andalso p1=p2 andalso s0=3 andalso s1=3 andalso s2=3 ]
       end , 
     inputToString= fn( _, i1, i2 ) => Int.toString i1 ^ " " ^ Int.toString i2  }
 
@@ -75,9 +71,9 @@ val _ =
         [ DisjointSet.find i1, DisjointSet.find i2, DisjointSet.find i3 ] ,
     evaluate=
       fn[ ( p1, r1, s1, _ ), ( p2, r2, s2, _ ), ( p3, r3, s3, _ ) ] => 
-        [ p1=0 andalso r1=1 andalso Real.==( s1, 3.0 ),
-          p2=0 andalso r2=1 andalso Real.==( s2, 3.0 ),
-          p3=2 andalso r3=1 andalso Real.==( s3, 2.0 ) ] ,
+        [ p1=0 andalso r1=1 andalso s1=3,
+          p2=0 andalso r2=1 andalso s2=3,
+          p3=2 andalso r3=1 andalso s3=2 ] ,
     inputToString= 
       fn( _, i ) => Int.toString i }
 

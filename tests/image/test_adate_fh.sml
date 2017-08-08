@@ -8,7 +8,7 @@
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="RealGrayscaleFH", what="segment",
+    group="RealGrayscaleADATEFH", what="segment",
     genInput=
       fn() => [ 
         ( ( 1.0, 2.0, 20 ),
@@ -17,8 +17,8 @@ val _ =
           Option.valOf( RealPGM.read"resources/simple.segment.raw.pgm" ) ) ] ,
     f= 
       fn[ i1, i2 ] => [ 
-        RealGrayscaleFH.segment ( #1 i1 ) ( #2 i1 ), 
-        RealGrayscaleFH.segment ( #1 i2 ) ( #2 i2 ) ] ,
+        RealGrayscaleADATEFH.segment ( #1 i1 ) ( #2 i1 ), 
+        RealGrayscaleADATEFH.segment ( #1 i2 ) ( #2 i2 ) ] ,
     evaluate= 
       fn[ o1, o2 ] =>
       let
@@ -30,8 +30,8 @@ val _ =
             ( IntGrayscaleImage.full o1' )
         val t1 = Option.valOf( IntPGM.read"resources/proper3.fh.truth.pgm" )
         val t2 = Option.valOf( IntPGM.read"resources/simple.segment.fh.truth.pgm" )
-        val _ = IntPGM.write( o1', "output/proper3.realgrayscalefh.segment.pgm" )
-        val _ = IntPGM.write( o2, "output/simple.segment.realgrayscalefh.segment.pgm" )
+        val _ = IntPGM.write( o1', "output/proper3.realgrayscaleadatefh.segment.pgm" )
+        val _ = IntPGM.write( o2, "output/simple.segment.realgrayscaleadatefh.segment.pgm" )
       in
         [ IntGrayscaleImage.equal( o1', t1 ), IntGrayscaleImage.equal( o2, t2 ) ]
       end ,
@@ -39,14 +39,14 @@ val _ =
 
 val _ = 
   SimpleTest.test' ( CommandLine.arguments() ) {
-    group="RealRGBFH", what="segment",
+    group="RealRGBADATEFH", what="segment",
     genInput=
       fn() => [ 
         ( ( 1.0, 2.0, 20 ),
           Option.valOf( RealPPM.read"resources/proper3.raw.ppm" ) ) ] ,
     f= 
       fn[ i1 ] => [ 
-        RealRGBFH.segment ( #1 i1 ) ( #2 i1 ) ] ,
+        RealRGBADATEFH.segment ( #1 i1 ) ( #2 i1 ) ] ,
     evaluate= 
       fn[ o1 ] =>
       let
