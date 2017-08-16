@@ -517,4 +517,4 @@ struct
 
   end (* local *)
 
-end (* structure Canny *)
+end (* structure ADATECanny *)
