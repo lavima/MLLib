@@ -322,8 +322,8 @@ struct
           [] => ()
         | pixel::pixels' =>
             case pixel of 
-              false => ( output( out, "1" ); write pixels' )
-            | true => ( output( out, "0" ); write pixels' )
+              false => ( output( out, "1\n" ); write pixels' )
+            | true => ( output( out, "0\n" ); write pixels' )
     in
       write pixels
     end

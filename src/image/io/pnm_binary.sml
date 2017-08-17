@@ -189,7 +189,6 @@ struct
       read 0
     end
 
-    (* TODO error loading this data into matlab *)
     fun writeBooleanPixels( output : BinIO.outstream, 
                             width : int, 
                             pixels : bool list )

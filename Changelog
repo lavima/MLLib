@@ -1,3 +1,6 @@
+2017-08-17	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
+	* Fixed bug in PNMText.writeBoolanPixels
+
 2017-08-08	Lars Vidar Magnusson <lars.v.magnusson@hiof.no>
 	* Fixed bug in ADATEFHFun
 	* Added (non validating) tests for ADATEFH structures. Visual inspection of

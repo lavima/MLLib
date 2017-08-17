@@ -61,19 +61,19 @@ struct
 
     val out = BinIO.openOut filename 
     val ( height, width ) = dimensions im
+
+    val _ = PNMText.writeHeader( out, ( format, width, height, 1, 0w1, [] ) )
     val _ = 
-      ( PNMText.writeHeader( out, ( format, width, height, 1, 0w1, [] ) );
-        if format=plainPBM then
-          PNMText.writeBooleanPixels( out, toList im ) 
-        else 
-          PNMBinary.writeBooleanPixels( out, width, toList im ) )
+      case format of 
+        plainPBM => PNMText.writeBooleanPixels( out, toList im ) 
+      | rawPBM => PNMBinary.writeBooleanPixels( out, width, toList im )
   in
     BinIO.closeOut out
   end
 
   val write = write' plainPBM
 
-end (* functor PBMReaderFun *)
+end (* functor PBMFun *)
 
 local 
   structure PBMImage : PBM_IMAGE =
